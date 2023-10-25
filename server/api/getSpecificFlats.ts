@@ -13,7 +13,8 @@ export async function getStadtUndLandFlats(browser: Browser) {
 
   await page.waitForSelector("#button-submit-gen-2");
   await page.click("#button-submit-gen-2");
-  page.waitForSelector(".SP-TeaserList__item");
+
+  await page.waitForSelector(".SP-TeaserList__item");
   const els = await page.$$(".SP-TeaserList__item");
   const data = await Promise.all(
     els.map(async (el) => ({
@@ -37,7 +38,6 @@ export async function getStadtUndLandFlats(browser: Browser) {
       ),
     }))
   );
-
   await page.close();
   return data;
 }

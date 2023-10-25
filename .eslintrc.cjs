@@ -5,9 +5,8 @@ module.exports = {
     node: true,
   },
   extends: [
-    "eslint:recommended",
-    "plugin:vue/vue3-essential",
-    "plugin:@typescript-eslint/recommended",
+    "@nuxtjs/eslint-config-typescript",
+    // "plugin:@typescript-eslint/stylistic-type-checked",
   ],
   overrides: [],
   parser: "vue-eslint-parser",
@@ -16,6 +15,7 @@ module.exports = {
     sourceType: "module",
     parser: "@typescript-eslint/parser",
     extraFileExtensions: [".vue"],
+    // project: "./tsconfig.json",
   },
   plugins: ["vue", "@typescript-eslint"],
   rules: {
@@ -31,5 +31,29 @@ module.exports = {
       },
     ],
     "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+    "@typescript-eslint/indent": "off",
+    semi: "off",
+    quotes: ["error", "double"],
+    "comma-dangle": "off",
+    "space-before-function-paren": "off",
+    "arrow-parens": "off",
+    "vue/html-closing-bracket-newline": "off",
+    "vue/html-indent": "off",
+    "import/no-named-as-default-member": "off",
+    "no-console": "off",
+    "vue/multi-word-component-names": "off",
+    // "@typescript-eslint/no-misused-promises": [
+    //   2,
+    //   {
+    //     checksVoidReturn: { attributes: false },
+    //   },
+    // ],
+    // "@typescript-eslint/no-floating-promises": [
+    //   2,
+    //   {
+    //     ignoreVoid: true,
+    //   },
+    // ],
+    // "no-void": "off",
   },
 };

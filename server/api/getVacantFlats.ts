@@ -1,5 +1,5 @@
-import { getBrowser } from "~/utils/getBrowser";
 import { getReanovoFlats, getStadtUndLandFlats } from "./getSpecificFlats";
+import { getBrowser } from "~/utils/getBrowser";
 
 export default defineEventHandler(async () => {
   const browser = await getBrowser();
