@@ -42,6 +42,7 @@ module.exports = {
     "import/no-named-as-default-member": "off",
     "no-console": "off",
     "vue/multi-word-component-names": "off",
+    "vue/singleline-html-element-content-newline": "off",
     // "@typescript-eslint/no-misused-promises": [
     //   2,
     //   {

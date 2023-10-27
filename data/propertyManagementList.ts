@@ -1,13 +1,19 @@
 import type { Browser } from "puppeteer";
+import { z } from "zod";
 
-type Flat = {
-  objectNumber: string;
-  objectType: string;
-  address: string;
-  usableArea: string;
-  rentExcludingVAT: string;
-  rentIncludingVAT: string;
-};
+const flatSchema = z.object({
+  title: z.string(),
+  price: z.number(),
+  roomNumber: z.number(),
+  usableArea: z.string(),
+  objectNumber: z.string(),
+  objectType: z.string(),
+  address: z.string(),
+  rentExcludingVAT: z.string(),
+  rentIncludingVAT: z.string(),
+});
+
+type Flat = z.infer<typeof flatSchema>;
 
 type PropertyManagement = {
   id: string;
@@ -60,6 +66,7 @@ export const propertyManagementList: PropertyManagement[] = [
   {
     id: "reanovo",
     name: "Reanovo",
+    // @ts-ignore
     getFlats: async () => {
       const url = "https://reanovo.everreal.co/api/prism/public/expose?take=20";
       const data = await fetch(url).then((r) => r.json());
