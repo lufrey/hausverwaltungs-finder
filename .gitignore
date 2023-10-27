@@ -17,8 +17,9 @@ logs
 .DS_Store
 .fleet
 .idea
+docker-compose.yml
 
 # Local env files
 .env
 .env.*
-!.env.example
+!.env.sample
