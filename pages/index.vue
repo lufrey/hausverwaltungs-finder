@@ -4,7 +4,7 @@ const route = useRoute();
 
 <template>
   <div>
-    <h1>Nuxt Routing set up successfully!</h1>
+    <h1 class="p-3 m-7">Nuxt Routing set up successfully!</h1>
     <p>Current route: {{ route.path }}</p>
     <a
       href="https://nuxt.com/docs/getting-started/routing"
