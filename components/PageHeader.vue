@@ -8,12 +8,12 @@
         <span class="tagline hidden md:block text-l font-light opacity-50">what's a housing crisis?</span>
         <div class="nav_links flex items-center gap-8">
             <div class="favorites hidden md:inline-block relative">
-                <img src="../assets/heart_outline.svg" alt="Hier sind deine Favorites" class="favorites__image">
+                <img src="/heart_outline.svg" alt="Hier sind deine Favorites" class="favorites__image">
                 <span class="favorites__counter absolute text-s top">3</span>
             </div>
             <a href="https://github.com/lufrey/hausverwaltungs-finder" target="_blank" class="contribute border-2 rounded-full border-primary px-5 py-2">
                 <span>Mitwirken</span>
-                <img src="../assets/github-mark.svg" alt="Klicke um auf GitHub zu diesem Projekt beizutragen" class="github_logo hidden sm:inline w-6 ml-2">
+                <img src="/github-mark.svg" alt="Klicke um auf GitHub zu diesem Projekt beizutragen" class="github_logo hidden sm:inline w-6 ml-2">
             </a>
         </div>
     </nav>
