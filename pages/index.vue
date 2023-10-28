@@ -13,7 +13,7 @@
       />
     </div>
     <div
-      class="apartmentlist flex flex-col gap-4 rounded-3xl bg-background p-5"
+      class="apartmentlist relative flex flex-col gap-4 rounded-3xl bg-background p-5"
     >
       <PreviewlistApartment
         apt-name="Gemütliche Wohnung für Senioren"
@@ -45,9 +45,10 @@
         :favorite="true"
         image-src="/apartment_example_image.png"
       />
+      <FatButton button-text="Alle Wohnungen ansehen" href="/page2" />
     </div>
-    <div class="map_preview rounded-3xl bg-[green] p-5">map_preview</div>
-    <div class="decoration rounded-3xl bg-[#61edff] p-5">decoration</div>
+    <div class="map_preview relative rounded-3xl bg-[green] p-5">map_preview</div>
+    <div class="decoration relative rounded-3xl bg-[#61edff] p-5">decoration</div>
     <div
       class="mailing_list relative rounded-3xl border border-black bg-secondary p-5"
     >
@@ -78,8 +79,8 @@
         ]"
         placeholder="Bezirk"
       /> <!-- bezirk-->
-      <Slider /> <!-- Zimemer -->
-      <Slider /> <!-- Monatsmiete -->
+      <Slider title="Zimmer (minimum)" output-title="Anzahl" min-value="0" max-value="10" /> <!-- Zimemer -->
+      <Slider title="Monatsmiete (kalt, maximum)" output-title="Preis €" min-value="100" max-value="5000" /> <!-- Monatsmiete -->
       <FatButton button-text="Jetzt in den Verteiler" action="submit" />
     </div>
   </div>

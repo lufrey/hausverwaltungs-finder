@@ -1,10 +1,19 @@
 <template>
-  <button
-    class="absolute -right-10 -bottom-5 rounded-xl border border-primary bg-white px-6 py-4 text-m font-medium text-primary"
-    @click="handleClick"
-  >
+  <NuxtLink v-if="href" :to="href" class="absolute -bottom-5 -right-10 rounded-xl border border-primary bg-white px-6 py-4 text-m font-medium text-primary">
     {{ buttonText }}
-    <img src="/arrow_right.svg" alt="" class="inline ml-4">
+    <img
+      src="/arrow_right.svg"
+      alt=""
+      class="ml-4 inline"
+    />
+  </NuxtLink>
+  <button v-else class="absolute -bottom-5 -right-10 rounded-xl border border-primary bg-white px-6 py-4 text-m font-medium text-primary" @click="$emit('submit', action)">
+    {{ buttonText }}
+    <img
+      src="/arrow_right.svg"
+      alt=""
+      class="ml-4 inline"
+    />
   </button>
 </template>
 
@@ -19,24 +28,18 @@ export default {
       type: String,
       required: true,
     },
-  },
-  emits: ["submit"],
-  methods: {
-    handleClick() {
-      if (this.action === "submit") {
-        // Submit form
-        this.$emit("submit");
-      } else {
-        // Navigate to new page
-        this.$router.push("/" + this.action);
-      }
+    href: {
+      type: String,
+      required: false,
+      default: null,
     },
   },
+  emits: ["submit"],
 };
 </script>
 
 <style scoped>
-button {
+a, button {
   box-shadow: #a555a2 -7px 7px;
 }
 </style>
