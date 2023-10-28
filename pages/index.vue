@@ -2,7 +2,7 @@
   <div class="layout">
     <div class="eyecatcher relative rounded-3xl bg-main p-5">
       <h1
-        class="eyecatcher__headline text-white ml-[-76px] mr-16 hyphens-manual text-xxl"
+        class="eyecatcher__headline ml-[-76px] mr-16 hyphens-manual text-xxl text-white"
       >
         Berlins Wohnungs&shy;markt auf einen Blick
       </h1>
@@ -46,11 +46,62 @@
     </div>
     <div class="map_preview rounded-3xl bg-[green] p-5">map_preview</div>
     <div class="decoration rounded-3xl bg-[#61edff] p-5">decoration</div>
-    <div class="mailing_list rounded-3xl bg-secondary p-5">mailing_list</div>
+    <div
+      class="mailing_list relative rounded-3xl border border-black bg-secondary p-5"
+    >
+      <span
+        class="mail-tile-header absolute -top-8 left-[-1px] rounded-t-3xl border border-black bg-secondary px-5 pt-2 text-xl"
+        >Nichts verpassen</span
+      >
+      <p class="mt-2 max-w-xl text-l font-light text-[grey]">
+        Lass dich ganz einfach benachrichtigen sobald neue Wohnungen mit deinen
+        Kriterien verfügbar sind.
+      </p>
+      <!--labels hinzufügen-->
+      <TextFieldWithRules
+        class="mt-5"
+        placeholder="E-Mail"
+        :rules="['required', 'email']"
+      /> <!-- email -->
+      <TextFieldWithAutocomplete
+        class="mt-5"
+        :options="[
+          'Friedrichshain',
+          'Kreuzberg',
+          'Neukölln',
+          'Mitte',
+          'Prenzlauer Berg',
+          'Charlottenburg',
+          'Schöneberg',
+        ]"
+        placeholder="Bezirk"
+      /> <!-- bezirk-->
+      <Slider /> <!-- Zimemer -->
+      <Slider /> <!-- Monatsmiete -->
+      <FatButton button-text="Jetzt in den Verteiler" action="submit" />
+    </div>
   </div>
 </template>
 
 <style scoped>
+.mail-tile-header::before {
+  height: 3px;
+  width: 100%;
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  background-color: #ecdaeb;
+}
+.mail-tile-header::after {
+  height: 50%;
+  width: 3px;
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  right: -2px;
+  background-color: #ecdaeb;
+}
 .eyecatcher__headline {
   text-shadow: 6px 6px 0px #a555a2;
   -webkit-text-stroke: 1px #000;
