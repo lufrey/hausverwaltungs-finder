@@ -12,11 +12,13 @@
         class="eyecatcher__explanation absolute right-3 top-3"
       />
     </div>
-    <div class="apartmentlist rounded-3xl bg-background p-5">
+    <div
+      class="apartmentlist flex flex-col gap-4 rounded-3xl bg-background p-5"
+    >
       <PreviewlistApartment
         apt-name="Gemütliche Wohnung für Senioren"
-        apt-street="Rigaerstraße 14"
-        apt-district="Friedrichshain"
+        :apt-street="'Rigaerstraße 14'"
+        :apt-district="'Friedrichshain'"
         :tags="['WBS', 'Altbau']"
         price="1198"
         square-footage="84"
