@@ -15,6 +15,15 @@ export default defineNuxtConfig({
       },
     },
   },
-  modules: ["@nuxtjs/tailwindcss"],
-  css: ["~/assets/main.css"],
+  modules: [
+    "@nuxtjs/tailwindcss",
+    [
+      "@nuxtjs/google-fonts",
+      {
+        families: {
+          Poppins: [400, 500, 600, 700],
+        },
+      },
+    ],
+  ],
 });

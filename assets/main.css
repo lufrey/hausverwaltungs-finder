@@ -1,9 +1,0 @@
-@font-face {
-    font-family: 'Inter';
-    src: url('Inter-VariableFont.ttf') format('truetype'); /* Update the path */
-    font-weight: 300 400 500 700; /* Specify the font weight range */
-  }  
-  
-body {
-    font-family: 'Inter', sans-serif;
-}

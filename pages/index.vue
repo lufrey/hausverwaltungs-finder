@@ -1,7 +1,3 @@
-<script setup lang="ts">
-const route = useRoute();
-</script>
-
 <template>
   <div class="layout">
     <!-- <h1>Nuxt Routing set up successfully!</h1>
@@ -15,8 +11,14 @@ const route = useRoute();
       <a href="/page2">Go to page 2</a>
     </p> -->
     <div class="tile eyecatcher bg-main relative">
-      <h1 class="eyecatcher__headline text-xxl break-words hyphens-auto">Berlins Wohnungsmarkt auf einen Blick</h1>
-      <img src="../assets/questionmark.svg" alt="" class="eyecatcher__explanation absolute top-3 right-3">
+      <h1 class="eyecatcher__headline text-xxl break-words hyphens-auto">
+        Berlins Wohnungsmarkt auf einen Blick
+      </h1>
+      <img
+        src="../assets/questionmark.svg"
+        alt=""
+        class="eyecatcher__explanation absolute top-3 right-3"
+      />
     </div>
     <div class="tile apartmentlist bg-background">
       <PreviewlistApartment
@@ -62,13 +64,13 @@ const route = useRoute();
   padding: 1.25rem;
 }
 .eyecatcher__headline {
-  text-shadow: 6px 6px 0px #A555A2;
+  text-shadow: 6px 6px 0px #a555a2;
   -webkit-text-stroke: 1px #000;
   color: #fff;
   margin-left: -76px;
   margin-right: 60px;
 }
-.layout { 
+.layout {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -89,14 +91,23 @@ const route = useRoute();
     "decoration decoration decoration decoration mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list";
 }
 
-.eyecatcher { grid-area: eyecatcher; }
+.eyecatcher {
+  grid-area: eyecatcher;
+}
 
-.apartmentlist { grid-area: apartmentlist; }
+.apartmentlist {
+  grid-area: apartmentlist;
+}
 
-.map_preview { grid-area: map_preview; }
+.map_preview {
+  grid-area: map_preview;
+}
 
-.decoration { grid-area: decoration; }
+.decoration {
+  grid-area: decoration;
+}
 
-.mailing_list { grid-area: mailing_list; }
-
+.mailing_list {
+  grid-area: mailing_list;
+}
 </style>
