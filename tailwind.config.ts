@@ -13,6 +13,7 @@ const config: Partial<Config> = {
     },
     fontFamily: {
       inter: ["Inter", "sans-serif"],
+      poppins: ["Poppins", "sans-serif"],
     },
     fontSize: {
       xs: "12px",
