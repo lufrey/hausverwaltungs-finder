@@ -1,3 +1,21 @@
+<script lang="ts" setup>
+const props = defineProps<{
+  imageSrc: string;
+  aptName: string;
+  aptStreet: string;
+  aptDistrict: string;
+  tags: string[];
+  price: number;
+  usableArea: number;
+  favorite: boolean;
+}>();
+
+const isFavoriteShown = ref(props.favorite);
+const toggleFavorite = () => {
+  isFavoriteShown.value = !isFavoriteShown.value;
+};
+</script>
+
 <template>
   <div class="flex gap-2">
     <div class="aspect-square h-full">
@@ -20,7 +38,7 @@
         <span
           v-for="tag in tags as string[]"
           :key="tag"
-          class="tag py-0.25 bg-white rounded-full px-2.5 text-xs text-accent"
+          class="tag py-0.25 rounded-full bg-white px-2.5 text-xs text-accent"
           >{{ tag }}</span
         >
       </div>
@@ -28,63 +46,18 @@
     <div class="flex shrink-0 flex-grow flex-col items-end gap-1">
       <span class="price block text-l font-light leading-5">{{ price }} €</span>
       <span class="square-footage block text-s font-light"
-        >{{ squareFootage }} m²</span
+        >{{ usableArea }} m²</span
       >
       <button
         class="favorites-button inline-block"
         title="Zu Favoriten hinzufügen"
         @click="toggleFavorite"
       >
-        <img
-          :src="favorite ? '/heart_filled.svg' : '/heart_outline.svg'"
+        <IconHeart
+          :filled="isFavoriteShown"
           class="w-5"
         />
       </button>
     </div>
   </div>
 </template>
-
-<script lang="ts">
-export default {
-  name: "PreviewlistApartment",
-  props: {
-    imageSrc: {
-      type: String,
-      required: true,
-    },
-    aptName: {
-      type: String,
-      required: true,
-    },
-    aptStreet: {
-      type: String,
-      required: true,
-    },
-    aptDistrict: {
-      type: String,
-      required: true,
-    },
-    tags: {
-      type: Array,
-      required: true,
-    },
-    price: {
-      type: String,
-      required: true,
-    },
-    squareFootage: {
-      type: String,
-      required: true,
-    },
-    favorite: {
-      type: Boolean,
-      required: true,
-    },
-  },
-  methods: {
-    toggleFavorite() {
-      this.$emit("toggle-favorite");
-    },
-  },
-};
-</script>

@@ -20,6 +20,9 @@ export default defineNuxtConfig({
     [
       "@nuxtjs/google-fonts",
       {
+        preconnect: true,
+        prefetch: true,
+        preload: true,
         families: {
           Poppins: [400, 500, 600, 700],
         },

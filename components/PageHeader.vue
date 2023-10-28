@@ -1,5 +1,11 @@
 <template>
   <nav class="flex items-center justify-between">
+    <NuxtLink
+      to="/"
+      class="logo text-xl font-medium tracking-tighter text-main"
+    >
+      ApartiFind
+    </NuxtLink>
     <a
       href="/"
       class="logo text-xl font-medium tracking-tighter text-main"
@@ -10,10 +16,9 @@
     >
     <div class="nav_links flex items-center gap-8">
       <div class="favorites relative hidden md:inline-block">
-        <img
-          src="/heart_outline.svg"
-          alt="Hier sind deine Favorites"
-          class="favorites__image flex items-center justify-center"
+        <IconHeart
+          :filled="false"
+          class="h-8 w-8"
         />
         <span
           class="top absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-s"
