@@ -12,14 +12,16 @@
         class="eyecatcher__explanation absolute right-3 top-3"
       />
     </div>
-    <div class="apartmentlist rounded-3xl bg-background p-5">
+    <div
+      class="apartmentlist flex flex-col gap-4 rounded-3xl bg-background p-5"
+    >
       <PreviewlistApartment
         apt-name="Gemütliche Wohnung für Senioren"
         apt-street="Rigaerstraße 14"
         apt-district="Friedrichshain"
         :tags="['WBS', 'Altbau']"
-        price="1198"
-        square-footage="84"
+        :price="1198"
+        :usable-area="84"
         :favorite="false"
         image-src="/apartment_example_image.png"
       />
@@ -28,8 +30,8 @@
         apt-street="Wilhelminenhofstraße 132"
         apt-district="Treptow"
         :tags="['Neueintrag']"
-        price="640"
-        square-footage="122"
+        :price="640"
+        :usable-area="122"
         :favorite="false"
         image-src="/apartment_example_image.png"
       />
@@ -38,8 +40,8 @@
         apt-street="Edisonstraße 32"
         apt-district="Marzahn"
         :tags="['Neubau', 'Zenral', 'WBS']"
-        price="2661"
-        square-footage="13"
+        :price="2661"
+        :usable-area="13"
         :favorite="true"
         image-src="/apartment_example_image.png"
       />
