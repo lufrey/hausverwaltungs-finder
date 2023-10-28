@@ -14,19 +14,34 @@ const route = useRoute();
     <p>
       <a href="/page2">Go to page 2</a>
     </p> -->
-    <div class="eyecatcher">eyecatcher</div>
-    <div class="apartmentlist">apartmentlist</div>
-    <div class="map_preview">map_preview</div>
-    <div class="decoration">decoration</div>
-    <div class="mailing_list">mailing_list</div>
+    <div class="tile eyecatcher bg-main relative">
+      <h1 class="eyecatcher__headline text-xxl break-words hyphens-auto">Berlins Wohnungsmarkt auf einen Blick</h1>
+      <img src="../assets/questionmark.svg" alt="" class="eyecatcher__explanation absolute top-3 right-3">
+    </div>
+    <div class="tile apartmentlist bg-background">apartmentlist</div>
+    <div class="tile map_preview bg-[green]">map_preview</div>
+    <div class="tile decoration bg-[#61edff]">decoration</div>
+    <div class="tile mailing_list bg-secondary">mailing_list</div>
   </div>
 </template>
 
 <style scoped>
-.layout {  display: grid;
+.tile {
+  border-radius: 1.5rem;
+  padding: 1.25rem;
+}
+.eyecatcher__headline {
+  text-shadow: 6px 6px 0px #A555A2;
+  -webkit-text-stroke: 1px #000;
+  color: #fff;
+  margin-left: -76px;
+  margin-right: 60px;
+}
+.layout { 
+  display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  gap: 0px 0px;
+  gap: 1.25rem;
   grid-auto-flow: row;
   grid-template-areas:
     "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
