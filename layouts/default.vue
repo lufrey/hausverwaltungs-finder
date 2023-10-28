@@ -1,6 +1,6 @@
 <template>
   <div
-    class="max-w-6xl px-4 my-4 mx-auto xl:my-8 flex-row space-y-10 font-poppins"
+    class="mx-auto my-4 max-w-6xl flex-row space-y-10 px-4 font-poppins xl:my-8"
   >
     <header>
       <PageHeader />

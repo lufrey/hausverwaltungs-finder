@@ -39,25 +39,31 @@ export const propertyManagementList: PropertyManagement[] = [
       const els = await page.$$(".SP-TeaserList__item");
       const data = await Promise.all(
         els.map(async (el) => ({
-          objectNumber: await el.$eval("tr:nth-child(1) td", (el) =>
-            el.textContent?.trim()
+          objectNumber: await el.$eval(
+            "tr:nth-child(1) td",
+            (el) => el.textContent?.trim(),
           ),
-          objectType: await el.$eval("tr:nth-child(2) td", (el) =>
-            el.textContent?.trim()
+          objectType: await el.$eval(
+            "tr:nth-child(2) td",
+            (el) => el.textContent?.trim(),
           ),
-          address: await el.$eval("tr:nth-child(3) td", (el) =>
-            el.textContent?.trim()
+          address: await el.$eval(
+            "tr:nth-child(3) td",
+            (el) => el.textContent?.trim(),
           ),
-          usableArea: await el.$eval("tr:nth-child(4) td", (el) =>
-            el.textContent?.trim()
+          usableArea: await el.$eval(
+            "tr:nth-child(4) td",
+            (el) => el.textContent?.trim(),
           ),
-          rentExcludingVAT: await el.$eval("tr:nth-child(5) td", (el) =>
-            el.textContent?.trim()
+          rentExcludingVAT: await el.$eval(
+            "tr:nth-child(5) td",
+            (el) => el.textContent?.trim(),
           ),
-          rentIncludingVAT: await el.$eval("tr:nth-child(6) td", (el) =>
-            el.textContent?.trim()
+          rentIncludingVAT: await el.$eval(
+            "tr:nth-child(6) td",
+            (el) => el.textContent?.trim(),
           ),
-        }))
+        })),
       );
       await page.close();
       return data;
