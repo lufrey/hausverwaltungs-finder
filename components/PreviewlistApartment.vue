@@ -50,7 +50,11 @@ const toggleFavorite = () => {
       >
       <button
         class="favorites-button inline-block"
-        title="Zu Favoriten hinzufügen"
+        :title="`${
+          isFavoriteShown
+            ? 'Aus Favoriten entfernen'
+            : 'Zu Favoriten hinzufügen'
+        }`"
         @click="toggleFavorite"
       >
         <IconHeart

@@ -43,6 +43,7 @@ module.exports = {
     "vue/multi-word-component-names": "off",
     "vue/singleline-html-element-content-newline": "off",
     "vue/html-self-closing": "off",
+    "func-call-spacing": "off",
     // "@typescript-eslint/no-misused-promises": [
     //   2,
     //   {

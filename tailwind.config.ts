@@ -29,6 +29,13 @@ const config: Partial<Config> = {
         secondary: "#ECDAEB",
         accent: "#A555A2",
       },
+      boxShadow: {
+        accent: "#a555a2 -7px 7px",
+        accentHover: "#a555a2 -4px 4px",
+      },
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+      },
       borderRadius: {
         l: "25px",
         m: "15px",

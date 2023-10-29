@@ -14,6 +14,7 @@ defineProps({
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 21.98 20.32"
+    class="text-white"
   >
     <path
       class="d"

@@ -6,11 +6,6 @@
     >
       ApartiFind
     </NuxtLink>
-    <a
-      href="/"
-      class="logo text-xl font-medium tracking-tighter text-main"
-      >ApartiFind</a
-    >
     <span class="tagline hidden text-l font-light opacity-50 md:block"
       >What's a housing crisis?</span
     >
@@ -25,18 +20,24 @@
           >3</span
         >
       </div>
-      <a
-        href="https://github.com/lufrey/hausverwaltungs-finder"
-        target="_blank"
-        class="contribute rounded-full border-2 border-primary px-5 py-2"
-      >
-        <span>Mitwirken</span>
-        <img
-          src="/github-mark.svg"
-          alt="Klicke um auf GitHub zu diesem Projekt beizutragen"
-          class="github_logo ml-2 hidden w-6 sm:inline"
-        />
-      </a>
+      <div class="mx-auto flex items-center justify-center">
+        <div
+          class="bg-gradient rota flex w-full rounded-full bg-gradient-to-b from-primary to-accent p-[3px] hover:from-accent hover:to-accent"
+        >
+          <NuxtLink
+            to="https://github.com/lufrey/hausverwaltungs-finder"
+            target="_blank"
+            class="contribute rounded-full bg-white px-5 py-2"
+          >
+            <span>Mitwirken</span>
+            <img
+              src="/github-mark.svg"
+              alt="Klicke um auf GitHub zu diesem Projekt beizutragen"
+              class="github_logo ml-2 hidden w-6 sm:inline"
+            />
+          </NuxtLink>
+        </div>
+      </div>
     </div>
   </nav>
 </template>
