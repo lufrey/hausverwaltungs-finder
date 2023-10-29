@@ -45,10 +45,17 @@
         :favorite="true"
         image-src="/apartment_example_image.png"
       />
-      <FatButton button-text="Alle Wohnungen ansehen" href="/page2" />
+      <FatButton
+        button-text="Alle Wohnungen ansehen"
+        href="/page2"
+      />
     </div>
-    <div class="map_preview relative rounded-3xl bg-[green] p-5">map_preview</div>
-    <div class="decoration relative rounded-3xl bg-[#61edff] p-5">decoration</div>
+    <div class="map_preview relative rounded-3xl bg-[green] p-5">
+      map_preview
+    </div>
+    <div class="decoration relative rounded-3xl bg-[#61edff] p-5">
+      decoration
+    </div>
     <div
       class="mailing_list relative rounded-3xl border border-black bg-secondary p-5"
     >
@@ -60,13 +67,14 @@
         Lass dich ganz einfach benachrichtigen sobald neue Wohnungen mit deinen
         Kriterien verfügbar sind.
       </p>
-      <!--labels hinzufügen-->
-      <TextFieldWithRules
+      <!-- Labels hinzufügen -->
+      <!-- <TextFieldWithRules
         class="mt-5"
         placeholder="E-Mail"
         :rules="['required', 'email']"
-      /> <!-- email -->
-      <TextFieldWithAutocomplete
+      /> -->
+      <!-- E-Mail -->
+      <!-- <TextFieldWithAutocomplete
         class="mt-5"
         :options="[
           'Friedrichshain',
@@ -78,10 +86,23 @@
           'Schöneberg',
         ]"
         placeholder="Bezirk"
-      /> <!-- bezirk-->
-      <Slider title="Zimmer (minimum)" output-title="Anzahl" min-value="0" max-value="10" /> <!-- Zimemer -->
-      <Slider title="Monatsmiete (kalt, maximum)" output-title="Preis €" min-value="100" max-value="5000" /> <!-- Monatsmiete -->
-      <FatButton button-text="Jetzt in den Verteiler" action="submit" />
+      /> -->
+      <!-- Bezirk -->
+      <Slider
+        title="Zimmer (minimum)"
+        output-title="Anzahl"
+        :min-value="0"
+        :max-value="10"
+      />
+      <!-- Zimmer -->
+      <Slider
+        title="Monatsmiete (kalt, maximum)"
+        output-title="Preis €"
+        :min-value="100"
+        :max-value="5000"
+      />
+      <!-- Monatsmiete -->
+      <FatButton button-text="Jetzt in den Verteiler" />
     </div>
   </div>
 </template>
