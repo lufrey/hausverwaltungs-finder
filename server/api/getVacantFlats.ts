@@ -8,8 +8,8 @@ export default defineEventHandler(async () => {
     propertyManagementList.map(async ({ getFlats, id, name }) => ({
       id,
       name,
-      flats: await getFlats(browser),
-    }))
+      flats: (await getFlats(browser)).filter(Boolean),
+    })),
   );
 
   return data;
