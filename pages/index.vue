@@ -74,9 +74,8 @@
         :rules="['required', 'email']"
       /> -->
       <!-- E-Mail -->
-      <!-- <TextFieldWithAutocomplete
-        class="mt-5"
-        :options="[
+      <TextFieldWithAutocomplete
+        :suggestions="[
           'Friedrichshain',
           'Kreuzberg',
           'Neukölln',
@@ -86,7 +85,7 @@
           'Schöneberg',
         ]"
         placeholder="Bezirk"
-      /> -->
+      />
       <!-- Bezirk -->
       <Slider
         title="Zimmer (minimum)"
