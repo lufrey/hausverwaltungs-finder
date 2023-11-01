@@ -1,10 +1,10 @@
 <template>
-  <div class="layout">
+  <div class="layout flex flex-col gap-y-4">
     <div class="eyecatcher relative rounded-3xl bg-main p-5">
       <h1
         class="eyecatcher__headline ml-[-76px] mr-16 hyphens-manual text-xxl text-white"
       >
-        Berlins Wohnungs&shy;markt auf einen Blick
+        Berlins Wohnungs&shy;markt auf einen&nbsp;Blick
       </h1>
       <img
         src="../assets/questionmark.svg"
@@ -13,7 +13,7 @@
       />
     </div>
     <div
-      class="apartmentlist relative flex flex-col gap-4 rounded-3xl bg-background p-5"
+      class="apartmentlist relative mb-6 flex flex-col gap-4 rounded-3xl bg-background p-5"
     >
       <PreviewlistApartment
         apt-name="Gemütliche Wohnung für Senioren"
@@ -57,7 +57,7 @@
       decoration
     </div>
     <div
-      class="mailing_list relative rounded-3xl border border-black bg-secondary p-5"
+      class="mailing_list relative mb-6 mt-4 rounded-3xl border border-black bg-secondary p-5"
     >
       <span
         class="mail-tile-header absolute -top-8 left-[-1px] rounded-t-3xl border border-black bg-secondary px-5 pt-2 text-xl"
@@ -123,25 +123,39 @@
   text-shadow: 6px 6px 0px #a555a2;
   -webkit-text-stroke: 1px #000;
 }
-.layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  gap: 1.25rem;
-  grid-auto-flow: row;
-  grid-template-areas:
-    "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
-    "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
-    "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
-    "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
-    "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
-    "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
-    "decoration decoration decoration decoration map_preview map_preview apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
-    "decoration decoration decoration decoration map_preview map_preview apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
-    "decoration decoration decoration decoration . . . . . . . ."
-    "decoration decoration decoration decoration mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list"
-    "decoration decoration decoration decoration mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list"
-    "decoration decoration decoration decoration mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list";
+@media screen and (min-width: 768px) {
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 1.25rem;
+    grid-auto-flow: row;
+    grid-template-areas:
+      "eyecatcher eyecatcher map_preview"
+      "eyecatcher eyecatcher decoration"
+      "apartmentlist apartmentlist apartmentlist"
+      "mailing_list mailing_list mailing_list";
+  }
+}
+@media screen and (min-width: 1024px) {
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 1.25rem;
+    grid-auto-flow: row;
+    grid-template-areas:
+      "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
+      "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
+      "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
+      "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
+      "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
+      "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
+      "decoration decoration decoration decoration map_preview map_preview apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
+      "decoration decoration decoration decoration map_preview map_preview apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
+      "decoration decoration decoration decoration . . . . . . . ."
+      "decoration decoration decoration decoration mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list"
+      "decoration decoration decoration decoration mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list"
+      "decoration decoration decoration decoration mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list";
+  }
 }
 
 .eyecatcher {
