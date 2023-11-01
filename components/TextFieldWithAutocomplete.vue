@@ -11,7 +11,7 @@
         https://vuetifyjs.com/en/components/autocompletes/#usage
         or restructuring the whole thing...
     -->
-  <label for="">unfinished component</label>
+  <label for="districts">unfinished component</label>
   <multi-input
     class="relative flex h-8 w-full flex-row place-content-end items-center rounded-md bg-white shadow-inner focus-within:border-b-2 focus-within:border-b-accent"
   >
@@ -29,6 +29,7 @@
       />
     </div>
     <input
+      id="districts"
       v-model="inputValue"
       type="text"
       class="mt-0 h-full w-full min-w-max rounded-md px-1 outline-none"
