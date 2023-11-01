@@ -5,7 +5,7 @@ import { districtSchema } from "./districts";
 export const addressSchema = z.object({
   street: z.string(),
   houseNumber: z.string(),
-  zipCode: z.string(),
+  postalCode: z.string(),
   district: districtSchema.optional(),
   city: z.string(),
   coordinates: z.object({

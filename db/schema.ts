@@ -1,40 +1,51 @@
 import { relations } from "drizzle-orm";
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import {
+  sqliteTable,
+  text,
+  integer,
+  primaryKey,
+  real,
+  blob,
+} from "drizzle-orm/sqlite-core";
 
 export const tags = sqliteTable("tags", {
   id: integer("id").primaryKey(),
   name: text("name"),
 });
 
-// export const tagsRelations = relations(tags, ({ many }) => ({
-//   flats: many(flat),
-// }));
-
 export const flat = sqliteTable("flat", {
   id: integer("id").primaryKey(),
   title: text("title"),
-  price: integer("price"),
-  roomNumber: integer("roomNumber"),
-  usableArea: integer("usableArea"),
-  objectNumber: text("objectNumber"),
-  objectType: text("objectType"),
+  coldRentPrice: integer("coldRentPrice"),
+  warmRentPrice: integer("warmRentPrice"),
+  roomCount: integer("roomCount"),
+  usableArea: real("usableArea"),
   floor: integer("floor"),
+  image: blob("image"),
   addressId: integer("addressId"),
+  propertyManagementId: text("propertyManagementId"),
 });
 
-export const flatRelations = relations(flat, ({ many, one }) => ({
-  //   tags: many(tags),
+export const flatRelations = relations(flat, ({ one }) => ({
   address: one(address, { fields: [flat.addressId], references: [address.id] }),
+  propertyManagement: one(propertyManagement, {
+    fields: [flat.propertyManagementId],
+    references: [propertyManagement.slug],
+  }),
 }));
 
-export const flatToTags = sqliteTable("flatToTags", {
-  flatId: integer("flatId")
-    .notNull()
-    .references(() => flat.id),
-  tagId: integer("tagId")
-    .notNull()
-    .references(() => tags.id),
-});
+export const flatToTags = sqliteTable(
+  "flatToTags",
+  {
+    flatId: integer("flatId")
+      .notNull()
+      .references(() => flat.id),
+    tagId: integer("tagId")
+      .notNull()
+      .references(() => tags.id),
+  },
+  (table) => ({ pk: primaryKey(table.flatId, table.tagId) }),
+);
 
 export const tagsToFlatRelations = relations(tags, ({ one }) => ({
   tags: one(tags, {
@@ -82,3 +93,16 @@ export const district = sqliteTable("district", {
 export const districtRelations = relations(district, ({ many }) => ({
   postalCode: many(postalCode),
 }));
+
+export const propertyManagement = sqliteTable("propertyManagement", {
+  slug: text("slug").primaryKey(),
+  name: text("name"),
+  website: text("website"),
+});
+
+export const propertyManagementRelations = relations(
+  propertyManagement,
+  ({ many }) => ({
+    flats: many(flat),
+  }),
+);

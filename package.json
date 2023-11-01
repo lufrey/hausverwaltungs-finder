@@ -7,7 +7,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "migrateTurso": "tsx db/migrateTurso.ts"
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
@@ -20,20 +21,22 @@
     "@types/better-sqlite3": "^7.6.6",
     "@typescript-eslint/eslint-plugin": "^6.9.0",
     "@typescript-eslint/parser": "^6.9.0",
+    "dotenv": "^16.3.1",
     "drizzle-kit": "^0.19.13",
     "eslint": "^8.52.0",
     "eslint-plugin-vue": "^9.18.0",
     "nuxt": "^3.8.0",
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.6",
+    "tsx": "^3.14.0",
     "vue": "^3.3.6",
     "vue-router": "^4.2.5"
   },
   "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.3.41",
     "@libsql/client": "^0.3.6",
     "better-sqlite3": "^9.0.0",
     "drizzle-orm": "^0.28.6",
-    "@googlemaps/google-maps-services-js": "^3.3.41",
     "puppeteer": "^21.4.1",
     "zod": "^3.22.4"
   }

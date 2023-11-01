@@ -11,6 +11,7 @@ const flatSchema = z.object({
   roomCount: z.number().nullable().optional(),
   usableArea: z.number().nullable().optional(),
   address: addressSchema.nullable(),
+  floor: z.number().nullable().optional(),
   tags: z.array(z.string()),
   image: z.string().optional().nullable(),
 });
@@ -18,20 +19,19 @@ const flatSchema = z.object({
 type Flat = z.infer<typeof flatSchema>;
 
 const propertyManagementSchema = z.object({
-  id: z.string(),
+  slug: z.string(),
   name: z.string(),
   website: z.string().optional(),
 });
 
 type PropertyManagement = z.infer<typeof propertyManagementSchema> & {
-  getFlats: (browser: Browser) => Promise<Flat[]>;
+  getFlats: (browser: Browser) => Promise<(Flat | false)[]>;
 };
 
 export const propertyManagementList: PropertyManagement[] = [
   {
-    id: "stadtundland",
+    slug: "stadtundland",
     name: "Stadt und Land",
-    // @ts-ignore
     getFlats: async (browser: Browser) => {
       const url = "https://www.stadtundland.de/immobiliensuche.php";
       const page = await browser.newPage();

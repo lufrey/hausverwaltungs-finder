@@ -1,0 +1,27 @@
+{
+  "version": "5",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1698870595916,
+      "tag": "0000_striped_night_thrasher",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1698871531063,
+      "tag": "0001_unusual_abomination",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1698875842229,
+      "tag": "0003_bitter_tinkerer",
+      "breakpoints": true
+    }
+  ]
+}
