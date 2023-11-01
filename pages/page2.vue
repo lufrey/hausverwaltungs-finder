@@ -1,3 +1,8 @@
+<script setup lang="ts">
+useHead({
+  title: "Seite 2",
+});
+</script>
 <template>
   <div>
     <div>moin</div>

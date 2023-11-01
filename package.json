@@ -33,6 +33,7 @@
     "@libsql/client": "^0.3.6",
     "better-sqlite3": "^9.0.0",
     "drizzle-orm": "^0.28.6",
+    "@googlemaps/google-maps-services-js": "^3.3.41",
     "puppeteer": "^21.4.1",
     "zod": "^3.22.4"
   }

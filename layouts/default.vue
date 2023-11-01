@@ -9,7 +9,7 @@
       <slot />
     </main>
     <footer>
-      <PageFooter />
+      <!-- <PageFooter /> -->
     </footer>
   </div>
 </template>

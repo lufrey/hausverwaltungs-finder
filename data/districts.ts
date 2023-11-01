@@ -1,5 +1,5 @@
 import { z } from "zod";
-
+import { typedObjectKeys } from "@/utils/typeHelper";
 const berlinDistricts = {
   mitte: {
     title: "Mitte",

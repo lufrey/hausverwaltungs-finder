@@ -31,6 +31,7 @@ module.exports = {
     ],
     "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
     "@typescript-eslint/indent": "off",
+    indent: "off",
     semi: "off",
     quotes: ["error", "double"],
     "comma-dangle": "off",

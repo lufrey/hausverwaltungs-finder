@@ -1,18 +1,22 @@
 <template>
-  <div>
-    <div class="slider-container">
-      <label>{{ title }}</label>
+  <div class="flex flex-row justify-between gap-4">
+    <div class="grow">
+      <label class="font-medium">{{ title }}</label>
       <input
         v-model="sliderValue"
         type="range"
         :min="minValue"
         :max="maxValue"
-        class="slider"
+        class="slider h-6 w-full appearance-none rounded-full bg-white px-1 shadow-inner outline-none"
       />
     </div>
-    <div class="output-container">
-      <label>{{ outputTitle }}</label>
-      <div class="output">{{ sliderValue }}</div>
+    <div>
+      <label class="font-medium">{{ outputTitle }}</label>
+      <div
+        class="h-6 w-16 rounded-md bg-white text-center font-medium shadow-inner"
+      >
+        {{ sliderValue }}
+      </div>
     </div>
   </div>
 </template>
@@ -54,22 +58,19 @@ export default {
 </script>
 
 <style>
-.slider-container {
-  display: flex;
-  align-items: center;
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  background: #a555a2;
+  cursor: pointer;
+  border-radius: 999px;
 }
-
-.slider {
-  margin-left: 10px;
-}
-
-.output-container {
-  display: flex;
-  align-items: center;
-  margin-top: 10px;
-}
-
-.output {
-  margin-left: 10px;
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #04aa6d;
+  cursor: pointer;
 }
 </style>

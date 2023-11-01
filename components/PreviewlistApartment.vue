@@ -18,7 +18,7 @@ const toggleFavorite = () => {
 
 <template>
   <div class="flex gap-2">
-    <div class="aspect-square h-full">
+    <div class="aspect-square h-full shrink-0">
       <img
         :src="imageSrc"
         alt="Property Image"
