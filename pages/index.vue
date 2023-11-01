@@ -53,8 +53,13 @@
     <div class="map_preview relative rounded-3xl bg-[green] p-5">
       map_preview
     </div>
-    <div class="decoration relative rounded-3xl bg-[#61edff] p-5">
-      decoration
+    <div class="decoration relative overflow-hidden rounded-3xl bg-[#61edff]">
+      <ImageSlider
+        :images="[
+          'simone-hutsch-YsEOuVd7afg-unsplash.jpg',
+          'wasimul-hossain-XoIXsOnTOM0-unsplash.jpg',
+        ]"
+      />
     </div>
     <div
       class="mailing_list relative mb-6 mt-4 rounded-3xl border border-black bg-secondary p-5"
