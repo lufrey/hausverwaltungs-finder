@@ -67,13 +67,7 @@
         Lass dich ganz einfach benachrichtigen sobald neue Wohnungen mit deinen
         Kriterien verfügbar sind.
       </p>
-      <!-- Labels hinzufügen -->
-      <!-- <TextFieldWithRules
-        class="mt-5"
-        placeholder="E-Mail"
-        :rules="['required', 'email']"
-      /> -->
-      <!-- E-Mail -->
+      <TextFieldWithRules />
       <TextFieldWithAutocomplete
         :suggestions="[
           'Friedrichshain',
