@@ -1,33 +1,8 @@
 <template>
-  <!--
-        <multi-input> is a custom element.
-        PROBLEM:
-        When many selections are made, the input field starts pushing the selections out, to the left.
-        This can't be fixed with overflow-x: hidden because that automatically turns overflow-y into scroll!
-        https://stackoverflow.com/questions/6421966/css-overflow-x-visible-and-overflow-y-hidden-causing-scrollbar-issue
-        Only solutions i can think of are using pre built components from
-        https://primevue.org/autocomplete/#multiple
-        or
-        https://vuetifyjs.com/en/components/autocompletes/#usage
-        or restructuring the whole thing...
-    -->
-  <label for="districts">unfinished component</label>
-  <multi-input
+  <label for="districts">Bezirke</label>
+  <input-suggestions
     class="relative flex h-8 w-full flex-row place-content-end items-center rounded-md bg-white shadow-inner focus-within:border-b-2 focus-within:border-b-accent"
   >
-    <div
-      v-for="(item, index) in selectedItems"
-      :key="index"
-      class="ml-2 flex h-5 flex-row items-center justify-end rounded-sm bg-gray-300 pl-5 pr-2 text-s"
-    >
-      <span class="whitespace-nowrap">{{ item }}</span>
-      <img
-        src="/cancel_remove.svg"
-        alt="entfernen"
-        class="ml-1 w-4"
-        @click="removeItem(index)"
-      />
-    </div>
     <input
       id="districts"
       v-model="inputValue"
@@ -52,7 +27,25 @@
         {{ suggestion }}
       </div>
     </div>
-  </multi-input>
+  </input-suggestions>
+  <div
+    v-if="selectedItems.length"
+    class="mt-2 flex flex-row flex-wrap gap-1 rounded-md bg-white p-1"
+  >
+    <div
+      v-for="(item, index) in selectedItems"
+      :key="index"
+      class="flex h-5 w-max flex-row items-center justify-end rounded-sm bg-gray-300 px-2 py-3 text-s"
+    >
+      <span class="whitespace-nowrap">{{ item }}</span>
+      <img
+        src="/cancel_remove.svg"
+        alt="entfernen"
+        class="ml-1 w-4"
+        @click="removeItem(index)"
+      />
+    </div>
+  </div>
 </template>
 
 <script>
