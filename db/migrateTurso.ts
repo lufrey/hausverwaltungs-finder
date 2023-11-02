@@ -1,6 +1,6 @@
 import { createClient } from "@libsql/client";
 import { migrate } from "drizzle-orm/libsql/migrator";
-import { tursoDb } from "./db";
+import { tursoDb } from "./tursoDb";
 
 const { TURSO_URL, TURSO_TOKEN } = process.env;
 if (!TURSO_URL || !TURSO_TOKEN) {
@@ -14,7 +14,7 @@ const client = createClient({
 
 (async () => {
   try {
-    await migrate(tursoDb, {
+    await migrate(tursoDb!, {
       migrationsFolder: "drizzle",
     });
   } catch (err) {

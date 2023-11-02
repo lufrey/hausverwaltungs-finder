@@ -58,12 +58,10 @@ export const propertyManagementList: PropertyManagement[] = [
             ".SP-Teaser__headline",
             (el) => el.textContent?.trim() ?? "",
           );
-          // TODO: fix this
-          // console.log(await el.$(".SP-Teaser__image"));
           const imageUrl =
-            (await el.$(".SP-Teaser__image")) === null
-              ? null // @ts-ignore
-              : await el.$eval(".SP-FixedSize__raiser", (el) => el.href);
+            (await el.$(".SP-MiniGallery__list a")) === null
+              ? null
+              : await el.$eval(".SP-MiniGallery__list a", (el) => el.href);
 
           const idSource = await el.$eval(
             ".SP-LinkList__item a",
@@ -112,8 +110,8 @@ export const propertyManagementList: PropertyManagement[] = [
             coldRentPrice: parseUncleanInt(mappedTableData.coldRentPrice),
             warmRentPrice: parseUncleanInt(mappedTableData.warmRentPrice),
             usableArea: parseUncleanFloat(mappedTableData.usableArea),
-            tags: ["altbau"],
-            image: imageUrl,
+            tags: [],
+            // image: imageUrl,
           } satisfies Flat;
           const result = flatSchema.safeParse(returnFlat);
           if (result.success) {
