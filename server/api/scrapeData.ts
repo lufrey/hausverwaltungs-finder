@@ -1,8 +1,13 @@
 import { sql } from "drizzle-orm";
+import { createInsertSchema } from "drizzle-zod";
+import { type z } from "zod";
 import { propertyManagementList } from "~/data/propertyManagementList";
 import { db } from "~/db/db";
-import { address, flat, propertyManagement } from "~/db/schema";
+import { address, flat, postalCode, propertyManagement } from "~/db/schema";
 import { getBrowser } from "~/utils/getBrowser";
+
+const insertFlatSchema = createInsertSchema(flat);
+type InsertFlat = z.infer<typeof insertFlatSchema>;
 
 export default defineEventHandler(async () => {
   // update property management data in db
@@ -36,38 +41,75 @@ export default defineEventHandler(async () => {
 
   propertyManagementList.forEach(async ({ getFlats, slug }) => {
     const flats = (await getFlats(browser)).filter(Boolean);
-    // TODO: add some kind of generatable index to the address table
 
-    // create all addresses that dont exist
-    // const addresses = flats
-    //   .map((f) => f.address)
-    //   .filter(Boolean)
-    //   .map((a) => ({
-    //     id: a.id,
-    //     street: a.street,
-    //     city: a.city,
-    //     postalCodeId: a.postalCode,
-    //   }));
+    const addresses = flats.map((f) => f.address).filter(Boolean);
 
-    // await db.insert(address).values(addresses).onConflictDoNothing();
+    // create postal code if not exists
+    await db
+      .insert(postalCode)
+      .values(
+        addresses
+          .map((a) => a.postalCode)
+          .filter(Boolean)
+          .map((code) => ({
+            code,
+          })),
+      )
+      .onConflictDoNothing();
 
-    await db.insert(flat).values(
-      flats.map((f) => {
-        return {
-          // addressId: f.address ? f.address. : null,
-          coldRentPrice: f.coldRentPrice,
-          floor: f.floor,
-          image: null,
-          propertyManagementId: slug,
+    await db
+      .insert(address)
+      .values(addresses)
+      .onConflictDoUpdate({
+        target: address.id,
+        set: {
+          street: sql`excluded.street`,
+          city: sql`excluded.city`,
+          streetNumber: sql`excluded.streetNumber`,
+          postalCode: sql`excluded.postalCode`,
+          longitude: sql`excluded.longitude`,
+          latitude: sql`excluded.latitude`,
+        },
+        where: sql`address.id = excluded.id`,
+      });
 
-          // id: f.id,
-          roomCount: f.roomCount,
-          title: f.title,
-          usableArea: f.usableArea,
-          warmRentPrice: f.warmRentPrice,
-        };
-      }),
-    );
+    await db
+      .insert(flat)
+      .values(
+        flats.map((f) => {
+          return {
+            addressId: f.address ? f.address.id : null,
+            coldRentPrice: f.coldRentPrice,
+            floor: f.floor,
+            image: null,
+            propertyManagementId: slug,
+            id: f.id,
+            roomCount: f.roomCount,
+            title: f.title,
+            usableArea: f.usableArea,
+            warmRentPrice: f.warmRentPrice,
+            tags: f.tags,
+          } satisfies z.infer<typeof insertFlatSchema>;
+        }),
+      )
+      .onConflictDoUpdate({
+        target: flat.id,
+        set: {
+          addressId: sql`excluded.addressId`,
+          coldRentPrice: sql`excluded.coldRentPrice`,
+          floor: sql`excluded.floor`,
+          image: sql`excluded.image`,
+          propertyManagementId: sql`excluded.propertyManagementId`,
+          roomCount: sql`excluded.roomCount`,
+          title: sql`excluded.title`,
+          usableArea: sql`excluded.usableArea`,
+          warmRentPrice: sql`excluded.warmRentPrice`,
+          firstSeen: sql`excluded.firstSeen`,
+          lastSeen: sql`excluded.lastSeen`,
+          tags: sql`excluded.tags`,
+        },
+        where: sql`flat.id = excluded.id`,
+      });
   });
 
   return data;

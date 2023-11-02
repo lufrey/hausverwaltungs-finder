@@ -1,24 +1,16 @@
-import { z } from "zod";
 import { Client } from "@googlemaps/google-maps-services-js";
-import { districtSchema } from "./districts";
+import { createInsertSchema } from "drizzle-zod";
+import type { z } from "zod";
+import { address } from "~/db/schema";
+import { hashString } from "~/utils/util";
 
-export const addressSchema = z.object({
-  street: z.string(),
-  houseNumber: z.string(),
-  postalCode: z.string(),
-  district: districtSchema.optional(),
-  city: z.string(),
-  coordinates: z.object({
-    lat: z.number(),
-    lng: z.number(),
-  }),
-});
+export const insertAddressSchema = createInsertSchema(address);
 
-export const getAddress = async (address: string) => {
+export const getAddress = async (rawAddressString: string) => {
   const client = new Client({});
   const x = await client.geocode({
     params: {
-      address,
+      address: rawAddressString,
       key: process.env.GOOGLE_MAPS_API_KEY ?? "",
       region: "de",
       language: "de",
@@ -28,12 +20,12 @@ export const getAddress = async (address: string) => {
   const addressData = x.data.results[0];
 
   const addressComponentMap = {
-    street_number: "houseNumber",
+    street_number: "streetNumber",
     route: "street",
     sublocality_level_1: "district",
     locality: "city",
     postal_code: "zipCode",
-  };
+  } as const;
 
   const addressComponents = addressData.address_components.reduce(
     (acc, cur) => {
@@ -45,23 +37,32 @@ export const getAddress = async (address: string) => {
 
       return acc;
     },
-    {} as any,
+    {} as Record<
+      (typeof addressComponentMap)[keyof typeof addressComponentMap],
+      string
+    >,
   );
 
-  const result = addressSchema.safeParse({
+  const address = {
+    id: await hashString(
+      addressComponents.street +
+        addressComponents.streetNumber +
+        addressComponents.zipCode +
+        addressComponents.city,
+    ),
+    postalCode: addressComponents.zipCode,
     street: addressComponents.street,
-    houseNumber: addressComponents.houseNumber,
-    zipCode: addressComponents.zipCode,
     city: addressComponents.city,
-    coordinates: {
-      lat: addressData.geometry.location.lat,
-      lng: addressData.geometry.location.lng,
-    },
-  });
+    streetNumber: addressComponents.streetNumber,
+    longitude: addressData.geometry.location.lng,
+    latitude: addressData.geometry.location.lat,
+  } satisfies z.infer<typeof insertAddressSchema>;
+
+  const result = insertAddressSchema.safeParse(address);
   if (result.success) {
     return result.data;
   } else {
-    console.log(address);
+    // console.log(address);
     return null;
   }
 };

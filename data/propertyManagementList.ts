@@ -1,7 +1,8 @@
 import type { Browser } from "puppeteer";
 import { z } from "zod";
-import { addressSchema, getAddress } from "./address";
-import { parseUncleanFloat, parseUncleanInt } from "~/utils/util";
+import { getAddress, insertAddressSchema } from "./address";
+import { tagsSchema } from "./tags";
+import { hashString, parseUncleanFloat, parseUncleanInt } from "~/utils/util";
 
 const flatSchema = z.object({
   id: z.string(),
@@ -10,13 +11,13 @@ const flatSchema = z.object({
   warmRentPrice: z.number().nullable().optional(),
   roomCount: z.number().nullable().optional(),
   usableArea: z.number().nullable().optional(),
-  address: addressSchema.nullable(),
+  address: insertAddressSchema,
   floor: z.number().nullable().optional(),
-  tags: z.array(z.string()),
+  tags: tagsSchema.optional().nullable(),
   image: z.string().optional().nullable(),
 });
 
-type Flat = z.infer<typeof flatSchema>;
+export type Flat = z.infer<typeof flatSchema>;
 
 const propertyManagementSchema = z.object({
   slug: z.string(),
@@ -58,11 +59,17 @@ export const propertyManagementList: PropertyManagement[] = [
             (el) => el.textContent?.trim() ?? "",
           );
           // TODO: fix this
-          console.log(await el.$(".SP-Teaser__image"));
+          // console.log(await el.$(".SP-Teaser__image"));
           const imageUrl =
             (await el.$(".SP-Teaser__image")) === null
               ? null // @ts-ignore
               : await el.$eval(".SP-FixedSize__raiser", (el) => el.href);
+
+          const idSource = await el.$eval(
+            ".SP-LinkList__item a",
+            (el) => el.href,
+          );
+
           const tableData = await el.$eval(".SP-Table--static tbody", (el) => {
             return Array.from(el.children).reduce((acc, cur) => {
               const key =
@@ -92,17 +99,22 @@ export const propertyManagementList: PropertyManagement[] = [
             >,
           );
 
+          const address = await getAddress(mappedTableData.address);
+          if (!address) {
+            return false;
+          }
+
           const returnFlat = {
-            address: await getAddress(mappedTableData.address),
+            address,
             title,
-            id: "1",
+            id: await hashString(idSource),
             roomCount: parseUncleanInt(mappedTableData.roomCount),
             coldRentPrice: parseUncleanInt(mappedTableData.coldRentPrice),
             warmRentPrice: parseUncleanInt(mappedTableData.warmRentPrice),
             usableArea: parseUncleanFloat(mappedTableData.usableArea),
-            tags: [],
+            tags: ["altbau"],
             image: imageUrl,
-          };
+          } satisfies Flat;
           const result = flatSchema.safeParse(returnFlat);
           if (result.success) {
             return result.data;

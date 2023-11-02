@@ -37,6 +37,7 @@
     "@libsql/client": "^0.3.6",
     "better-sqlite3": "^9.0.0",
     "drizzle-orm": "^0.28.6",
+    "drizzle-zod": "^0.5.1",
     "puppeteer": "^21.4.1",
     "zod": "^3.22.4"
   }

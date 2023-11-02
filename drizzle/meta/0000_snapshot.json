@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "90519187-5b3e-4ff0-b5b4-246c7d30d94b",
+  "id": "d9d46ed3-9925-4740-9563-072028ea9da2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "address": {
@@ -9,7 +9,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "text",
           "primaryKey": true,
           "notNull": true,
           "autoincrement": false
@@ -28,9 +28,30 @@
           "notNull": false,
           "autoincrement": false
         },
+        "streetNumber": {
+          "name": "streetNumber",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "postalCode": {
           "name": "postalCode",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "longitude": {
+          "name": "longitude",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "latitude": {
+          "name": "latitude",
+          "type": "real",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -69,7 +90,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "text",
           "primaryKey": true,
           "notNull": true,
           "autoincrement": false
@@ -125,7 +146,7 @@
         },
         "addressId": {
           "name": "addressId",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -136,68 +157,32 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "firstSeen": {
+          "name": "firstSeen",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "lastSeen": {
+          "name": "lastSeen",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "tags": {
+          "name": "tags",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "flatToTags": {
-      "name": "flatToTags",
-      "columns": {
-        "flatId": {
-          "name": "flatId",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "tagId": {
-          "name": "tagId",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "flatToTags_flatId_flat_id_fk": {
-          "name": "flatToTags_flatId_flat_id_fk",
-          "tableFrom": "flatToTags",
-          "tableTo": "flat",
-          "columnsFrom": [
-            "flatId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "flatToTags_tagId_tags_id_fk": {
-          "name": "flatToTags_tagId_tags_id_fk",
-          "tableFrom": "flatToTags",
-          "tableTo": "tags",
-          "columnsFrom": [
-            "tagId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "flatToTags_flatId_tagId_pk": {
-          "columns": [
-            "flatId",
-            "tagId"
-          ]
-        }
-      },
       "uniqueConstraints": {}
     },
     "postalCode": {
@@ -226,8 +211,8 @@
     "propertyManagement": {
       "name": "propertyManagement",
       "columns": {
-        "id": {
-          "name": "id",
+        "slug": {
+          "name": "slug",
           "type": "text",
           "primaryKey": true,
           "notNull": true,
@@ -242,29 +227,6 @@
         },
         "website": {
           "name": "website",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "tags": {
-      "name": "tags",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "name": {
-          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": false,

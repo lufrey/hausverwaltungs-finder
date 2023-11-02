@@ -3,18 +3,13 @@ import {
   sqliteTable,
   text,
   integer,
-  primaryKey,
   real,
   blob,
 } from "drizzle-orm/sqlite-core";
-
-export const tags = sqliteTable("tags", {
-  id: integer("id").primaryKey(),
-  name: text("name"),
-});
+import type { tagKeys } from "~/data/tags";
 
 export const flat = sqliteTable("flat", {
-  id: integer("id").primaryKey(),
+  id: text("id").primaryKey(),
   title: text("title"),
   coldRentPrice: integer("coldRentPrice"),
   warmRentPrice: integer("warmRentPrice"),
@@ -22,8 +17,11 @@ export const flat = sqliteTable("flat", {
   usableArea: real("usableArea"),
   floor: integer("floor"),
   image: blob("image"),
-  addressId: integer("addressId"),
+  addressId: text("addressId"),
   propertyManagementId: text("propertyManagementId"),
+  firstSeen: integer("firstSeen", { mode: "timestamp" }),
+  lastSeen: integer("lastSeen", { mode: "timestamp" }),
+  tags: text("tags", { mode: "json" }).$type<typeof tagKeys>(),
 });
 
 export const flatRelations = relations(flat, ({ one }) => ({
@@ -34,40 +32,19 @@ export const flatRelations = relations(flat, ({ one }) => ({
   }),
 }));
 
-export const flatToTags = sqliteTable(
-  "flatToTags",
-  {
-    flatId: integer("flatId")
-      .notNull()
-      .references(() => flat.id),
-    tagId: integer("tagId")
-      .notNull()
-      .references(() => tags.id),
-  },
-  (table) => ({ pk: primaryKey(table.flatId, table.tagId) }),
-);
-
-export const tagsToFlatRelations = relations(tags, ({ one }) => ({
-  tags: one(tags, {
-    fields: [tags.id],
-    references: [tags.id],
-  }),
-  flat: one(flat, {
-    fields: [tags.id],
-    references: [flat.id],
-  }),
-}));
-
 export const address = sqliteTable("address", {
-  id: integer("id").primaryKey(),
+  id: text("id").primaryKey(),
   street: text("street"),
   city: text("city"),
-  postalCodeId: text("postalCode"),
+  streetNumber: text("streetNumber"),
+  postalCode: text("postalCode"),
+  longitude: real("longitude"),
+  latitude: real("latitude"),
 });
 
 export const addressRelations = relations(address, ({ one, many }) => ({
   postalCode: one(postalCode, {
-    fields: [address.postalCodeId],
+    fields: [address.postalCode],
     references: [postalCode.code],
   }),
   flats: many(flat),
