@@ -7,14 +7,15 @@ import { hashString, parseUncleanFloat, parseUncleanInt } from "~/utils/util";
 const flatSchema = z.object({
   id: z.string(),
   title: z.string(),
-  coldRentPrice: z.number().nullable().optional(),
+  coldRentPrice: z.number(),
   warmRentPrice: z.number().nullable().optional(),
   roomCount: z.number().nullable().optional(),
   usableArea: z.number().nullable().optional(),
   address: insertAddressSchema,
   floor: z.number().nullable().optional(),
-  tags: tagsSchema.optional().nullable(),
+  tags: tagsSchema,
   image: z.string().optional().nullable(),
+  url: z.string(),
 });
 
 export type Flat = z.infer<typeof flatSchema>;
@@ -98,7 +99,8 @@ export const propertyManagementList: PropertyManagement[] = [
           );
 
           const address = await getAddress(mappedTableData.address);
-          if (!address) {
+          const coldRentPrice = parseUncleanInt(mappedTableData.coldRentPrice);
+          if (!address || !coldRentPrice || !title) {
             return false;
           }
 
@@ -107,10 +109,11 @@ export const propertyManagementList: PropertyManagement[] = [
             title,
             id: await hashString(idSource),
             roomCount: parseUncleanInt(mappedTableData.roomCount),
-            coldRentPrice: parseUncleanInt(mappedTableData.coldRentPrice),
+            coldRentPrice,
             warmRentPrice: parseUncleanInt(mappedTableData.warmRentPrice),
             usableArea: parseUncleanFloat(mappedTableData.usableArea),
             tags: [],
+            url: idSource,
             // image: imageUrl,
           } satisfies Flat;
           const result = flatSchema.safeParse(returnFlat);

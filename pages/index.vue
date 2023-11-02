@@ -1,3 +1,12 @@
+<script setup lang="ts">
+const { $client } = useNuxtApp();
+const propertyManagementsWithFlats = await $client.flat.getAll.query();
+const flats = propertyManagementsWithFlats
+  .map((propertyManagement) => propertyManagement.flats)
+  .flat();
+console.log(flats);
+</script>
+
 <template>
   <div class="layout flex flex-col gap-y-4">
     <div class="eyecatcher relative rounded-3xl bg-main p-5">
@@ -15,7 +24,27 @@
     <div
       class="apartmentlist relative mb-6 flex flex-col gap-4 rounded-3xl bg-background p-5"
     >
+      <!-- <PreviewlistApartment
+        v-for="flat in flats"
+        :key="flat.id"
+        v-bind="flat"
+        :favorite="false"
+        image-src="/apartment_example_image.png"
+      /> -->
+
       <PreviewlistApartment
+        v-for="flat in flats"
+        :key="flat.id"
+        :title="flat.title"
+        :address="flat.address"
+        :cold-rent-price="flat.coldRentPrice"
+        :tags="flat.tags"
+        :favorite="false"
+        :usable-area="flat.usableArea"
+        :image-src="`/api/image/${flat.id}`"
+      />
+
+      <!-- <PreviewlistApartment
         apt-name="Gemütliche Wohnung für Senioren"
         apt-street="Rigaerstraße 14"
         apt-district="Friedrichshain"
@@ -44,7 +73,7 @@
         :usable-area="13"
         :favorite="true"
         image-src="/apartment_example_image.png"
-      />
+      /> -->
       <FatButton
         button-text="Alle Wohnungen ansehen"
         href="/page2"

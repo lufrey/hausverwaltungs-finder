@@ -1,13 +1,13 @@
+import fs from "fs";
 import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { type z } from "zod";
 import { propertyManagementList } from "~/data/propertyManagementList";
 import { db } from "~/db/db";
-import { address, flat, postalCode, propertyManagement } from "~/db/schema";
+import { address, flat, propertyManagement } from "~/db/schema";
 import { getBrowser } from "~/utils/getBrowser";
 
 const insertFlatSchema = createInsertSchema(flat);
-type InsertFlat = z.infer<typeof insertFlatSchema>;
 
 export default defineEventHandler(async () => {
   // update property management data in db
@@ -44,19 +44,6 @@ export default defineEventHandler(async () => {
 
     const addresses = flats.map((f) => f.address).filter(Boolean);
 
-    // create postal code if not exists
-    await db
-      .insert(postalCode)
-      .values(
-        addresses
-          .map((a) => a.postalCode)
-          .filter(Boolean)
-          .map((code) => ({
-            code,
-          })),
-      )
-      .onConflictDoNothing();
-
     await db
       .insert(address)
       .values(addresses)
@@ -73,22 +60,27 @@ export default defineEventHandler(async () => {
         where: sql`address.id = excluded.id`,
       });
 
+    const image = fs.readFileSync("./assets/placeholder.png");
+
     await db
       .insert(flat)
       .values(
         flats.map((f) => {
           return {
-            addressId: f.address ? f.address.id : null,
+            addressId: f.address.id,
             coldRentPrice: f.coldRentPrice,
             floor: f.floor,
-            image: null,
             propertyManagementId: slug,
             id: f.id,
             roomCount: f.roomCount,
             title: f.title,
             usableArea: f.usableArea,
-            warmRentPrice: f.warmRentPrice,
-            tags: f.tags,
+            warmRentPrice: f.warmRentPrice!,
+            tags: f.tags ?? [],
+            lastSeen: new Date(),
+            firstSeen: new Date(),
+            url: f.url,
+            image,
           } satisfies z.infer<typeof insertFlatSchema>;
         }),
       )
@@ -104,7 +96,6 @@ export default defineEventHandler(async () => {
           title: sql`excluded.title`,
           usableArea: sql`excluded.usableArea`,
           warmRentPrice: sql`excluded.warmRentPrice`,
-          firstSeen: sql`excluded.firstSeen`,
           lastSeen: sql`excluded.lastSeen`,
           tags: sql`excluded.tags`,
         },

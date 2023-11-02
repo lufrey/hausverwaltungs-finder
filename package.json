@@ -35,10 +35,13 @@
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^3.3.41",
     "@libsql/client": "^0.3.6",
+    "@trpc/client": "^10.43.1",
+    "@trpc/server": "^10.43.1",
     "better-sqlite3": "^9.0.0",
     "drizzle-orm": "^0.28.6",
     "drizzle-zod": "^0.5.1",
     "puppeteer": "^21.4.1",
+    "trpc-nuxt": "^0.10.12",
     "zod": "^3.22.4"
   }
 }

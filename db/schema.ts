@@ -10,18 +10,19 @@ import type { tagKeys } from "~/data/tags";
 
 export const flat = sqliteTable("flat", {
   id: text("id").primaryKey(),
-  title: text("title"),
-  coldRentPrice: integer("coldRentPrice"),
+  title: text("title").notNull(),
+  coldRentPrice: integer("coldRentPrice").notNull(),
   warmRentPrice: integer("warmRentPrice"),
   roomCount: integer("roomCount"),
   usableArea: real("usableArea"),
   floor: integer("floor"),
-  image: blob("image"),
-  addressId: text("addressId"),
+  image: blob("image", { mode: "buffer" }),
+  addressId: text("addressId").notNull(),
   propertyManagementId: text("propertyManagementId"),
-  firstSeen: integer("firstSeen", { mode: "timestamp" }),
-  lastSeen: integer("lastSeen", { mode: "timestamp" }),
-  tags: text("tags", { mode: "json" }).$type<typeof tagKeys>(),
+  firstSeen: integer("firstSeen", { mode: "timestamp" }).notNull(),
+  lastSeen: integer("lastSeen", { mode: "timestamp" }).notNull(),
+  url: text("url").notNull(),
+  tags: text("tags", { mode: "json" }).$type<typeof tagKeys>().notNull(),
 });
 
 export const flatRelations = relations(flat, ({ one }) => ({
@@ -34,46 +35,21 @@ export const flatRelations = relations(flat, ({ one }) => ({
 
 export const address = sqliteTable("address", {
   id: text("id").primaryKey(),
-  street: text("street"),
-  city: text("city"),
-  streetNumber: text("streetNumber"),
-  postalCode: text("postalCode"),
+  street: text("street").notNull(),
+  city: text("city").notNull(),
+  streetNumber: text("streetNumber").notNull(),
+  postalCode: text("postalCode").notNull(),
   longitude: real("longitude"),
   latitude: real("latitude"),
 });
 
-export const addressRelations = relations(address, ({ one, many }) => ({
-  postalCode: one(postalCode, {
-    fields: [address.postalCode],
-    references: [postalCode.code],
-  }),
+export const addressRelations = relations(address, ({ many }) => ({
   flats: many(flat),
-}));
-
-export const postalCode = sqliteTable("postalCode", {
-  code: text("code").primaryKey(),
-  districtId: integer("districtId"),
-});
-
-export const postalCodeRelations = relations(postalCode, ({ one }) => ({
-  district: one(district, {
-    fields: [postalCode.districtId],
-    references: [district.id],
-  }),
-}));
-
-export const district = sqliteTable("district", {
-  id: integer("id").primaryKey(),
-  name: text("name"),
-});
-
-export const districtRelations = relations(district, ({ many }) => ({
-  postalCode: many(postalCode),
 }));
 
 export const propertyManagement = sqliteTable("propertyManagement", {
   slug: text("slug").primaryKey(),
-  name: text("name"),
+  name: text("name").notNull(),
   website: text("website"),
 });
 

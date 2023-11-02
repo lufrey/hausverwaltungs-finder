@@ -1,41 +1,32 @@
 CREATE TABLE `address` (
 	`id` text PRIMARY KEY NOT NULL,
-	`street` text,
-	`city` text,
-	`streetNumber` text,
-	`postalCode` text,
+	`street` text NOT NULL,
+	`city` text NOT NULL,
+	`streetNumber` text NOT NULL,
+	`postalCode` text NOT NULL,
 	`longitude` real,
 	`latitude` real
 );
 --> statement-breakpoint
-CREATE TABLE `district` (
-	`id` integer PRIMARY KEY NOT NULL,
-	`name` text
-);
---> statement-breakpoint
 CREATE TABLE `flat` (
 	`id` text PRIMARY KEY NOT NULL,
-	`title` text,
-	`coldRentPrice` integer,
+	`title` text NOT NULL,
+	`coldRentPrice` integer NOT NULL,
 	`warmRentPrice` integer,
 	`roomCount` integer,
 	`usableArea` real,
 	`floor` integer,
 	`image` blob,
-	`addressId` text,
+	`addressId` text NOT NULL,
 	`propertyManagementId` text,
-	`firstSeen` integer,
-	`lastSeen` integer,
-	`tags` text
-);
---> statement-breakpoint
-CREATE TABLE `postalCode` (
-	`code` text PRIMARY KEY NOT NULL,
-	`districtId` integer
+	`firstSeen` integer NOT NULL,
+	`lastSeen` integer NOT NULL,
+	`url` text NOT NULL,
+	`tags` text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE `propertyManagement` (
 	`slug` text PRIMARY KEY NOT NULL,
-	`name` text,
+	`name` text NOT NULL,
 	`website` text
 );

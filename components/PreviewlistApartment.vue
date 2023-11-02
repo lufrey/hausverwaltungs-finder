@@ -1,12 +1,15 @@
 <script lang="ts" setup>
 const props = defineProps<{
+  title: string;
+  address: {
+    street: string;
+    postalCode: string;
+    streetNumber: string;
+  };
+  coldRentPrice: number;
   imageSrc: string;
-  aptName: string;
-  aptStreet: string;
-  aptDistrict: string;
   tags: string[];
-  price: number;
-  usableArea: number;
+  usableArea: number | null;
   favorite: boolean;
 }>();
 
@@ -19,6 +22,7 @@ const toggleFavorite = () => {
 <template>
   <div class="flex gap-2">
     <div class="aspect-square h-full shrink-0">
+      <!-- TODO: Replace with nuxt/image -->
       <img
         :src="imageSrc"
         alt="Property Image"
@@ -29,10 +33,11 @@ const toggleFavorite = () => {
       <h3
         class="overflow-hidden text-ellipsis whitespace-nowrap text-l leading-5"
       >
-        {{ aptName }}
+        {{ title }}
       </h3>
       <h4 class="overflow-hidden text-ellipsis text-s font-light">
-        {{ aptStreet }} - {{ aptDistrict }}
+        {{ address.street }} {{ address.streetNumber }} -
+        {{ address.postalCode }}
       </h4>
       <div class="tags-container flex flex-row gap-x-1">
         <span
@@ -44,7 +49,9 @@ const toggleFavorite = () => {
       </div>
     </div>
     <div class="flex shrink-0 flex-grow flex-col items-end gap-1">
-      <span class="price block text-l font-light leading-5">{{ price }} €</span>
+      <span class="price block text-l font-light leading-5"
+        >{{ coldRentPrice }} €</span
+      >
       <span class="square-footage block text-s font-light"
         >{{ usableArea }} m²</span
       >
