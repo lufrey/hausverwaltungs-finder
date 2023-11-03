@@ -1,7 +1,7 @@
-import fs from "fs";
 import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { type z } from "zod";
+import sharp from "sharp";
 import { propertyManagementList } from "~/data/propertyManagementList";
 import { db } from "~/db/db";
 import { address, flat, propertyManagement } from "~/db/schema";
@@ -60,29 +60,39 @@ export default defineEventHandler(async () => {
         where: sql`address.id = excluded.id`,
       });
 
-    const image = fs.readFileSync("./assets/placeholder.png");
-
     await db
       .insert(flat)
       .values(
-        flats.map((f) => {
-          return {
-            addressId: f.address.id,
-            coldRentPrice: f.coldRentPrice,
-            floor: f.floor,
-            propertyManagementId: slug,
-            id: f.id,
-            roomCount: f.roomCount,
-            title: f.title,
-            usableArea: f.usableArea,
-            warmRentPrice: f.warmRentPrice!,
-            tags: f.tags ?? [],
-            lastSeen: new Date(),
-            firstSeen: new Date(),
-            url: f.url,
-            image,
-          } satisfies z.infer<typeof insertFlatSchema>;
-        }),
+        await Promise.all(
+          flats.map(async (f) => {
+            let image: Buffer | null = null;
+            if (f.imageUrl) {
+              const imageBuffer = await (await fetch(f.imageUrl)).arrayBuffer();
+              image = await sharp(imageBuffer)
+                .resize(200, 200, {
+                  fit: "cover",
+                })
+                .toBuffer();
+            }
+
+            return {
+              addressId: f.address.id,
+              coldRentPrice: f.coldRentPrice,
+              floor: f.floor,
+              propertyManagementId: slug,
+              id: f.id,
+              roomCount: f.roomCount,
+              title: f.title,
+              usableArea: f.usableArea,
+              warmRentPrice: f.warmRentPrice!,
+              tags: f.tags ?? [],
+              lastSeen: new Date(),
+              firstSeen: new Date(),
+              url: f.url,
+              image,
+            } satisfies z.infer<typeof insertFlatSchema>;
+          }),
+        ),
       )
       .onConflictDoUpdate({
         target: flat.id,

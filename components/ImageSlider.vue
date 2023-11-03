@@ -1,3 +1,30 @@
+<script setup lang="ts">
+const props = defineProps({
+  images: {
+    type: Array,
+    default: () => ["simone-hutsch-YsEOuVd7afg-unsplash.jpg"],
+  },
+  interval: {
+    type: Number,
+    default: 7000,
+  }, // Time in milliseconds for each image transition
+});
+const currentImageIndex = ref(0);
+const autoAdvance = () => {
+  currentImageIndex.value = (currentImageIndex.value + 1) % props.images.length;
+};
+// Start the automatic image transition when the component is mounted
+let intervalId: number;
+onMounted(() => {
+  intervalId = props.interval; // Default to 5 seconds
+  setInterval(autoAdvance, intervalId);
+});
+onUnmounted(() => {
+  // Stop the automatic image transition when the component is unmounted
+  clearInterval(intervalId);
+});
+</script>
+
 <template>
   <transition-group
     tag="div"
@@ -5,52 +32,16 @@
     name="fade"
     mode="out-in"
   >
-    <img
+    <NuxtImg
       :key="currentImageIndex"
-      :src="'/decoration/' + currentImage"
+      :src="`/decoration/${images[currentImageIndex]}`"
       alt="Image Carousel"
       class="absolute h-full w-full object-cover"
+      sizes="100vw sm:50vw md:400px"
     />
   </transition-group>
 </template>
-<script>
-import { ref, watch, onMounted } from "vue";
-export default {
-  props: {
-    images: {
-      type: Array,
-      default: () => ["simone-hutsch-YsEOuVd7afg-unsplash.jpg"],
-    },
-    interval: {
-      type: Number,
-      default: 7000,
-    }, // Time in milliseconds for each image transition
-  },
-  setup(props) {
-    const currentImageIndex = ref(0);
-    // Compute the current image source based on the currentImageIndex
-    const currentImage = ref(props.images[currentImageIndex.value]);
-    // Watch for changes in the currentImageIndex and update the currentImage
-    watch(currentImageIndex, (newIndex) => {
-      currentImage.value = props.images[newIndex];
-    });
-    // Automatically advance to the next image at the specified interval
-    const autoAdvance = () => {
-      currentImageIndex.value =
-        (currentImageIndex.value + 1) % props.images.length;
-    };
-    // Start the automatic image transition when the component is mounted
-    onMounted(() => {
-      const interval = props.interval; // Default to 5 seconds
-      setInterval(autoAdvance, interval);
-    });
-    return {
-      currentImageIndex,
-      currentImage,
-    };
-  },
-};
-</script>
+
 <style>
 .fade-move, /* apply transition to moving elements */
 .fade-enter-active,

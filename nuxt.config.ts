@@ -34,6 +34,7 @@ export default defineNuxtConfig({
         },
       },
     ],
+    "@nuxt/image",
   ],
   build: {
     transpile: ["trpc-nuxt"],

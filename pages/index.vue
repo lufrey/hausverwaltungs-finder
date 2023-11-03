@@ -24,14 +24,6 @@ console.log(flats);
     <div
       class="apartmentlist relative mb-6 flex flex-col gap-4 rounded-3xl bg-background p-5"
     >
-      <!-- <PreviewlistApartment
-        v-for="flat in flats"
-        :key="flat.id"
-        v-bind="flat"
-        :favorite="false"
-        image-src="/apartment_example_image.png"
-      /> -->
-
       <PreviewlistApartment
         v-for="flat in flats"
         :key="flat.id"
@@ -42,6 +34,7 @@ console.log(flats);
         :favorite="false"
         :usable-area="flat.usableArea"
         :image-src="`/api/image/${flat.id}`"
+        :url="flat.url"
       />
 
       <!-- <PreviewlistApartment
@@ -82,7 +75,7 @@ console.log(flats);
     <div class="map_preview relative rounded-3xl bg-[green] p-5">
       map_preview
     </div>
-    <div class="decoration relative overflow-hidden rounded-3xl bg-[#61edff]">
+    <div class="decoration relative overflow-hidden rounded-3xl">
       <ImageSlider
         :images="[
           'simone-hutsch-YsEOuVd7afg-unsplash.jpg',

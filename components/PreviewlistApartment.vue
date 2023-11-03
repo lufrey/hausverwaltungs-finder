@@ -11,6 +11,7 @@ const props = defineProps<{
   tags: string[];
   usableArea: number | null;
   favorite: boolean;
+  url: string;
 }>();
 
 const isFavoriteShown = ref(props.favorite);
@@ -23,22 +24,28 @@ const toggleFavorite = () => {
   <div class="flex gap-2">
     <div class="aspect-square h-full shrink-0">
       <!-- TODO: Replace with nuxt/image -->
+
       <img
         :src="imageSrc"
         alt="Property Image"
-        class="h-full w-full rounded-lg"
+        class="h-16 w-16 rounded-lg"
       />
     </div>
     <div class="flex flex-col gap-1 overflow-hidden">
-      <h3
-        class="overflow-hidden text-ellipsis whitespace-nowrap text-l leading-5"
+      <NuxtLink
+        class="flex flex-col gap-1"
+        :to="url"
       >
-        {{ title }}
-      </h3>
-      <h4 class="overflow-hidden text-ellipsis text-s font-light">
-        {{ address.street }} {{ address.streetNumber }} -
-        {{ address.postalCode }}
-      </h4>
+        <h3
+          class="overflow-hidden text-ellipsis whitespace-nowrap text-l leading-5"
+        >
+          {{ title }}
+        </h3>
+        <h4 class="overflow-hidden text-ellipsis text-s font-light">
+          {{ address.street }} {{ address.streetNumber }} -
+          {{ address.postalCode }}
+        </h4>
+      </NuxtLink>
       <div class="tags-container flex flex-row gap-x-1">
         <span
           v-for="tag in tags as string[]"

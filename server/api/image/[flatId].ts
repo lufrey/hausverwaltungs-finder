@@ -3,10 +3,8 @@ import { db } from "~/db/db";
 export default defineEventHandler(async (e) => {
   const flatId = getRouterParam(e, "flatId");
 
-  console.log(flatId);
-
   if (!flatId) {
-    return {};
+    return null;
   }
   try {
     const x = await db.query.flat.findFirst({
@@ -19,5 +17,5 @@ export default defineEventHandler(async (e) => {
     console.error(err);
   }
 
-  return {};
+  return null;
 });

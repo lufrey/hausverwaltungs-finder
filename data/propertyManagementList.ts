@@ -14,7 +14,7 @@ const flatSchema = z.object({
   address: insertAddressSchema,
   floor: z.number().nullable().optional(),
   tags: tagsSchema,
-  image: z.string().optional().nullable(),
+  imageUrl: z.string().optional().nullable(),
   url: z.string(),
 });
 
@@ -114,7 +114,7 @@ export const propertyManagementList: PropertyManagement[] = [
             usableArea: parseUncleanFloat(mappedTableData.usableArea),
             tags: [],
             url: idSource,
-            // image: imageUrl,
+            imageUrl,
           } satisfies Flat;
           const result = flatSchema.safeParse(returnFlat);
           if (result.success) {
