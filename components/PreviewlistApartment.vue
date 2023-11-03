@@ -7,7 +7,7 @@ const props = defineProps<{
     streetNumber: string;
   };
   coldRentPrice: number;
-  imageSrc: string;
+  imageSrc: string | null;
   tags: string[];
   usableArea: number | null;
   favorite: boolean;
@@ -26,7 +26,7 @@ const toggleFavorite = () => {
       <!-- TODO: Replace with nuxt/image -->
 
       <img
-        :src="imageSrc"
+        :src="imageSrc ?? '/apartment_example_image.png'"
         alt="Property Image"
         class="h-16 w-16 rounded-lg"
       />
