@@ -1,7 +1,7 @@
 import type { Browser } from "puppeteer";
 import { z } from "zod";
 import { getAddress, insertAddressSchema } from "./address";
-import { tagsSchema } from "./tags";
+import { tagsSchema, type Tags } from "./tags";
 import { hashString, parseUncleanFloat, parseUncleanInt } from "~/utils/util";
 
 const flatSchema = z.object({
@@ -104,6 +104,15 @@ export const propertyManagementList: PropertyManagement[] = [
             return false;
           }
 
+          const tags: Tags = [];
+          if (title.toLowerCase().includes("garage")) {
+            tags.push("garage");
+          } else if (title.toLowerCase().includes("stellplatz")) {
+            tags.push("stellplatz");
+          } else if (title.toLowerCase().includes("parkplatz")) {
+            tags.push("parkplatz");
+          }
+
           const returnFlat = {
             address,
             title,
@@ -112,7 +121,7 @@ export const propertyManagementList: PropertyManagement[] = [
             coldRentPrice,
             warmRentPrice: parseUncleanInt(mappedTableData.warmRentPrice),
             usableArea: parseUncleanFloat(mappedTableData.usableArea),
-            tags: [],
+            tags,
             url: idSource,
             imageUrl,
           } satisfies Flat;

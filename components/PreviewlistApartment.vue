@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { type Tags, tags as tagList } from "@/data/tags";
 const props = defineProps<{
   title: string;
   address: {
@@ -8,7 +9,7 @@ const props = defineProps<{
   };
   coldRentPrice: number;
   imageSrc: string | null;
-  tags: string[];
+  tags: Tags;
   usableArea: number | null;
   favorite: boolean;
   url: string;
@@ -50,10 +51,10 @@ const origin = useRequestURL().origin;
       </NuxtLink>
       <div class="tags-container flex flex-row gap-x-1">
         <span
-          v-for="tag in tags as string[]"
+          v-for="tag in tags"
           :key="tag"
           class="tag py-0.25 rounded-full bg-white px-2.5 text-xs text-accent"
-          >{{ tag }}</span
+          >{{ tagList[tag] }}</span
         >
       </div>
     </div>

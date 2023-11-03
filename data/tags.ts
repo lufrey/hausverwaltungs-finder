@@ -8,6 +8,7 @@ export const tags = {
   schoeneAussicht: "Schöne Aussicht",
   parkplatz: "Parkplatz",
   garage: "Garage",
+  stellplatz: "Stellplatz",
 };
 
 export const tagKeys = typedObjectKeys(tags);
@@ -16,3 +17,4 @@ export const tagKeys = typedObjectKeys(tags);
 const [firstKey, ...restOfKeys] = typedObjectKeys(tags);
 
 export const tagsSchema = z.array(z.enum([firstKey, ...restOfKeys]));
+export type Tags = z.infer<typeof tagsSchema>;
