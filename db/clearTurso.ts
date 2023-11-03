@@ -7,8 +7,10 @@ const clearDb = async (): Promise<void> => {
   const tables = await tursoDb!.run(query);
 
   for (const table of tables.rows) {
-    const query = sql.raw(`DROP TABLE ${table.name};`);
-    await tursoDb!.run(query);
+    if (table.name !== "libsql_wasm_func_table") {
+      const query = sql.raw(`DROP TABLE ${table.name};`);
+      await tursoDb!.run(query);
+    }
   }
 };
 

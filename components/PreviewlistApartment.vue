@@ -18,17 +18,18 @@ const isFavoriteShown = ref(props.favorite);
 const toggleFavorite = () => {
   isFavoriteShown.value = !isFavoriteShown.value;
 };
+const origin = useRequestURL().origin;
 </script>
 
 <template>
   <div class="flex gap-2">
     <div class="aspect-square h-full shrink-0">
       <!-- TODO: Replace with nuxt/image -->
-
-      <img
-        :src="imageSrc ?? '/apartment_example_image.png'"
+      <NuxtImg
+        :src="imageSrc ? origin + imageSrc : '/apartment_example_image.png'"
         alt="Property Image"
         class="h-16 w-16 rounded-lg"
+        format="webp"
       />
     </div>
     <div class="flex flex-col gap-1 overflow-hidden">
