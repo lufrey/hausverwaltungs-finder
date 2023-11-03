@@ -35,6 +35,7 @@ const toggleFavorite = () => {
       <NuxtLink
         class="flex flex-col gap-1"
         :to="url"
+        target="_blank"
       >
         <h3
           class="overflow-hidden text-ellipsis whitespace-nowrap text-l leading-5"

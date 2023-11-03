@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import { publicProcedure, router } from "../trpc";
 import { db } from "~/db/db";
 
@@ -21,6 +22,9 @@ export const flatRouter = router({
             usableArea: true,
             warmRentPrice: true,
             url: true,
+          },
+          extras: {
+            hasImage: sql<0 | 1>`image IS NOT NULL`.as("hasImage"),
           },
         },
       },

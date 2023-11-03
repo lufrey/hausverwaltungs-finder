@@ -33,7 +33,7 @@ console.log(flats);
         :tags="flat.tags"
         :favorite="false"
         :usable-area="flat.usableArea"
-        :image-src="`/api/image/${flat.id}`"
+        :image-src="flat.hasImage ? `/api/image/${flat.id}` : null"
         :url="flat.url"
       />
 
