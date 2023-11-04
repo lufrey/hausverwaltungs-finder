@@ -35,6 +35,7 @@ console.log(flats);
         :usable-area="flat.usableArea"
         :image-src="flat.hasImage ? `/api/image/${flat.id}` : null"
         :url="flat.url"
+        :first-seen="new Date(flat.firstSeen)"
       />
 
       <!-- <PreviewlistApartment

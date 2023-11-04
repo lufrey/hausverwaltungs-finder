@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { isAfter, subHours } from "date-fns";
 import { type Tags, tags as tagList } from "@/data/tags";
 const props = defineProps<{
   title: string;
@@ -13,6 +14,7 @@ const props = defineProps<{
   usableArea: number | null;
   favorite: boolean;
   url: string;
+  firstSeen: Date;
 }>();
 
 const isFavoriteShown = ref(props.favorite);
@@ -20,6 +22,17 @@ const toggleFavorite = () => {
   isFavoriteShown.value = !isFavoriteShown.value;
 };
 const origin = useRequestURL().origin;
+
+const renderedTags = computed(() => {
+  const tags = [...props.tags];
+  const hoursUntilItsNotNewAnymore = 48;
+  if (
+    isAfter(props.firstSeen, subHours(new Date(), hoursUntilItsNotNewAnymore))
+  ) {
+    tags.push("new");
+  }
+  return tags;
+});
 </script>
 
 <template>
@@ -51,7 +64,7 @@ const origin = useRequestURL().origin;
       </NuxtLink>
       <div class="tags-container flex flex-row gap-x-1">
         <span
-          v-for="tag in tags"
+          v-for="tag in renderedTags"
           :key="tag"
           class="tag py-0.25 rounded-full bg-white px-2.5 text-xs text-accent"
           >{{ tagList[tag] }}</span

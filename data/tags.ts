@@ -2,6 +2,7 @@ import { z } from "zod";
 import { typedObjectKeys } from "@/utils/typeHelper";
 
 export const tags = {
+  new: "Neueintrag",
   wbs: "WBS",
   altbau: "Altbau",
   zentral: "Zentral",
