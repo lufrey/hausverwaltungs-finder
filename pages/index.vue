@@ -1,10 +1,9 @@
 <script setup lang="ts">
 const { $client } = useNuxtApp();
-const propertyManagementsWithFlats = await $client.flat.getAll.query();
+const propertyManagementsWithFlats = await $client.flat.getFeatured.query();
 const flats = propertyManagementsWithFlats
   .map((propertyManagement) => propertyManagement.flats)
   .flat();
-console.log(flats);
 </script>
 
 <template>
@@ -38,39 +37,9 @@ console.log(flats);
         :first-seen="new Date(flat.firstSeen)"
       />
 
-      <!-- <PreviewlistApartment
-        apt-name="Gemütliche Wohnung für Senioren"
-        apt-street="Rigaerstraße 14"
-        apt-district="Friedrichshain"
-        :tags="['WBS', 'Altbau']"
-        :price="1198"
-        :usable-area="84"
-        :favorite="false"
-        image-src="/apartment_example_image.png"
-      />
-      <PreviewlistApartment
-        apt-name="Wunderschöne 3 Zimmer Wohung in beliebter Lage"
-        apt-street="Wilhelminenhofstraße 132"
-        apt-district="Treptow"
-        :tags="['Neueintrag']"
-        :price="640"
-        :usable-area="122"
-        :favorite="false"
-        image-src="/apartment_example_image.png"
-      />
-      <PreviewlistApartment
-        apt-name="ERSTBEZUG: Luxuriös Wohnen im Herzen von Berlin Mitte"
-        apt-street="Edisonstraße 32"
-        apt-district="Marzahn"
-        :tags="['Neubau', 'Zenral', 'WBS']"
-        :price="2661"
-        :usable-area="13"
-        :favorite="true"
-        image-src="/apartment_example_image.png"
-      /> -->
       <FatButton
         button-text="Alle Wohnungen ansehen"
-        href="/page2"
+        href="/overview"
       />
     </div>
     <div class="map_preview relative rounded-3xl bg-[green] p-5">

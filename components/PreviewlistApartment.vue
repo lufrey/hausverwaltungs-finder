@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { isAfter, subHours } from "date-fns";
-import { type Tags, tags as tagList } from "@/data/tags";
+import { type Tags } from "@/data/tags";
+import { countsAsNew } from "~/utils/util";
 const props = defineProps<{
   title: string;
   address: {
@@ -25,10 +25,7 @@ const origin = useRequestURL().origin;
 
 const renderedTags = computed(() => {
   const tags = [...props.tags];
-  const hoursUntilItsNotNewAnymore = 48;
-  if (
-    isAfter(props.firstSeen, subHours(new Date(), hoursUntilItsNotNewAnymore))
-  ) {
+  if (countsAsNew(props.firstSeen)) {
     tags.push("new");
   }
   return tags;
@@ -63,12 +60,13 @@ const renderedTags = computed(() => {
         </h4>
       </NuxtLink>
       <div class="tags-container flex flex-row gap-x-1">
-        <span
+        <Tag
           v-for="tag in renderedTags"
           :key="tag"
+          :tag="tag"
           class="tag py-0.25 rounded-full bg-white px-2.5 text-xs text-accent"
-          >{{ tagList[tag] }}</span
         >
+        </Tag>
       </div>
     </div>
     <div class="flex shrink-0 flex-grow flex-col items-end gap-1">

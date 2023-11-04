@@ -37,3 +37,9 @@ export function hashString(input: string) {
         .join("");
     });
 }
+
+export function countsAsNew(firstSeen: Date) {
+  const now = new Date();
+  const timeUntilItIsNotNewAnymore = 1000 * 60 * 60 * 24 * 2; // 2 days
+  return now.getTime() - firstSeen.getTime() < timeUntilItIsNotNewAnymore;
+}
