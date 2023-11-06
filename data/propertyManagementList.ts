@@ -68,6 +68,7 @@ export const propertyManagementList: PropertyManagement[] = [
             ".SP-LinkList__item a",
             (el) => el.href,
           );
+          const id = await hashString(idSource);
 
           const tableData = await el.$eval(".SP-Table--static tbody", (el) => {
             return Array.from(el.children).reduce((acc, cur) => {
@@ -98,7 +99,7 @@ export const propertyManagementList: PropertyManagement[] = [
             >,
           );
 
-          const address = await getAddress(mappedTableData.address);
+          const address = await getAddress(id, mappedTableData.address);
           const coldRentPrice = parseUncleanInt(mappedTableData.coldRentPrice);
           if (!address || !coldRentPrice || !title) {
             return false;
@@ -116,7 +117,7 @@ export const propertyManagementList: PropertyManagement[] = [
           const returnFlat = {
             address,
             title,
-            id: await hashString(idSource),
+            id,
             roomCount: parseUncleanInt(mappedTableData.roomCount),
             coldRentPrice,
             warmRentPrice: parseUncleanInt(mappedTableData.warmRentPrice),

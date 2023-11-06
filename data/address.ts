@@ -1,12 +1,25 @@
 import { Client } from "@googlemaps/google-maps-services-js";
+import { eq } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import type { z } from "zod";
-import { address } from "~/db/schema";
+import { db } from "~/db/db";
+import { address, flat } from "~/db/schema";
 import { hashString } from "~/utils/util";
 
 export const insertAddressSchema = createInsertSchema(address);
 
-export const getAddress = async (rawAddressString: string) => {
+export const getAddress = async (flatId: string, rawAddressString: string) => {
+  const existingAddress = await db
+    .select()
+    .from(address)
+    .leftJoin(flat, eq(flat.addressId, address.id))
+    .where(eq(flat.id, flatId))
+    .limit(1);
+  if (existingAddress.length > 0) {
+    console.log("using existing address");
+    return existingAddress[0].address;
+  }
+
   const client = new Client({});
   const x = await client.geocode({
     params: {
@@ -43,7 +56,7 @@ export const getAddress = async (rawAddressString: string) => {
     >,
   );
 
-  const address = {
+  const googleAddress = {
     id: await hashString(
       addressComponents.street +
         addressComponents.streetNumber +
@@ -58,7 +71,7 @@ export const getAddress = async (rawAddressString: string) => {
     latitude: addressData.geometry.location.lat,
   } satisfies z.infer<typeof insertAddressSchema>;
 
-  const result = insertAddressSchema.safeParse(address);
+  const result = insertAddressSchema.safeParse(googleAddress);
   if (result.success) {
     return result.data;
   } else {
