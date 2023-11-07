@@ -8,6 +8,13 @@
       "when": 1698956345394,
       "tag": "0000_faulty_joystick",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1699381440754,
+      "tag": "0001_sparkling_stryfe",
+      "breakpoints": true
     }
   ]
 }

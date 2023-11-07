@@ -1,4 +1,4 @@
-import { and, eq, inArray, sql } from "drizzle-orm";
+import { and, eq, inArray, isNull, sql } from "drizzle-orm";
 import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
 import { db } from "~/db/db";
@@ -77,6 +77,7 @@ export const flatRouter = router({
               input.propertyManagements
                 ? inArray(flat.propertyManagementId, input.propertyManagements)
                 : sqlTrue,
+              isNull(flat.deleted),
             ),
           )
       ).map((dataPoint) => {

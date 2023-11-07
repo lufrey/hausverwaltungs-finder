@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { eq, inArray, isNull, sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { type z } from "zod";
 import sharp from "sharp";
@@ -111,6 +111,28 @@ export default defineEventHandler(async () => {
         },
         where: sql`flat.id = excluded.id`,
       });
+
+    // remove flats that are no longer available
+    const existingFlats = await db
+      .select()
+      .from(flat)
+      .leftJoin(propertyManagement, eq(flat.propertyManagementId, slug))
+      .where(isNull(flat.deleted))
+      .execute();
+
+    const existingFlatIds = existingFlats.map((f) => f.flat.id);
+    const newFlatIds = data.flatMap((d) => d.flats.map((f) => f.id));
+    const removedFlatIds = existingFlatIds.filter(
+      (id) => !newFlatIds.includes(id),
+    );
+
+    if (removedFlatIds.length > 0) {
+      await db
+        .update(flat)
+        .set({ deleted: new Date() })
+        .where(inArray(flat.id, removedFlatIds))
+        .execute();
+    }
   });
 
   return data;

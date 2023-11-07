@@ -16,7 +16,6 @@ export const getAddress = async (flatId: string, rawAddressString: string) => {
     .where(eq(flat.id, flatId))
     .limit(1);
   if (existingAddress.length > 0) {
-    console.log("using existing address");
     return existingAddress[0].address;
   }
 

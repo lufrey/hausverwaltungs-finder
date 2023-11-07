@@ -21,6 +21,7 @@ export const flat = sqliteTable("flat", {
   propertyManagementId: text("propertyManagementId"),
   firstSeen: integer("firstSeen", { mode: "timestamp" }).notNull(),
   lastSeen: integer("lastSeen", { mode: "timestamp" }).notNull(),
+  deleted: integer("deleted", { mode: "timestamp" }),
   url: text("url").notNull(),
   tags: text("tags", { mode: "json" }).$type<typeof tagKeys>().notNull(),
 });
