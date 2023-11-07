@@ -39,7 +39,7 @@ export default defineEventHandler(async () => {
     })),
   );
 
-  propertyManagementList.forEach(async ({ getFlats, slug }) => {
+  const dbPromises = propertyManagementList.map(async ({ getFlats, slug }) => {
     const flats = (await getFlats(browser)).filter(Boolean);
 
     const addresses = flats.map((f) => f.address).filter(Boolean);
@@ -134,6 +134,7 @@ export default defineEventHandler(async () => {
         .execute();
     }
   });
+  await Promise.allSettled(dbPromises);
 
   return data;
 });
