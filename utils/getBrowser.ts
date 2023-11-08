@@ -1,7 +1,8 @@
 import puppeteer from "puppeteer";
+import { env } from "~/env";
 
 export const getBrowser = async () => {
-  const { BROWSERLESS_URL, BROWSERLESS_TOKEN } = process.env;
+  const { BROWSERLESS_URL, BROWSERLESS_TOKEN } = env;
 
   // if specified, use browserless
   if (BROWSERLESS_URL && BROWSERLESS_TOKEN) {

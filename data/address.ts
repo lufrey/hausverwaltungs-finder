@@ -4,6 +4,7 @@ import { createInsertSchema } from "drizzle-zod";
 import type { z } from "zod";
 import { db } from "~/db/db";
 import { address, flat } from "~/db/schema";
+import { env } from "~/env";
 import { hashString } from "~/utils/util";
 
 export const insertAddressSchema = createInsertSchema(address);
@@ -23,7 +24,7 @@ export const getAddress = async (flatId: string, rawAddressString: string) => {
   const x = await client.geocode({
     params: {
       address: rawAddressString,
-      key: process.env.GOOGLE_MAPS_API_KEY ?? "",
+      key: env.GOOGLE_MAPS_API_KEY ?? "",
       region: "de",
       language: "de",
       components: "country:DE",

@@ -37,6 +37,7 @@
     "@googlemaps/google-maps-services-js": "^3.3.41",
     "@libsql/client": "^0.3.6",
     "@nuxt/image": "^1.0.0",
+    "@t3-oss/env-nuxt": "^0.7.1",
     "@trpc/client": "^10.43.1",
     "@trpc/server": "^10.43.1",
     "better-sqlite3": "^9.0.0",

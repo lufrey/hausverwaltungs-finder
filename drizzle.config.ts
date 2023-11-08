@@ -1,6 +1,7 @@
 import type { Config } from "drizzle-kit";
+import { env } from "./env";
 
-const { TURSO_URL, TURSO_TOKEN } = process.env;
+const { TURSO_URL, TURSO_TOKEN } = env;
 const isLocal = !TURSO_URL || !TURSO_TOKEN;
 
 export default {
