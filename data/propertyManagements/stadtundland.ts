@@ -7,6 +7,7 @@ import {
 import { getAddress } from "../address";
 import type { Tags } from "../tags";
 import { hashString, parseUncleanFloat, parseUncleanInt } from "~/utils/util";
+import { typedObjectKeys } from "~/utils/typeHelper";
 
 export const stadtundland: PropertyManagement = {
   slug: "stadtundland",
@@ -85,13 +86,22 @@ export const stadtundland: PropertyManagement = {
           }
 
           const tags: Tags = [];
-          if (title.toLowerCase().includes("garage")) {
-            tags.push("garage");
-          } else if (title.toLowerCase().includes("stellplatz")) {
-            tags.push("stellplatz");
-          } else if (title.toLowerCase().includes("parkplatz")) {
-            tags.push("parkplatz");
-          }
+
+          const titleToTagsMap = {
+            altbau: ["altbau"],
+            neubau: ["neubau"],
+            wbs: ["wbs"],
+            garage: ["garage"],
+            stellplatz: ["stellplatz"],
+            parkplatz: ["parkplatz"],
+          } as const;
+
+          const titleToTagsKeys = typedObjectKeys(titleToTagsMap);
+          titleToTagsKeys.forEach((key) => {
+            if (title.toLowerCase().includes(key)) {
+              tags.push(...titleToTagsMap[key]);
+            }
+          });
 
           const returnFlat = {
             address,

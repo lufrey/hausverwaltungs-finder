@@ -108,6 +108,7 @@ export default defineEventHandler(async () => {
           warmRentPrice: sql`excluded.warmRentPrice`,
           lastSeen: sql`excluded.lastSeen`,
           tags: sql`excluded.tags`,
+          deleted: sql`NULL`,
         },
         where: sql`flat.id = excluded.id`,
       });

@@ -45,6 +45,7 @@ module.exports = {
     "vue/singleline-html-element-content-newline": "off",
     "vue/html-self-closing": "off",
     "func-call-spacing": "off",
+    "no-fallthrough": "off",
     // "@typescript-eslint/no-misused-promises": [
     //   2,
     //   {

@@ -5,6 +5,7 @@ export const tags = {
   new: "Neueintrag",
   wbs: "WBS",
   altbau: "Altbau",
+  neubau: "Neubau",
   zentral: "Zentral",
   schoeneAussicht: "Schöne Aussicht",
   parkplatz: "Parkplatz",
