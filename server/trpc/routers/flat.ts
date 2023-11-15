@@ -50,7 +50,7 @@ export const flatRouter = router({
     .input(
       z
         .object({
-          limit: z.number().optional().default(20),
+          limit: z.number().optional().default(999),
           offset: z.number().optional().default(0),
           tags: z.array(z.string()).optional(),
           propertyManagements: z.array(z.string()).optional(),

@@ -129,6 +129,7 @@ export const stadtundland: PropertyManagement = {
     let paginationNextButton = await page.$(".SP-Paging__button--next");
     while (paginationNextButton) {
       await paginationNextButton.click();
+      await page.waitForNetworkIdle();
       const newPageData = await readPage();
       pagesData.push(...newPageData);
       paginationNextButton = await page.$(".SP-Paging__button--next");

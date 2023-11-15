@@ -39,9 +39,7 @@ export default defineEventHandler(async () => {
     })),
   );
 
-  const dbPromises = propertyManagementList.map(async ({ getFlats, slug }) => {
-    const flats = (await getFlats(browser)).filter(Boolean);
-
+  const dbPromises = data.map(async ({ slug, flats }) => {
     const addresses = flats.map((f) => f.address).filter(Boolean);
 
     await db
@@ -90,6 +88,7 @@ export default defineEventHandler(async () => {
               firstSeen: new Date(),
               url: f.url,
               image,
+              deleted: null,
             } satisfies z.infer<typeof insertFlatSchema>;
           }),
         ),
@@ -108,7 +107,7 @@ export default defineEventHandler(async () => {
           warmRentPrice: sql`excluded.warmRentPrice`,
           lastSeen: sql`excluded.lastSeen`,
           tags: sql`excluded.tags`,
-          deleted: sql`NULL`,
+          deleted: sql`excluded.deleted`,
         },
         where: sql`flat.id = excluded.id`,
       });
