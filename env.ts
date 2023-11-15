@@ -5,6 +5,8 @@ if (process.env.ENV_FILE_PATH) {
   dotenv.config({
     path: process.env.ENV_FILE_PATH,
   });
+} else {
+  dotenv.config();
 }
 
 export const env = createEnv({
