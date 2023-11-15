@@ -17,7 +17,7 @@
         />
         <span
           class="top absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-s"
-          >3</span
+          >4</span
         >
       </div>
       <div class="mx-auto flex items-center justify-center">
