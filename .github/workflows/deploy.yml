@@ -1,7 +1,6 @@
 on:
   push:
     branches:
-      - main
       - develop
 
 jobs:
@@ -19,5 +18,7 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
             cd /home/lfrey/projects/apartifind
             bash update.sh
