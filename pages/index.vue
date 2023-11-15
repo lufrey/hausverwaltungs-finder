@@ -38,9 +38,16 @@ const flats = propertyManagementsWithFlats
       />
 
       <FatButton
-        button-text="Alle Wohnungen ansehen"
+        class="absolute -bottom-5 -right-10"
         href="/overview"
-      />
+      >
+        Alle Wohnungen ansehen
+        <img
+          src="/arrow_right.svg"
+          alt=""
+          class="ml-4 inline"
+        />
+      </FatButton>
     </div>
     <div class="map_preview relative rounded-3xl bg-[green] p-5">
       map_preview
@@ -92,7 +99,14 @@ const flats = propertyManagementsWithFlats
         :max-value="5000"
       />
       <!-- Monatsmiete -->
-      <FatButton button-text="Jetzt in den Verteiler" />
+      <FatButton class="absolute -bottom-5 -right-10">
+        Jetzt in den Verteiler
+        <img
+          src="/arrow_right.svg"
+          alt=""
+          class="ml-4 inline"
+        />
+      </FatButton>
     </div>
   </div>
 </template>
