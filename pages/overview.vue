@@ -35,7 +35,7 @@ const flats = flatsQuery.data ?? [];
       </ul>
     </nav>
     <main>
-      <PreviewlistApartment
+      <DetaillistApartment
         v-for="flat in flats"
         :key="flat.id"
         :title="flat.title"
