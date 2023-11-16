@@ -1,0 +1,23 @@
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  update:
+    # go on server via ssh and run a bash script
+    runs-on: ubuntu-latest
+    environment: preview
+    steps:
+      - uses: actions/checkout@v2
+      - name: Update
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /home/lfrey/projects/apartifind
+            bash update.sh
