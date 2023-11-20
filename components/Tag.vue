@@ -10,7 +10,7 @@ defineProps<{
 <template>
   <NuxtLink
     :to="`/overview?tags=${tag}`"
-    class="py-0.25 rounded-full bg-white px-2.5 text-xs text-accent"
+    class="py-0.25 rounded-full px-2.5 text-xs"
   >
     {{ tags[tag] }}
   </NuxtLink>
