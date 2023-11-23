@@ -8,7 +8,7 @@ const flats = propertyManagementsWithFlats
 
 <template>
   <div class="layout flex flex-col gap-y-4">
-    <div class="eyecatcher relative rounded-3xl bg-main p-5">
+    <div class="eyecatcher relative ml-[56px] rounded-3xl bg-main p-5 md:ml-0">
       <h1
         class="eyecatcher__headline ml-[-76px] mr-16 hyphens-manual text-xxl text-white"
       >
@@ -21,7 +21,7 @@ const flats = propertyManagementsWithFlats
       />
     </div>
     <div
-      class="apartmentlist relative mb-6 flex flex-col gap-4 rounded-3xl bg-background p-5"
+      class="apartmentlist relative mb-6 flex flex-col gap-4 rounded-3xl bg-background p-5 pb-16"
     >
       <PreviewlistApartment
         v-for="flat in flats"
@@ -42,9 +42,22 @@ const flats = propertyManagementsWithFlats
         href="/overview"
       />
     </div>
-    <div class="map_preview relative rounded-3xl bg-[green] p-5">
-      map_preview
-    </div>
+    <NuxtLink
+      to="/map"
+      class="map_preview relative rounded-3xl bg-[green]"
+    >
+      <img
+        src="/map_preview.png"
+        alt=""
+        class="object-cover"
+      />
+      <img
+        class="absolute bottom-0 right-0 mb-3 mr-3"
+        src="/zoom_in.svg"
+        alt=""
+      />
+    </NuxtLink>
+
     <div class="decoration relative overflow-hidden rounded-3xl">
       <ImageSlider
         :images="[
@@ -56,7 +69,6 @@ const flats = propertyManagementsWithFlats
     <MailinglistSignup />
   </div>
 </template>
-
 <style scoped>
 .eyecatcher__headline {
   text-shadow: 6px 6px 0px #a555a2;
