@@ -53,69 +53,11 @@ const flats = propertyManagementsWithFlats
         ]"
       />
     </div>
-    <div
-      class="mailing_list relative mb-6 mt-4 rounded-3xl border border-black bg-secondary p-5"
-    >
-      <span
-        class="mail-tile-header absolute -top-8 left-[-1px] rounded-t-3xl border border-black bg-secondary px-5 pt-2 text-xl"
-        >Nichts verpassen</span
-      >
-      <p class="mt-2 max-w-xl text-l font-light text-[grey]">
-        Lass dich ganz einfach benachrichtigen sobald neue Wohnungen mit deinen
-        Kriterien verfügbar sind.
-      </p>
-      <TextFieldWithRules />
-      <TextFieldWithAutocomplete
-        :suggestions="[
-          'Friedrichshain',
-          'Kreuzberg',
-          'Neukölln',
-          'Mitte',
-          'Prenzlauer Berg',
-          'Charlottenburg',
-          'Schöneberg',
-        ]"
-        placeholder="Bezirk"
-      />
-      <!-- Bezirk -->
-      <Slider
-        title="Zimmer (minimum)"
-        output-title="Anzahl"
-        :min-value="0"
-        :max-value="10"
-      />
-      <!-- Zimmer -->
-      <Slider
-        title="Monatsmiete (kalt, maximum)"
-        output-title="Preis €"
-        :min-value="100"
-        :max-value="5000"
-      />
-      <!-- Monatsmiete -->
-      <FatButton button-text="Jetzt in den Verteiler" />
-    </div>
+    <MailinglistSignup />
   </div>
 </template>
 
 <style scoped>
-.mail-tile-header::before {
-  height: 3px;
-  width: 100%;
-  content: "";
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  background-color: #ecdaeb;
-}
-.mail-tile-header::after {
-  height: 50%;
-  width: 3px;
-  content: "";
-  position: absolute;
-  bottom: -3px;
-  right: -2px;
-  background-color: #ecdaeb;
-}
 .eyecatcher__headline {
   text-shadow: 6px 6px 0px #a555a2;
   -webkit-text-stroke: 1px #000;
