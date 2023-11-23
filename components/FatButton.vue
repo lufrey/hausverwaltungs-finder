@@ -1,8 +1,9 @@
 <template>
   <NuxtLink
     v-if="href"
-    :to="href"
-    class="hover:shadow-accentHover absolute -bottom-5 -right-10 rounded-xl border border-primary bg-white px-6 py-4 text-m font-medium text-primary shadow-accent transition-shadow duration-200"
+    :to="disabled ? '' : href"
+    class="absolute -bottom-5 -right-10 rounded-xl border border-primary bg-white px-6 py-4 text-m font-medium text-primary shadow-accent transition-shadow duration-200 hover:shadow-accentHover"
+    :class="disabled ? 'cursor-not-allowed hover:shadow-accent' : ''"
   >
     {{ buttonText }}
     <img
@@ -13,7 +14,9 @@
   </NuxtLink>
   <button
     v-else
-    class="hover:shadow-accentHover absolute -bottom-5 -right-10 rounded-xl border border-primary bg-white px-6 py-4 text-m font-medium text-primary shadow-accent transition-shadow duration-200"
+    class="absolute -bottom-5 -right-10 rounded-xl border border-primary bg-white px-6 py-4 text-m font-medium text-primary shadow-accent transition-shadow duration-200 hover:shadow-accentHover"
+    :class="disabled ? 'cursor-not-allowed hover:shadow-accent' : ''"
+    :disabled="disabled"
     @click="$emit('submit', action)"
   >
     {{ buttonText }}
@@ -30,6 +33,7 @@ defineProps<{
   buttonText: string;
   action?: () => void;
   href?: string;
+  disabled?: boolean;
 }>();
 defineEmits(["submit"]);
 </script>
