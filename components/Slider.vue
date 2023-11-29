@@ -45,14 +45,22 @@ export default {
       required: false,
       default: 10,
     },
+    defaultValue: {
+      type: Number,
+      required: false,
+      default: 5,
+    },
   },
   setup(props) {
-    const sliderValue = ref(0);
+    const sliderValue = ref(props.defaultValue);
 
     return {
       sliderValue,
       ...props,
     };
+  },
+  onMounted() {
+    sliderValue.value = (minValue + maxValue) / 2;
   },
 };
 </script>

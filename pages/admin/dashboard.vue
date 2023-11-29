@@ -20,7 +20,7 @@ const isScrapingNewData = ref(false);
             isScrapingNewData = false;
           }
         "
-        class="ml-auto flex items-center gap-4"
+        class="-right-4 ml-auto flex items-center gap-4 md:-right-10"
       >
         Alles neu laden
         <LoadingSpinner v-if="isScrapingNewData" />
