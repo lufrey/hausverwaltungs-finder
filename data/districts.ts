@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { typedObjectKeys } from "@/utils/typeHelper";
-const berlinDistricts = {
+
+export const berlinDistricts = {
   mitte: {
     title: "Mitte",
     zipCodes: [],
@@ -9,7 +10,6 @@ const berlinDistricts = {
     title: "Friedrichshain",
     zipCodes: [],
   },
-
   prenzlauerBerg: {
     title: "Prenzlauer Berg",
     zipCodes: [],
