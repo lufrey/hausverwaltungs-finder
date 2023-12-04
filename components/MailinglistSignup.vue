@@ -1,12 +1,6 @@
 <script setup lang="ts">
-import { z } from "zod";
 import { berlinDistricts } from "~/data/districts";
-const formSchema = z.object({
-  email: z.string().email("Die E-Mail Adresse ist nicht gültig"),
-  district: z.array(z.string()),
-  rooms: z.number().int(),
-  price: z.number().int(),
-});
+import { mailingListSignUpSchema } from "~/data/mailingList";
 
 withDefaults(
   defineProps<{
@@ -26,7 +20,7 @@ const formState = ref({
     price: 2000,
   },
   errors: computed(() => {
-    const result = formSchema.safeParse(formState.value.values);
+    const result = mailingListSignUpSchema.safeParse(formState.value.values);
     if (!formState.value.hasBeenSubmitted || result.success) {
       return {} satisfies Record<string, undefined>;
     }
@@ -105,7 +99,14 @@ const formState = ref({
 
     <FatButton
       class="absolute -bottom-5 -right-4 md:-right-10"
-      :action="() => (formState.hasBeenSubmitted = true)"
+      :action="
+        async () => {
+          formState.hasBeenSubmitted = true;
+          if (Object.values(formState.errors).length > 0) return;
+
+          await $client.mailingList.signUp.mutate(formState.values);
+        }
+      "
     >
       Jetzt in den Verteiler
     </FatButton>

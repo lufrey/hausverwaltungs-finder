@@ -39,7 +39,7 @@ export const flatRouter = router({
         ...withOptions,
         ...{
           flats: {
-            limit: 5,
+            limit: 8,
             ...withOptions.flats,
           },
         },
