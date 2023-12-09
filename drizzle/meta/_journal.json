@@ -15,6 +15,13 @@
       "when": 1699381440754,
       "tag": "0001_sparkling_stryfe",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1701687422563,
+      "tag": "0002_icy_dragon_lord",
+      "breakpoints": true
     }
   ]
 }

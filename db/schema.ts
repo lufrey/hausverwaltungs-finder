@@ -8,6 +8,15 @@ import {
 } from "drizzle-orm/sqlite-core";
 import type { tagKeys } from "~/data/tags";
 
+export const signups = sqliteTable("signups", {
+  id: text("id").primaryKey(),
+  email: text("email").notNull(),
+  createdAt: integer("createdAt", { mode: "timestamp" }).notNull(),
+  districts: text("districts", { mode: "json" }),
+  maxPrice: integer("maxPrice").notNull(),
+  minRooms: integer("minRooms").notNull(),
+});
+
 export const flat = sqliteTable("flat", {
   id: text("id").primaryKey(),
   title: text("title").notNull(),
