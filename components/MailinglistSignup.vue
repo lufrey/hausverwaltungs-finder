@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { berlinDistricts } from "~/data/districts";
-import { mailingListSignUpSchema } from "~/data/mailingList";
+import { mailingListSignUpSchema } from "~/data/schemas";
 
 withDefaults(
   defineProps<{

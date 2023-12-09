@@ -8,8 +8,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "start": "nuxt start",
-    "postinstall": "nuxt prepare",
-    "migrateTurso": "tsx db/migrateTurso.ts"
+    "postinstall": "nuxt prepare"
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
@@ -19,11 +18,10 @@
     "@nuxtjs/google-fonts": "^3.0.2",
     "@nuxtjs/tailwindcss": "latest",
     "@total-typescript/ts-reset": "^0.5.1",
-    "@types/better-sqlite3": "^7.6.7",
     "@typescript-eslint/eslint-plugin": "^6.11.0",
     "@typescript-eslint/parser": "^6.11.0",
     "dotenv": "^16.3.1",
-    "drizzle-kit": "^0.20.2",
+    "drizzle-kit": "^0.20.6",
     "eslint": "^8.53.0",
     "eslint-plugin-vue": "^9.18.1",
     "nuxt": "^3.8.1",
@@ -40,8 +38,7 @@
     "@t3-oss/env-nuxt": "^0.7.1",
     "@trpc/client": "^10.43.3",
     "@trpc/server": "^10.43.3",
-    "better-sqlite3": "^9.1.1",
-    "drizzle-orm": "^0.29.0",
+    "drizzle-orm": "^0.29.1",
     "drizzle-zod": "^0.5.1",
     "puppeteer": "^21.5.2",
     "sharp": "^0.32.6",

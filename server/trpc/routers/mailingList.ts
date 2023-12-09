@@ -1,7 +1,8 @@
 import { sql } from "drizzle-orm";
 import { publicProcedure, router } from "../trpc";
 import { db } from "~/db/db";
-import { mailingListSignUpSchema } from "~/data/mailingList";
+import { mailingListSignUpSchema } from "~/data/schemas";
+import { getMailList } from "~/data/mailingList";
 
 export const mailingListRouter = router({
   signUp: publicProcedure
@@ -12,10 +13,8 @@ export const mailingListRouter = router({
         orderBy: sql`RANDOM()`,
       });
       return res;
-
-      console.log(input);
-      return {
-        success: true,
-      };
     }),
+  get: publicProcedure.query(async () => {
+    return await getMailList();
+  }),
 });
