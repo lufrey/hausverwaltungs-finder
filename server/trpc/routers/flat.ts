@@ -39,6 +39,7 @@ export const flatRouter = router({
         ...withOptions,
         ...{
           flats: {
+            where: isNull(flat.deleted),
             limit: 8,
             ...withOptions.flats,
           },
