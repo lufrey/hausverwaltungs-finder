@@ -35,7 +35,6 @@ const renderedTags = computed(() => {
 <template>
   <div class="flex gap-2">
     <div class="aspect-square h-full shrink-0">
-      <!-- TODO: Replace with nuxt/image -->
       <NuxtImg
         :src="imageSrc ? origin + imageSrc : '/apartment_example_image.png'"
         alt="Property Image"
