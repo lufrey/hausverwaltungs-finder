@@ -1,0 +1,2 @@
+# this is just a example for how the cronjob is set on the server
+0 * * * * curl -X GET https://apartifind.lksfr.de/api/updateData\?token\=<CRON_TOKEN_FROM_ENV>
