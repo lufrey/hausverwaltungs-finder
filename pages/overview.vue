@@ -62,8 +62,9 @@ const tableHeaders = {
         </tr>
       </thead>
       <tbody class="text-center">
-        <DetaillistApartment
+        <ApartmentDetails
           v-for="flat in flats"
+          :id="flat.id"
           :key="flat.id"
           :room-count="flat.roomCount"
           as="row"
@@ -83,8 +84,9 @@ const tableHeaders = {
     <div class="lg:hidden">
       <h2 class="mb-4 text-xl">Alle Wohnungen</h2>
       <main>
-        <DetaillistApartment
+        <ApartmentDetails
           v-for="flat in flats"
+          :id="flat.id"
           :key="flat.id"
           :room-count="flat.roomCount"
           :title="flat.title"
