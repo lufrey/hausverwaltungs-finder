@@ -3,26 +3,28 @@ const props = defineProps<{
   id: string;
 }>();
 
-const isFavoriteShown = ref(false);
-const toggleFavorite = () => {
-  isFavoriteShown.value = !isFavoriteShown.value;
-  console.log(
-    `${isFavoriteShown.value ? "Added" : "Removed"} ${props.id} from favorites`,
-  );
-};
+const { isFavorite, toggle } = useFavorite(props.id);
 </script>
 
 <template>
   <button
     class="favorites-button inline-block"
     :title="`${
-      isFavoriteShown ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen'
+      isFavorite ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen'
     }`"
-    @click="toggleFavorite"
+    @click="() => toggle()"
   >
-    <IconHeart
-      :filled="isFavoriteShown"
-      class="w-5"
-    />
+    <ClientOnly>
+      <IconHeart
+        :filled="isFavorite"
+        class="w-5"
+      />
+      <template #fallback>
+        <IconHeart
+          :filled="false"
+          class="w-5"
+        />
+      </template>
+    </ClientOnly>
   </button>
 </template>
