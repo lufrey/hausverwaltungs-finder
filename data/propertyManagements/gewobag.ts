@@ -8,7 +8,7 @@ import { getAddress } from "../address";
 import type { Tags } from "../tags";
 import { hashString, parseUncleanFloat, parseUncleanInt } from "~/utils/util";
 import { typedObjectKeys } from "~/utils/typeHelper";
-/*
+
 export const gewobag: PropertyManagement = {
   slug: "gewobag",
   name: "Gewobag",
@@ -32,7 +32,7 @@ export const gewobag: PropertyManagement = {
             ".read-more-link",
             (link) => (link as HTMLAnchorElement).href,
           );
-          const address = await el.$eval(
+          const addressRaw = await el.$eval(
             "address",
             (addressEl) => addressEl.textContent,
           );
@@ -46,11 +46,22 @@ export const gewobag: PropertyManagement = {
           const warmRentPriceText = await el.$eval(
             ".angebot-kosten td",
             (rentText) => rentText.textContent,
-          ); // ab 841,75€
+          );
           const warmRentPrice = warmRentPriceText
-            ? warmRentPriceText.substring(3)
+            ? warmRentPriceText.substring(3) // ab 841,75€
             : "";
-          if (!address || !warmRentPrice || !title) {
+
+          const imageUrl = await el.$eval("img[alt='Hausansicht']", (img) => {
+            return img.src;
+          });
+
+          if (!addressRaw) {
+            return false;
+          }
+          const id = await hashString(idSource);
+          const addressPretty = await getAddress(idSource, addressRaw);
+
+          if (!addressPretty || !warmRentPrice || !title) {
             return false;
           }
 
@@ -73,11 +84,11 @@ export const gewobag: PropertyManagement = {
           });
 
           const returnFlat = {
-            address,
+            address: addressPretty,
             title,
             id,
             roomCount: parseUncleanInt(rooms),
-            coldRentPrice,
+            coldRentPrice: null, // nicht auf der Übersichtsseite verfügbar. wenn dann jede angebotsseite aufrufen...
             warmRentPrice: parseUncleanInt(warmRentPrice),
             usableArea: parseUncleanFloat(usableArea),
             tags,
@@ -95,7 +106,6 @@ export const gewobag: PropertyManagement = {
 
     const pagesData = await readPage();
 
-    return pagesData;
+    return pagesData as (Flat | false)[];
   },
 };
-*/
