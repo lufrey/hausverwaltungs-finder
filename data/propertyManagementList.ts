@@ -4,6 +4,7 @@ import { insertAddressSchema } from "./address";
 import { tagsSchema } from "./tags";
 import { stadtundland } from "./propertyManagements/stadtundland";
 import { gewobag } from "./propertyManagements/gewobag";
+import { deutschewohnen } from "./propertyManagements/deutschewohnen";
 
 export const flatSchema = z.object({
   id: z.string(),
@@ -34,6 +35,7 @@ export type PropertyManagement = z.infer<typeof propertyManagementSchema> & {
 export const propertyManagementList: PropertyManagement[] = [
   stadtundland,
   gewobag,
+  deutschewohnen,
   // {
   //   id: "reanovo",
   //   name: "Reanovo",
