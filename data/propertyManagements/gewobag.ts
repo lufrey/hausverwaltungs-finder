@@ -18,6 +18,16 @@ export const gewobag: PropertyManagement = {
     const page = await browser.newPage();
     await page.goto(url);
 
+    try {
+      await page
+        .waitForSelector("#CookieBoxSaveButton", {
+          timeout: 300,
+        })
+        .then(() => page.click("#CookieBoxSaveButton"));
+    } catch (e) {
+      console.log("no cookie banner");
+    }
+
     const readPage = async () => {
       await page.waitForSelector(".angebot-content");
       const els = await page.$$("article.angebot-big-layout");
@@ -106,6 +116,7 @@ export const gewobag: PropertyManagement = {
 
     const pagesData = await readPage();
 
+    console.log(pagesData);
     return pagesData as (Flat | false)[];
   },
 };

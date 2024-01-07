@@ -101,7 +101,7 @@ export const propertyManagementRouter = router({
 
                 return {
                   addressId: f.address.id,
-                  coldRentPrice: f.coldRentPrice,
+                  coldRentPrice: f.coldRentPrice!,
                   floor: f.floor,
                   propertyManagementId: slug,
                   id: f.id,
