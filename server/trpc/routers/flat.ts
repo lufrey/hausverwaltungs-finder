@@ -5,6 +5,7 @@ import { db } from "~/db/db";
 import { address, flat } from "~/db/schema";
 import { countsAsNew } from "~/utils/util";
 import { omit } from "~/utils/typeHelper";
+import { zipCodeToDistrict } from "~/data/districts";
 
 const extras = {
   hasImage: sql<0 | 1>`image IS NOT NULL`.as("hasImage"),
@@ -56,6 +57,7 @@ export const flatRouter = router({
           offset: z.number().optional().default(0),
           tags: z.array(z.string()).optional(),
           propertyManagements: z.array(z.string()).optional(),
+          districts: z.array(z.string()).optional(),
         })
         .optional()
         .default({}),
@@ -98,6 +100,16 @@ export const flatRouter = router({
 
         if (input.tags && input.tags.length > 0) {
           return flat.tags.some((tag) => input.tags!.includes(tag));
+        }
+
+        if (input.districts && input.districts.length > 0) {
+          if (!flat?.address?.postalCode) {
+            return false;
+          }
+          const flatDistrict = zipCodeToDistrict[flat.address.postalCode];
+          if (!flatDistrict || !input.districts.includes(flatDistrict.slug)) {
+            return false;
+          }
         }
 
         return true;

@@ -44,7 +44,10 @@ const { renderedTags, img } = useApartment(props);
         </h3>
         <h4 class="overflow-hidden text-ellipsis text-s font-light">
           {{ address.street }} {{ address.streetNumber }} -
-          {{ address.postalCode }}
+          <ApartmentDistrict
+            class="hover:underline"
+            :zip-code="address.postalCode"
+          />
         </h4>
       </NuxtLink>
       <div class="tags-container flex flex-row gap-x-1">

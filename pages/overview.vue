@@ -7,6 +7,7 @@ const { $client } = useNuxtApp();
 const { urlStateWithArrayValues } = useUrlState<{
   tags: Tags;
   propertyManagements: string[];
+  districts: string[];
 }>();
 
 const flatsQuery = await $client.flat.getAll.useQuery(urlStateWithArrayValues);
@@ -30,38 +31,41 @@ const tableHeaders = {
     title: "Preis pro m²",
     sortable: true,
   },
-  zipCode: {
-    title: "PLZ",
+  district: {
+    title: "Bezirk",
     sortable: false,
   },
 };
 </script>
 <template>
   <div>
-    <table
-      class="-mx-4 hidden w-full border-separate border-spacing-4 lg:table"
-    >
-      <thead
-        class="border-collapse border-spacing-0 rounded-xl bg-background p-5"
-      >
+    <table class="-mx-4 hidden w-full lg:table">
+      <thead class="bg-background">
         <tr class="">
-          <th class="-m-4 rounded-xl p-4 font-normal">Immobilie</th>
+          <th class="-m-4 rounded-l-xl p-4 font-medium">Immobilie</th>
           <th
             v-for="[headerKey, header] in Object.entries(tableHeaders)"
             :key="headerKey"
-            class="-m-4 rounded-xl p-4 font-normal"
+            class="-m-4 p-4 font-medium last:rounded-r-xl"
           >
-            <div class="flex gap-2">
+            <div
+              v-if="header.sortable"
+              class="flex gap-2"
+            >
               {{ header.title }}
-              <img
-                v-if="header.sortable"
-                src="/sort_direction.svg"
-              />
+              <img src="/sort_direction.svg" />
+            </div>
+            <div v-else>
+              {{ header.title }}
             </div>
           </th>
         </tr>
       </thead>
       <tbody class="text-center">
+        <!-- this is necessary for spacing -->
+        <tr aria-hidden="true">
+          <td class="p-2"></td>
+        </tr>
         <ApartmentDetails
           v-for="flat in flats"
           :id="flat.id"

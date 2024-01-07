@@ -34,7 +34,7 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
     v-if="Boolean(as === 'row')"
     class="text-m font-light leading-5"
   >
-    <td>
+    <td class="pb-4 pr-4">
       <div class="flex grow-[2] items-center gap-x-2">
         <div class="aspect-square h-full shrink-0">
           <NuxtImg
@@ -72,21 +72,34 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
         </div>
       </div>
     </td>
-    <td>{{ coldRentPrice ?? warmRentPrice ?? "-" }} €</td>
-    <td>
+    <td class="p-4">{{ coldRentPrice ?? warmRentPrice ?? "-" }} €</td>
+    <td class="p-4">
       {{ roomCount ?? "-" }}
     </td>
-    <td>{{ usableArea === 0 ? "-" : usableArea + " m²" }}</td>
-    <td v-if="shownPrice">
+    <td class="p-4">{{ usableArea === 0 ? "-" : usableArea + " m²" }}</td>
+    <td
+      v-if="shownPrice"
+      class="p-4"
+    >
       {{
         usableArea
           ? (shownPrice / usableArea).toFixed(2).replace(".", ",") + " €/m²"
           : "-"
       }}
     </td>
-    <td v-else>-</td>
-    <td>{{ address.postalCode }}</td>
-    <td>
+    <td
+      v-else
+      class="p-4"
+    >
+      -
+    </td>
+    <td class="p-4">
+      <ApartmentDistrict
+        class="underline hover:no-underline"
+        :zip-code="address.postalCode"
+      />
+    </td>
+    <td class="pb-4 pl-4">
       <ApartmentFavoriteButton :id="id" />
     </td>
   </tr>
