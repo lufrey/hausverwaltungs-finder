@@ -24,16 +24,20 @@ const { renderedTags, img } = useApartment(props);
 <template>
   <div class="flex gap-2">
     <div class="aspect-square h-full shrink-0">
-      <NuxtImg
-        :src="img"
-        alt="Property Image"
-        class="h-16 w-16 rounded-lg"
-        format="webp"
-      />
+      <NuxtLink
+        :to="url"
+        target="_blank"
+      >
+        <NuxtImg
+          :src="img"
+          :alt="`Vorschaubild ${title}`"
+          class="h-16 w-16 rounded-lg"
+          format="webp"
+        />
+      </NuxtLink>
     </div>
     <div class="flex flex-col gap-1 overflow-hidden">
       <NuxtLink
-        class="flex flex-col gap-1"
         :to="url"
         target="_blank"
       >
@@ -42,14 +46,14 @@ const { renderedTags, img } = useApartment(props);
         >
           {{ title }}
         </h3>
-        <h4 class="overflow-hidden text-ellipsis text-s font-light">
-          {{ address.street }} {{ address.streetNumber }} -
-          <ApartmentDistrict
-            class="hover:underline"
-            :zip-code="address.postalCode"
-          />
-        </h4>
       </NuxtLink>
+      <h4 class="overflow-hidden text-ellipsis text-s font-light">
+        {{ address.street }} {{ address.streetNumber }} -
+        <ApartmentDistrict
+          class="hover:underline"
+          :zip-code="address.postalCode"
+        />
+      </h4>
       <div class="tags-container flex flex-row gap-x-1">
         <ApartmentTag
           v-for="tag in renderedTags"

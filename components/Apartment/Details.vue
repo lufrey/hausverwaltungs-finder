@@ -109,16 +109,20 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
     class="items-top mb-4 flex items-center gap-x-4"
   >
     <div class="aspect-square h-full shrink-0">
-      <NuxtImg
-        :src="img"
-        alt="Property Image"
-        class="h-16 w-16 rounded-lg"
-        format="webp"
-      />
+      <NuxtLink
+        :to="url"
+        target="_blank"
+      >
+        <NuxtImg
+          :src="img"
+          :alt="`Vorschaubild ${title}`"
+          class="h-16 w-16 rounded-lg"
+          format="webp"
+        />
+      </NuxtLink>
     </div>
     <div class="flex flex-col gap-1 overflow-hidden">
       <NuxtLink
-        class="flex flex-col gap-1"
         :to="url"
         target="_blank"
       >
@@ -127,11 +131,14 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
         >
           {{ title }}
         </h3>
-        <h4 class="overflow-hidden text-ellipsis text-s font-light">
-          {{ address.street }} {{ address.streetNumber }} -
-          {{ address.postalCode }}
-        </h4>
       </NuxtLink>
+      <h4 class="overflow-hidden text-ellipsis text-s font-light">
+        {{ address.street }} {{ address.streetNumber }} -
+        <ApartmentDistrict
+          class="hover:underline"
+          :zip-code="address.postalCode"
+        />
+      </h4>
       <div class="tags-container flex flex-row gap-x-1">
         <ApartmentTag
           v-for="tag in renderedTags"
@@ -144,7 +151,7 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
     </div>
     <div class="flex shrink-0 flex-grow flex-col items-end gap-1">
       <span class="price block text-l font-light leading-5"
-        >{{ coldRentPrice }} €</span
+        >{{ coldRentPrice ?? warmRentPrice ?? "-" }} €</span
       >
       <span class="square-footage block text-s font-light"
         >{{ usableArea }} m²</span

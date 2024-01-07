@@ -16,9 +16,10 @@ const district = computed(() => zipCodeToDistrict[props.zipCode]);
   <NuxtLink
     v-if="district"
     :to="`/overview?districts=${district.slug}`"
+    :title="`Bezirk für ${zipCode}`"
     v-bind="$attrs"
   >
     {{ zipCodeToDistrict[zipCode].name }}
   </NuxtLink>
-  <div v-else>{{ zipCode }}</div>
+  <span v-else>{{ zipCode }}</span>
 </template>
