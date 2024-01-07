@@ -10,7 +10,8 @@ const props = withDefaults(
       postalCode: string;
       streetNumber: string;
     };
-    coldRentPrice: number;
+    coldRentPrice: number | null;
+    warmRentPrice: number | null;
     imageSrc: string | null;
     tags: Tags;
     usableArea: number | null;
@@ -25,6 +26,7 @@ const props = withDefaults(
 );
 
 const { renderedTags, img } = useApartment(props);
+const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
 </script>
 
 <template>
@@ -70,18 +72,19 @@ const { renderedTags, img } = useApartment(props);
         </div>
       </div>
     </td>
-    <td>{{ coldRentPrice }} €</td>
+    <td>{{ coldRentPrice ?? warmRentPrice ?? "-" }} €</td>
     <td>
       {{ roomCount ?? "-" }}
     </td>
     <td>{{ usableArea === 0 ? "-" : usableArea + " m²" }}</td>
-    <td>
+    <td v-if="shownPrice">
       {{
         usableArea
-          ? (coldRentPrice / usableArea).toFixed(2).replace(".", ",") + " €/m²"
+          ? (shownPrice / usableArea).toFixed(2).replace(".", ",") + " €/m²"
           : "-"
       }}
     </td>
+    <td v-else>-</td>
     <td>{{ address.postalCode }}</td>
     <td>
       <ApartmentFavoriteButton :id="id" />

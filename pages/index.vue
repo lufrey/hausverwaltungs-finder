@@ -30,6 +30,7 @@ const flats = propertyManagementsWithFlats
         :title="flat.title"
         :address="flat.address"
         :cold-rent-price="flat.coldRentPrice"
+        :warm-rent-price="flat.warmRentPrice"
         :tags="flat.tags"
         :usable-area="flat.usableArea"
         :image-src="flat.hasImage ? `/api/image/${flat.id}` : null"

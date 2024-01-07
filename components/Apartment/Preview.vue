@@ -9,7 +9,8 @@ const props = defineProps<{
     postalCode: string;
     streetNumber: string;
   };
-  coldRentPrice: number;
+  coldRentPrice: number | null;
+  warmRentPrice: number | null;
   imageSrc: string | null;
   tags: Tags;
   usableArea: number | null;
@@ -58,7 +59,7 @@ const { renderedTags, img } = useApartment(props);
     </div>
     <div class="flex shrink-0 flex-grow flex-col items-end gap-1">
       <span class="price block text-l font-light leading-5"
-        >{{ coldRentPrice }} €</span
+        >{{ coldRentPrice ?? warmRentPrice ?? "-" }} €</span
       >
       <span class="square-footage block text-s font-light"
         >{{ usableArea }} m²</span
