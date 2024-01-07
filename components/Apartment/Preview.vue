@@ -18,7 +18,7 @@ const props = defineProps<{
   firstSeen: Date;
 }>();
 
-const { renderedTags, img } = useApartment(props);
+const { img } = useApartment(props);
 </script>
 
 <template>
@@ -56,7 +56,7 @@ const { renderedTags, img } = useApartment(props);
       </h4>
       <div class="tags-container flex flex-row gap-x-1">
         <ApartmentTag
-          v-for="tag in renderedTags"
+          v-for="tag in tags"
           :key="tag"
           :tag="tag"
           class="tag py-0.25 rounded-full bg-white px-2.5 text-xs text-accent"

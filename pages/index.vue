@@ -1,9 +1,9 @@
 <script setup lang="ts">
 const { $client } = useNuxtApp();
-const propertyManagementsWithFlats = await $client.flat.getFeatured.query();
-const flats = propertyManagementsWithFlats
-  .map((propertyManagement) => propertyManagement.flats)
-  .flat();
+const propertyManagementsWithFlats = await $client.flat.getFeatured.query({
+  limit: 7,
+});
+const flats = propertyManagementsWithFlats;
 </script>
 
 <template>

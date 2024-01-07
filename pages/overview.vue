@@ -42,7 +42,9 @@ const tableHeaders = {
     <table class="-mx-4 hidden w-full lg:table">
       <thead class="bg-background">
         <tr class="">
-          <th class="-m-4 rounded-l-xl p-4 font-medium">Immobilie</th>
+          <th class="-m-4 rounded-l-xl p-4 font-medium">
+            Immobilien ({{ flats?.length ?? 0 }})
+          </th>
           <th
             v-for="[headerKey, header] in Object.entries(tableHeaders)"
             :key="headerKey"
@@ -87,7 +89,7 @@ const tableHeaders = {
     </table>
 
     <div class="lg:hidden">
-      <h2 class="mb-4 text-xl">Alle Wohnungen</h2>
+      <h2 class="mb-4 text-xl">Alle Wohnungen ({{ flats?.length ?? 0 }})</h2>
       <main>
         <ApartmentDetails
           v-for="flat in flats"

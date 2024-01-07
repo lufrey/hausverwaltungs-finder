@@ -1,60 +1,73 @@
-import { and, eq, inArray, isNull, sql } from "drizzle-orm";
+import { and, eq, inArray, isNull, sql, getTableColumns } from "drizzle-orm";
 import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
 import { db } from "~/db/db";
 import { address, flat } from "~/db/schema";
-import { countsAsNew } from "~/utils/util";
 import { omit } from "~/utils/typeHelper";
-import { zipCodeToDistrict } from "~/data/districts";
+import { berlinDistricts } from "~/data/districts";
 
-const extras = {
-  hasImage: sql<0 | 1>`image IS NOT NULL`.as("hasImage"),
-};
 const sqlTrue = sql`true`;
 
-const withOptions = {
-  flats: {
-    with: { address: true },
-    columns: {
-      id: true,
-      addressId: true,
-      coldRentPrice: true,
-      floor: true,
-      propertyManagementId: true,
-      tags: true,
-      title: true,
-      firstSeen: true,
-      lastSeen: true,
-      roomCount: true,
-      usableArea: true,
-      warmRentPrice: true,
-      url: true,
-    },
-    extras,
+const countsAsNewTime = 60 * 60 * 24;
+export const countsAsNewFilter = sql<
+  0 | 1
+>`strftime('%s', 'now') - firstSeen < ${countsAsNewTime}`.as("isNew");
+
+const queryOptions = {
+  where: isNull(flat.deleted),
+  with: { address: true },
+  columns: {
+    id: true,
+    addressId: true,
+    coldRentPrice: true,
+    floor: true,
+    propertyManagementId: true,
+    tags: true,
+    title: true,
+    firstSeen: true,
+    lastSeen: true,
+    roomCount: true,
+    usableArea: true,
+    warmRentPrice: true,
+    url: true,
+  },
+  extras: {
+    hasImage: sql<0 | 1>`image IS NOT NULL`.as("hasImage"),
+    isNew: countsAsNewFilter,
   },
 } as const;
 
 export const flatRouter = router({
-  getFeatured: publicProcedure.query(async () => {
-    return await db.query.propertyManagement.findMany({
-      with: {
-        ...withOptions,
-        ...{
-          flats: {
-            where: isNull(flat.deleted),
-            limit: 8,
-            ...withOptions.flats,
-          },
-        },
-      },
-    });
-  }),
+  getFeatured: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().optional().default(8),
+      }),
+    )
+    .query(async ({ input }) => {
+      return (
+        await db.query.flat.findMany({
+          ...queryOptions,
+          limit: input.limit,
+        })
+      ).map((flat) => {
+        if (flat.isNew) {
+          flat.tags.push("new");
+        }
+        return flat;
+      });
+    }),
   getAll: publicProcedure
     .input(
       z
         .object({
-          limit: z.number().optional().default(999),
-          offset: z.number().optional().default(0),
+          pagination: z
+            .object({
+              limit: z.number(),
+              offset: z.number(),
+            })
+            .optional()
+            .default({ limit: 999, offset: 0 }),
           tags: z.array(z.string()).optional(),
           propertyManagements: z.array(z.string()).optional(),
           districts: z.array(z.string()).optional(),
@@ -63,7 +76,8 @@ export const flatRouter = router({
         .default({}),
     )
     .query(async ({ input }) => {
-      // remove tag "new"
+      // when filtering for "new", we need to filter for the timestamp
+      // instead of the tag
       const onlyShowNew = input.tags?.includes("new");
       if (onlyShowNew) {
         input.tags = input.tags?.filter((tag) => tag !== "new");
@@ -71,21 +85,44 @@ export const flatRouter = router({
 
       const data = (
         await db
-          .select()
+          .select({
+            flat: { ...getTableColumns(flat), isNew: countsAsNewFilter },
+            address: getTableColumns(address),
+          })
           .from(flat)
-          .limit(input.limit)
-          .offset(input.offset)
+          .limit(input.pagination.limit)
+          .offset(input.pagination.offset)
           .leftJoin(address, eq(flat.addressId, address.id))
           .where(
             and(
+              // not deleted
+              isNull(flat.deleted),
+              // fulfills property management filter
               input.propertyManagements
                 ? inArray(flat.propertyManagementId, input.propertyManagements)
                 : sqlTrue,
-              isNull(flat.deleted),
+              // fulfills district filter
+              input.districts
+                ? inArray(
+                    address.postalCode,
+                    input.districts
+                      .map((d) => {
+                        // @ts-ignore
+                        const district = berlinDistricts[d];
+                        return district?.zipCodes ?? [];
+                      })
+                      .flat(),
+                  )
+                : sqlTrue,
+              // fulfills countsAsNew filter
+              onlyShowNew ? sql`isNew = 1` : sqlTrue,
             ),
           )
       ).map((dataPoint) => {
         const flat = omit(dataPoint.flat, ["deleted", "image"]);
+        if (flat.isNew) {
+          flat.tags.push("new");
+        }
         return {
           ...flat,
           address: dataPoint.address,
@@ -94,22 +131,8 @@ export const flatRouter = router({
       });
 
       return data.filter((flat) => {
-        if (onlyShowNew && !countsAsNew(flat.firstSeen)) {
-          return false;
-        }
-
         if (input.tags && input.tags.length > 0) {
           return flat.tags.some((tag) => input.tags!.includes(tag));
-        }
-
-        if (input.districts && input.districts.length > 0) {
-          if (!flat?.address?.postalCode) {
-            return false;
-          }
-          const flatDistrict = zipCodeToDistrict[flat.address.postalCode];
-          if (!flatDistrict || !input.districts.includes(flatDistrict.slug)) {
-            return false;
-          }
         }
 
         return true;

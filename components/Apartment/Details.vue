@@ -25,7 +25,7 @@ const props = withDefaults(
   },
 );
 
-const { renderedTags, img } = useApartment(props);
+const { img } = useApartment(props);
 const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
 </script>
 
@@ -61,7 +61,7 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
             </h4>
             <div class="flex flex-row items-center gap-x-1">
               <ApartmentTag
-                v-for="tag in renderedTags"
+                v-for="tag in tags"
                 :key="tag"
                 :tag="tag"
                 class="tag py-0.25 rounded-full bg-secondary px-2.5 text-xs text-accent"
@@ -141,7 +141,7 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
       </h4>
       <div class="tags-container flex flex-row gap-x-1">
         <ApartmentTag
-          v-for="tag in renderedTags"
+          v-for="tag in tags"
           :key="tag"
           :tag="tag"
           class="tag py-0.25 rounded-full bg-secondary px-2.5 text-xs text-accent"
