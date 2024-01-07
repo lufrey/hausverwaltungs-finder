@@ -1,4 +1,4 @@
-import { eq, inArray, isNull, sql } from "drizzle-orm";
+import { and, eq, inArray, isNull, sql } from "drizzle-orm";
 import { z } from "zod";
 import sharp from "sharp";
 import { createInsertSchema } from "drizzle-zod";
@@ -29,7 +29,7 @@ export const propertyManagementRouter = router({
     .input(
       z
         .object({
-          slugs: z.array(z.string().optional()).optional(),
+          slugs: z.array(z.string()).optional(),
           return: z.boolean().optional(),
         })
         .optional(),
@@ -56,16 +56,17 @@ export const propertyManagementRouter = router({
 
       const browser = await getBrowser();
 
-      const data = await Promise.all(
-        propertyManagementList.map(async ({ getFlats, slug }) => ({
+      const scrapedData = await Promise.all(
+        propertyManagements.map(async ({ getFlats, slug }) => ({
           slug,
           flats: (await getFlats(browser)).filter(Boolean),
         })),
       );
 
-      const dbPromises = data.map(async ({ slug, flats }) => {
+      const dbPromises = scrapedData.map(async ({ slug, flats }) => {
         const addresses = flats.map((f) => f.address).filter(Boolean);
 
+        // upsert addresses
         await db
           .insert(address)
           .values(addresses)
@@ -82,6 +83,7 @@ export const propertyManagementRouter = router({
             where: sql`address.id = excluded.id`,
           });
 
+        // upsert flats
         await db
           .insert(flat)
           .values(
@@ -138,19 +140,16 @@ export const propertyManagementRouter = router({
             where: sql`flat.id = excluded.id`,
           });
 
-        // remove flats that are no longer available
         const existingFlats = await db
           .select()
           .from(flat)
-          .leftJoin(propertyManagement, eq(flat.propertyManagementId, slug))
-          .where(isNull(flat.deleted))
+          .where(and(isNull(flat.deleted), eq(flat.propertyManagementId, slug)))
           .execute();
 
-        const existingFlatIds = existingFlats.map((f) => f.flat.id);
-        const newFlatIds = data.flatMap((d) => d.flats.map((f) => f.id));
-        const removedFlatIds = existingFlatIds.filter(
-          (id) => !newFlatIds.includes(id),
-        );
+        const newFlatIds = flats.map((f) => f.id);
+        const removedFlatIds = existingFlats
+          .map((f) => f.id)
+          .filter((id) => !newFlatIds.includes(id));
 
         if (removedFlatIds.length > 0) {
           await db
@@ -162,7 +161,7 @@ export const propertyManagementRouter = router({
       });
       await Promise.allSettled(dbPromises);
       if (input?.return) {
-        return data;
+        return scrapedData;
       }
       return null;
     }),

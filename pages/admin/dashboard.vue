@@ -3,45 +3,92 @@ useHead({
   title: "Admin Dashboard",
 });
 const { $client } = useNuxtApp();
+const NuxtLink = resolveComponent("NuxtLink");
 
 const propertyManagements = await $client.propertyManagement.getAll.useQuery();
-const isScrapingNewData = ref(false);
+
+const scrapingStatus = ref<{
+  slugs?: string[];
+  isActive: boolean;
+}>({
+  isActive: false,
+});
+
+const updatePropertyManagements = async (slugs?: string[]) => {
+  if (scrapingStatus.value.isActive) {
+    return;
+  }
+
+  scrapingStatus.value = {
+    slugs,
+    isActive: true,
+  };
+
+  await $client.propertyManagement.update.mutate({ slugs });
+  propertyManagements.refresh();
+
+  scrapingStatus.value = {
+    isActive: false,
+  };
+};
 </script>
 <template>
   <main>
     <h2 class="pb-4 text-xl">Hausverwaltungen</h2>
     <div class="flex flex-col gap-4">
       <FatButton
-        :action="
-          async () => {
-            isScrapingNewData = true;
-            await $client.propertyManagement.update.mutate();
-            propertyManagements.refresh();
-            isScrapingNewData = false;
-          }
-        "
-        class="-right-4 ml-auto flex items-center gap-4 md:-right-10"
+        :action="() => void updatePropertyManagements()"
+        class="-right-4 mb-4 ml-auto flex items-center gap-4 md:-right-10"
       >
         Alles neu laden
-        <LoadingSpinner v-if="isScrapingNewData" />
+        <LoadingSpinner
+          v-if="scrapingStatus.isActive && !scrapingStatus.slugs"
+        />
       </FatButton>
+      <div class="grid gap-4 lg:grid-cols-2">
+        <div
+          v-for="propertyManagement in propertyManagements.data.value"
+          :key="propertyManagement.slug"
+          class="flex flex-col gap-4 rounded-3xl border border-black bg-background p-5"
+        >
+          <component
+            :is="propertyManagement.website ? NuxtLink : 'span'"
+            :to="propertyManagement.website"
+          >
+            <h3 class="text-l">
+              {{ propertyManagement.name }}
+            </h3>
+          </component>
 
-      <div
-        v-for="propertyManagement in propertyManagements.data.value"
-        :key="propertyManagement.slug"
-        class="mb-6 flex flex-col gap-4 rounded-3xl bg-background p-5"
-      >
-        <h3 class="text-l">
-          {{ propertyManagement.name }}
-        </h3>
-        <div class="flex gap-4">
-          <p>
-            aktive Wohnungen:
-            {{
-              propertyManagement.flats.filter((flat) => flat.isActive).length
-            }}
-          </p>
-          <p>Insgesamt: {{ propertyManagement.flats.length }}</p>
+          <table class="-mx-2 mr-auto border-separate border-spacing-2">
+            <tr>
+              <td>Wohnungen (aktiv):</td>
+              <td>
+                {{
+                  propertyManagement.flats.filter((flat) => flat.isActive)
+                    .length
+                }}
+              </td>
+            </tr>
+            <tr>
+              <td>Wohnungen (gesamt):</td>
+              <td>{{ propertyManagement.flats.length }}</td>
+            </tr>
+          </table>
+          <FatButton
+            :action="
+              () => void updatePropertyManagements([propertyManagement.slug])
+            "
+            class="-right-4 mb-4 ml-auto flex items-center gap-4 md:-right-10"
+          >
+            neu laden
+            <LoadingSpinner
+              v-if="
+                scrapingStatus.isActive &&
+                scrapingStatus.slugs?.includes(propertyManagement.slug)
+              "
+            />
+          </FatButton>
         </div>
       </div>
     </div>
