@@ -4,6 +4,7 @@ import { publicProcedure, router } from "../trpc";
 import { db } from "~/db/db";
 import { address, flat } from "~/db/schema";
 import { countsAsNew } from "~/utils/util";
+import { omit } from "~/utils/typeHelper";
 
 const extras = {
   hasImage: sql<0 | 1>`image IS NOT NULL`.as("hasImage"),
@@ -82,8 +83,9 @@ export const flatRouter = router({
             ),
           )
       ).map((dataPoint) => {
+        const flat = omit(dataPoint.flat, ["deleted", "image"]);
         return {
-          ...dataPoint.flat,
+          ...flat,
           address: dataPoint.address,
           hasImage: +!!dataPoint.flat.image as 0 | 1,
         };

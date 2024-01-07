@@ -1,3 +1,7 @@
+<script setup lang="ts">
+const { favorites } = useFavorite("");
+</script>
+
 <template>
   <nav class="flex items-center justify-between">
     <NuxtLink
@@ -17,7 +21,7 @@
         />
         <span
           class="top absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-s"
-          >4</span
+          ><ClientOnly fallback="0">{{ favorites.length }}</ClientOnly></span
         >
       </div>
       <div class="mx-auto flex items-center justify-center">

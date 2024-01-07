@@ -23,7 +23,7 @@
         id="districts"
         v-model="inputValue"
         type="text"
-        class="mt-0 h-full min-w-max rounded-md px-1 outline-none"
+        class="mt-0 h-full min-w-max grow rounded-md px-1 outline-none"
         placeholder="hinzufügen..."
         @input="handleInput"
         @keydown.down="highlightNext"
@@ -63,12 +63,6 @@ const $emit = defineEmits(["update:modelValue"]);
 const inputValue = ref("");
 const highlightedIndex = ref(-1);
 const showSuggestions = ref(false);
-console.log(highlightedIndex);
-
-// console log highlightedIndex change
-watch(highlightedIndex, (newValue, oldValue) => {
-  console.log("highlightedIndex changed from", oldValue, "to", newValue);
-});
 
 const handleInput = (event: Event) => {
   inputValue.value = (event.target as HTMLInputElement).value;

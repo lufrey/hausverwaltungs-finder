@@ -17,8 +17,15 @@ export const stadtundland: PropertyManagement = {
     const page = await browser.newPage();
     await page.goto(url);
 
-    await page.waitForSelector(".SP-ConsentBanner__button--onlyNecessary");
-    await page.click(".SP-ConsentBanner__button--onlyNecessary");
+    try {
+      await page
+        .waitForSelector(".SP-ConsentBanner__button--onlyNecessary", {
+          timeout: 300,
+        })
+        .then(() => page.click(".SP-ConsentBanner__button--onlyNecessary"));
+    } catch (e) {
+      console.log("no cookie banner");
+    }
 
     await page.waitForSelector("#button-submit-gen-2");
     await page.click("#button-submit-gen-2");

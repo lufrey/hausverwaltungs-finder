@@ -23,14 +23,14 @@ const flats = propertyManagementsWithFlats
     <div
       class="apartmentlist relative mb-6 flex flex-col gap-4 rounded-3xl bg-background p-5 pb-16"
     >
-      <PreviewlistApartment
+      <ApartmentPreview
         v-for="flat in flats"
+        :id="flat.id"
         :key="flat.id"
         :title="flat.title"
         :address="flat.address"
         :cold-rent-price="flat.coldRentPrice"
         :tags="flat.tags"
-        :favorite="false"
         :usable-area="flat.usableArea"
         :image-src="flat.hasImage ? `/api/image/${flat.id}` : null"
         :url="flat.url"
