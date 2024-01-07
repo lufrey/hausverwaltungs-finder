@@ -116,7 +116,7 @@ export const gewobag: PropertyManagement = {
 
     const pagesData = await readPage();
 
-    console.log(pagesData);
-    return pagesData as (Flat | false)[];
+    await page.close();
+    return pagesData;
   },
 };

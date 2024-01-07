@@ -20,7 +20,7 @@ export const signups = sqliteTable("signups", {
 export const flat = sqliteTable("flat", {
   id: text("id").primaryKey(),
   title: text("title").notNull(),
-  coldRentPrice: integer("coldRentPrice").notNull(),
+  coldRentPrice: integer("coldRentPrice"),
   warmRentPrice: integer("warmRentPrice"),
   roomCount: integer("roomCount"),
   usableArea: real("usableArea"),

@@ -32,7 +32,7 @@ export type PropertyManagement = z.infer<typeof propertyManagementSchema> & {
 };
 
 export const propertyManagementList: PropertyManagement[] = [
-  // stadtundland,
+  stadtundland,
   gewobag,
   // {
   //   id: "reanovo",
