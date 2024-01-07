@@ -6,4 +6,7 @@ import { createContext } from "~/server/trpc/context";
 export default createNuxtApiHandler({
   router: appRouter,
   createContext,
+  onError({ error }) {
+    console.error(error);
+  },
 });
