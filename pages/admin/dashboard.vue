@@ -31,20 +31,40 @@ const updatePropertyManagements = async (slugs?: string[]) => {
     isActive: false,
   };
 };
+
+const allFlats = computed(
+  () => propertyManagements.data.value?.map((p) => p.flats).flat(),
+);
 </script>
 <template>
   <main>
-    <h2 class="pb-4 text-xl">Hausverwaltungen</h2>
+    <h2 class="pb-4 text-xl">Übersicht</h2>
     <div class="flex flex-col gap-4">
-      <FatButton
-        :action="() => void updatePropertyManagements()"
-        class="-right-4 mb-4 ml-auto flex items-center gap-4 md:-right-10"
-      >
-        Alles neu laden
-        <LoadingSpinner
-          v-if="scrapingStatus.isActive && !scrapingStatus.slugs"
-        />
-      </FatButton>
+      <div class="mb-4 flex flex-col gap-4 md:flex-row">
+        <table class="-mx-2 mr-auto border-separate border-spacing-2">
+          <tr>
+            <td>Wohnungen (aktiv):</td>
+            <td>
+              {{ allFlats?.filter((flat) => flat.isActive).length ?? 0 }}
+            </td>
+          </tr>
+          <tr>
+            <td>Wohnungen (gesamt):</td>
+            <td>
+              {{ allFlats?.length ?? 0 }}
+            </td>
+          </tr>
+        </table>
+        <FatButton
+          :action="() => void updatePropertyManagements()"
+          class="-right-4 mb-4 ml-auto flex items-center gap-4 md:-right-10"
+        >
+          Alles neu laden
+          <LoadingSpinner
+            v-if="scrapingStatus.isActive && !scrapingStatus.slugs"
+          />
+        </FatButton>
+      </div>
       <div class="grid gap-4 lg:grid-cols-2">
         <div
           v-for="propertyManagement in propertyManagements.data.value"
