@@ -29,6 +29,34 @@
       "when": 1704646608045,
       "tag": "0003_flowery_smiling_tiger",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1704722140310,
+      "tag": "0004_bouncy_stick",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1704726179848,
+      "tag": "0005_damp_nebula",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1704730019771,
+      "tag": "0006_thick_tiger_shark",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1704730134429,
+      "tag": "0007_secret_goblin_queen",
+      "breakpoints": true
     }
   ]
 }

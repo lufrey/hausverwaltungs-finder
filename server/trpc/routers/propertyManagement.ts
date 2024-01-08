@@ -5,9 +5,10 @@ import { createInsertSchema } from "drizzle-zod";
 import { publicProcedure, router } from "../trpc";
 import { db } from "~/db/db";
 import { propertyManagementList } from "~/data/propertyManagementList";
-import { address, flat, propertyManagement } from "~/db/schema";
+import { address, flat, flatToTag, propertyManagement, tag } from "~/db/schema";
 import { getBrowser } from "~/utils/getBrowser";
 import { isFulfilled } from "~/utils/typeHelper";
+import { tags } from "~/data/tags";
 const insertFlatSchema = createInsertSchema(flat);
 
 export const propertyManagementRouter = router({
@@ -66,6 +67,17 @@ export const propertyManagementRouter = router({
 
       const dbPromises = scrapedData.map(async ({ slug, flats }) => {
         const addresses = flats.map((f) => f.address).filter(Boolean);
+        const tagKeys = Array.from(new Set(flats.map((f) => f.tags).flat()));
+        const tagsToInsert = tagKeys
+          // make sure this tag exists in the tags object
+          .filter((tag) => !!tags[tag])
+          .map((tag) => ({ id: tag, name: tags[tag] }));
+
+        await db
+          .insert(tag)
+          .values(tagsToInsert)
+          .onConflictDoNothing()
+          .execute();
 
         // upsert addresses
         await db
@@ -110,7 +122,6 @@ export const propertyManagementRouter = router({
                 title: f.title,
                 usableArea: f.usableArea,
                 warmRentPrice: f.warmRentPrice,
-                tags: f.tags ?? [],
                 lastSeen: new Date(),
                 firstSeen: new Date(),
                 url: f.url,
@@ -139,12 +150,23 @@ export const propertyManagementRouter = router({
               usableArea: sql`excluded.usableArea`,
               warmRentPrice: sql`excluded.warmRentPrice`,
               lastSeen: sql`excluded.lastSeen`,
-              tags: sql`excluded.tags`,
               deleted: sql`excluded.deleted`,
               url: sql`excluded.url`,
             },
             where: sql`flat.id = excluded.id`,
           });
+
+        // connect tags to flats
+        const flatToTagRelations = flats
+          .map((flat) =>
+            flat.tags.map((tag) => ({ flatId: flat.id, tagId: tag })),
+          )
+          .flat();
+        await db
+          .insert(flatToTag)
+          .values(flatToTagRelations)
+          .onConflictDoNothing()
+          .execute();
 
         const existingFlats = await db
           .select()

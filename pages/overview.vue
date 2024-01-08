@@ -8,13 +8,15 @@ const { urlStateWithArrayValues } = useUrlState<{
   tags: Tags;
   propertyManagements: string[];
   districts: string[];
+  limit: string;
 }>();
 
+// @ts-ignore TODO: self healing url params with schema
 const flatsQuery = await $client.flat.getAll.useQuery(urlStateWithArrayValues);
+
 const flats = flatsQuery.data ?? [];
 
 const tableHeaders = {
-  // immobilie: "Immobilie",
   coldRentPrice: {
     title: "Preis",
     sortable: true,

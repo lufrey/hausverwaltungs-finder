@@ -1,0 +1,1 @@
+ALTER TABLE `flat` DROP COLUMN `tags`;
