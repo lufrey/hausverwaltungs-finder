@@ -28,6 +28,13 @@ export function parseUncleanFloat(input: string) {
   return parseFloat(cleanNumberString(input));
 }
 
+export function formatArea(input: number | null) {
+  if (!input) {
+    return "-";
+  }
+  return (input.toFixed(1) + "&nbsp;m²").replace(".", ",");
+}
+
 export function hashString(input: string) {
   return crypto.subtle
     .digest("SHA-1", new TextEncoder().encode(input))

@@ -9,7 +9,7 @@ import { type Tags, tagsSchema } from "~/data/tags";
 
 const sqlTrue = sql`true`;
 
-const countsAsNewTime = 60 * 60 * 3;
+const countsAsNewTime = 60 * 60 * 12;
 export const countsAsNewFilter = sql<
   0 | 1
 >`strftime('%s', 'now') - firstSeen < ${countsAsNewTime}`.as("isNew");
@@ -73,8 +73,8 @@ export const flatRouter = router({
         .default({}),
     )
     .query(async ({ input }) => {
-      // when filtering for "new", we need to filter for the timestamp
-      // instead of the tag
+      // when filtering for "new", we need to filter
+      // for the timestamp instead of the tag
       const onlyShowNew = input.tags?.includes("new");
       if (onlyShowNew) {
         input.tags = input.tags?.filter((tag) => tag !== "new");
@@ -83,9 +83,14 @@ export const flatRouter = router({
 
       // get the flatIds of all flats that fulfill the filters
       const flatIdsQuery = db
-        .select({ id: flat.id, isNew: countsAsNewFilter })
+        .select({
+          id: flat.id,
+          isNew: countsAsNewFilter,
+          postalCode: address.postalCode,
+        })
         .from(flat)
         .leftJoin(flatToTag, eq(flat.id, flatToTag.flatId))
+        .innerJoin(address, eq(flat.addressId, address.id))
         .groupBy(flat.id)
         .where(
           and(
@@ -122,7 +127,7 @@ export const flatRouter = router({
       // run the full query, there will be multiples, because of the m:n relation to the tags
       const query = db
         .select({
-          flat: { ...getTableColumns(flat), isNew: countsAsNewFilter },
+          flat: { ...getTableColumns(flat), isNew: sql`isNew` },
           address: getTableColumns(address),
           flatToTag: getTableColumns(flatToTag),
         })

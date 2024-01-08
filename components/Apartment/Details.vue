@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { type Tags } from "@/data/tags";
+import { formatArea } from "~/utils/util";
 
 const props = withDefaults(
   defineProps<{
@@ -37,12 +38,17 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
     <td class="pb-4 pr-4">
       <div class="flex grow-[2] items-center gap-x-2">
         <div class="aspect-square h-full shrink-0">
-          <NuxtImg
-            :src="img"
-            alt="Property Image"
-            class="h-16 w-16 rounded-lg"
-            format="webp"
-          />
+          <NuxtLink
+            :to="url"
+            target="_blank"
+          >
+            <NuxtImg
+              :src="img"
+              :alt="`Vorschaubild ${title}`"
+              class="h-16 w-16 rounded-lg"
+              format="webp"
+            />
+          </NuxtLink>
         </div>
         <div class="flex max-w-sm flex-col overflow-hidden">
           <NuxtLink
@@ -72,18 +78,22 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
         </div>
       </div>
     </td>
-    <td class="p-4">{{ coldRentPrice ?? warmRentPrice ?? "-" }} €</td>
+    <td class="p-4">{{ coldRentPrice ?? warmRentPrice ?? "-" }}&nbsp;€</td>
     <td class="p-4">
       {{ roomCount ?? "-" }}
     </td>
-    <td class="p-4">{{ usableArea === 0 ? "-" : usableArea + " m²" }}</td>
+    <td
+      class="p-4"
+      v-html="formatArea(usableArea)"
+    ></td>
     <td
       v-if="shownPrice"
       class="p-4"
     >
       {{
         usableArea
-          ? (shownPrice / usableArea).toFixed(2).replace(".", ",") + " €/m²"
+          ? (shownPrice / usableArea).toFixed(2).replace(".", ",") +
+            "&nbsp;€/m²"
           : "-"
       }}
     </td>
@@ -151,11 +161,12 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
     </div>
     <div class="flex shrink-0 flex-grow flex-col items-end gap-1">
       <span class="price block text-l font-light leading-5"
-        >{{ coldRentPrice ?? warmRentPrice ?? "-" }} €</span
+        >{{ coldRentPrice ?? warmRentPrice ?? "-" }}&nbsp;€</span
       >
-      <span class="square-footage block text-s font-light"
-        >{{ usableArea }} m²</span
-      >
+      <span
+        class="block text-s font-light"
+        v-html="formatArea(usableArea)"
+      ></span>
       <ApartmentFavoriteButton :id="id" />
     </div>
   </div>
