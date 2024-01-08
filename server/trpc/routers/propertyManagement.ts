@@ -7,6 +7,7 @@ import { db } from "~/db/db";
 import { propertyManagementList } from "~/data/propertyManagementList";
 import { address, flat, propertyManagement } from "~/db/schema";
 import { getBrowser } from "~/utils/getBrowser";
+import { isFulfilled } from "~/utils/typeHelper";
 const insertFlatSchema = createInsertSchema(flat);
 
 export const propertyManagementRouter = router({
@@ -84,43 +85,47 @@ export const propertyManagementRouter = router({
           });
 
         // upsert flats
+        const flatsToInsert = (
+          await Promise.allSettled(
+            flats.map(async (f) => {
+              let image: Buffer | null = null;
+              if (f.imageUrl) {
+                const imageBuffer = await (
+                  await fetch(f.imageUrl)
+                ).arrayBuffer();
+                image = await sharp(imageBuffer)
+                  .resize(200, 200, {
+                    fit: "cover",
+                  })
+                  .toBuffer();
+              }
+
+              return {
+                addressId: f.address.id,
+                coldRentPrice: f.coldRentPrice,
+                floor: f.floor,
+                propertyManagementId: slug,
+                id: f.id,
+                roomCount: f.roomCount,
+                title: f.title,
+                usableArea: f.usableArea,
+                warmRentPrice: f.warmRentPrice,
+                tags: f.tags ?? [],
+                lastSeen: new Date(),
+                firstSeen: new Date(),
+                url: f.url,
+                image,
+                deleted: null,
+              } satisfies z.infer<typeof insertFlatSchema>;
+            }),
+          )
+        )
+          .filter(isFulfilled)
+          .map((r) => r.value);
+
         await db
           .insert(flat)
-          .values(
-            await Promise.all(
-              flats.map(async (f) => {
-                let image: Buffer | null = null;
-                if (f.imageUrl) {
-                  const imageBuffer = await (
-                    await fetch(f.imageUrl)
-                  ).arrayBuffer();
-                  image = await sharp(imageBuffer)
-                    .resize(200, 200, {
-                      fit: "cover",
-                    })
-                    .toBuffer();
-                }
-
-                return {
-                  addressId: f.address.id,
-                  coldRentPrice: f.coldRentPrice,
-                  floor: f.floor,
-                  propertyManagementId: slug,
-                  id: f.id,
-                  roomCount: f.roomCount,
-                  title: f.title,
-                  usableArea: f.usableArea,
-                  warmRentPrice: f.warmRentPrice,
-                  tags: f.tags ?? [],
-                  lastSeen: new Date(),
-                  firstSeen: new Date(),
-                  url: f.url,
-                  image,
-                  deleted: null,
-                } satisfies z.infer<typeof insertFlatSchema>;
-              }),
-            ),
-          )
+          .values(flatsToInsert)
           .onConflictDoUpdate({
             target: flat.id,
             set: {

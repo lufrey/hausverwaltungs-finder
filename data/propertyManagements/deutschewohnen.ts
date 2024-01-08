@@ -1,4 +1,4 @@
-import type { Browser } from "puppeteer";
+import { z } from "zod";
 import {
   flatSchema,
   type Flat,
@@ -6,92 +6,86 @@ import {
 } from "../propertyManagementList";
 import { getAddress } from "../address";
 import type { Tags } from "../tags";
-import { hashString, parseUncleanFloat, parseUncleanInt } from "~/utils/util";
+import { hashString } from "~/utils/util";
 import { typedObjectKeys } from "~/utils/typeHelper";
+
+const listingSchema = z.object({
+  id: z.string(),
+  utilizationType: z.string(),
+  commercializationType: z.string(),
+  detailType: z.string(),
+  title: z.string(),
+  price: z.number(),
+  address: z.object({
+    street: z.string(),
+    houseNumber: z.string(),
+    zip: z.string(),
+    city: z.string(),
+    district: z.string(),
+  }),
+  images: z.array(
+    z.object({
+      filePath: z.string(),
+      title: z.string(),
+    }),
+  ),
+  requiresQualificationCertificate: z.boolean(),
+  area: z.number(),
+  rooms: z.number(),
+  date: z.string(),
+});
 
 export const deutschewohnen: PropertyManagement = {
   slug: "deutschewohnen",
   name: "Deutsche Wohnen SE",
-  getFlats: async (browser: Browser) => {
-    const url =
-      "https://www.deutsche-wohnen.com/immobilienangebote#page=1&commercializationType=rent&utilizationType=flat,retirement&location=Berlin&city=Berlin";
-    const page = await browser.newPage();
-    await page.goto(url);
+  getFlats: async () => {
+    const url = "https://immo-api.deutsche-wohnen.com/estate/findByFilter";
+
+    const postBody = {
+      infrastructure: {},
+      flatTypes: {},
+      other: {},
+      page: "1",
+      locale: "de",
+      commercializationType: "rent",
+      utilizationType: "flat,retirement",
+      location: "Berlin",
+      city: "Berlin",
+    };
+
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(postBody),
+    }).then((r) => r.json());
 
     try {
-      await page
-        .waitForSelector(
-          "#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowallSelection",
-          {
-            timeout: 4000, // dauert manchmal ewig auf dieser Seite...
-          },
-        )
-        .then(() =>
-          page.click(
-            "#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowallSelection",
-          ),
+      const parsedRes = z.array(z.any()).parse(res);
+      const listings = parsedRes
+        .map((listing) => {
+          const result = listingSchema.safeParse(listing);
+          if (result.success) {
+            return result.data;
+          }
+          return false;
+        })
+        .filter(Boolean);
+      if (parsedRes.length !== listings.length) {
+        console.log(
+          `parsed ${listings.length} of ${parsedRes.length} listings`,
         );
-    } catch (e) {
-      console.log("no cookie banner");
-    }
-
-    const readPage = async () => {
-      const apartments = await page.$$(".object-list__item");
+      }
 
       return await Promise.all(
-        apartments.map(async (apartment) => {
-          const title = await apartment.$eval(
-            "h2",
-            (titleElement) => titleElement.textContent?.trim() ?? "",
+        listings.map(async (listing) => {
+          const id = await hashString(listing.id);
+          const cleanedAddress = await getAddress(
+            id,
+            `${listing.address.street} ${listing.address.houseNumber}, ${listing.address.zip} ${listing.address.city}`,
           );
-
-          const idSource = await apartment.$eval(
-            "a.object-list__content-container",
-            (link) => (link as HTMLAnchorElement).href,
-          );
-
-          const addressRaw = await apartment.$eval(
-            ".object-list__address p",
-            (addressEl) => addressEl.textContent,
-          );
-
-          const areaRaw = await apartment.$eval(
-            ".object-list__detail-item span:has(sup)",
-            (space) => space.textContent, // '55,5 m2|'
-          );
-
-          const usableArea = areaRaw ? areaRaw.split(" ")[0] : "";
-          const roomsRaw = await apartment.$eval(
-            ".object-list__detail-item span:has(span+span)",
-            (roomCount) => roomCount.textContent, // '2\n Zimmer|'
-          );
-
-          const rooms = roomsRaw ? roomsRaw.split("\n")[0] : "";
-          const coldRentPrice = await apartment.$eval(
-            ".object-list__price-total",
-            (rent) => rent.textContent,
-          );
-
-          let imageUrl = "";
-          try {
-            imageUrl = await apartment.$eval(
-              ".slick-active .image-slider__image-container picture img",
-              (img) => {
-                const imgsrc = img.getAttribute("data-src");
-                return imgsrc || "";
-              },
-            );
-          } catch (e) {
-            console.log("Image not found");
-          }
-
-          if (!addressRaw) {
-            return false;
-          }
-          const id = await hashString(idSource);
-          const addressPretty = await getAddress(idSource, addressRaw);
-
-          if (!addressPretty || !coldRentPrice || !title) {
+          if (cleanedAddress === null) {
             return false;
           }
 
@@ -108,22 +102,24 @@ export const deutschewohnen: PropertyManagement = {
 
           const titleToTagsKeys = typedObjectKeys(titleToTagsMap);
           titleToTagsKeys.forEach((key) => {
-            if (title.toLowerCase().includes(key)) {
+            if (listing.title.toLowerCase().includes(key)) {
               tags.push(...titleToTagsMap[key]);
             }
           });
 
           const returnFlat = {
-            address: addressPretty,
-            title,
+            address: cleanedAddress,
+            title: listing.title,
             id,
-            roomCount: parseUncleanInt(rooms),
-            coldRentPrice: parseUncleanInt(coldRentPrice),
+            roomCount: listing.rooms,
+            coldRentPrice: listing.price,
             warmRentPrice: null,
-            usableArea: parseUncleanFloat(usableArea),
+            usableArea: listing.area,
             tags,
-            url: idSource,
-            imageUrl,
+            url: `https://www.deutsche-wohnen.com/immobilienangebote/${listing.id}`,
+            imageUrl: listing.images[0]?.filePath
+              ? `https://immo-api.deutsche-wohnen.com${listing.images[0]?.filePath}`
+              : null,
           } satisfies Flat;
           const result = flatSchema.safeParse(returnFlat);
           if (result.success) {
@@ -132,23 +128,9 @@ export const deutschewohnen: PropertyManagement = {
           return false;
         }),
       );
-    };
-
-    const pagesData = await readPage();
-
-    const paginationSelector =
-      "a.pagination__entry--control:has(.pagination__icon--next)";
-    let paginationNextButton = await page.$(paginationSelector);
-
-    while (paginationNextButton) {
-      await paginationNextButton.click();
-      await page.waitForNetworkIdle();
-      const newPageData = await readPage();
-      pagesData.push(...newPageData);
-      paginationNextButton = await page.$(paginationSelector);
+    } catch (e) {
+      console.log("error parsing json", e);
+      return [];
     }
-
-    await page.close();
-    return pagesData;
   },
 };

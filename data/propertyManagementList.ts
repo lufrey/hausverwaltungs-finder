@@ -36,14 +36,4 @@ export const propertyManagementList: PropertyManagement[] = [
   stadtundland,
   gewobag,
   deutschewohnen,
-  // {
-  //   id: "reanovo",
-  //   name: "Reanovo",
-  //   // @ts-ignore
-  //   getFlats: async () => {
-  //     const url = "https://reanovo.everreal.co/api/prism/public/expose?take=20";
-  //     const data = await fetch(url).then((r) => r.json());
-  //     return data;
-  //   },
-  // },
 ];
