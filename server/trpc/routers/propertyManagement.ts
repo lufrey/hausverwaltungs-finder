@@ -141,6 +141,7 @@ export const propertyManagementRouter = router({
               lastSeen: sql`excluded.lastSeen`,
               tags: sql`excluded.tags`,
               deleted: sql`excluded.deleted`,
+              url: sql`excluded.url`,
             },
             where: sql`flat.id = excluded.id`,
           });

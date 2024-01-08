@@ -116,7 +116,7 @@ export const deutschewohnen: PropertyManagement = {
             warmRentPrice: null,
             usableArea: listing.area,
             tags,
-            url: `https://www.deutsche-wohnen.com/immobilienangebote/${listing.id}`,
+            url: `https://www.deutsche-wohnen.com/expose/object/${listing.id}`,
             imageUrl: listing.images[0]?.filePath
               ? `https://immo-api.deutsche-wohnen.com${listing.images[0]?.filePath}`
               : null,
