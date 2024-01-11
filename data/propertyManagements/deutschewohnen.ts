@@ -5,9 +5,8 @@ import {
   type PropertyManagement,
 } from "../propertyManagementList";
 import { getAddress } from "../address";
-import type { Tags } from "../tags";
+import { getTagsForTitle } from "../tags";
 import { hashString } from "~/utils/util";
-import { typedObjectKeys } from "~/utils/typeHelper";
 
 const listingSchema = z.object({
   id: z.string(),
@@ -89,24 +88,6 @@ export const deutschewohnen: PropertyManagement = {
             return false;
           }
 
-          const tags: Tags = [];
-
-          const titleToTagsMap = {
-            altbau: ["altbau"],
-            neubau: ["neubau"],
-            wbs: ["wbs"],
-            garage: ["garage"],
-            stellplatz: ["stellplatz"],
-            parkplatz: ["parkplatz"],
-          } as const;
-
-          const titleToTagsKeys = typedObjectKeys(titleToTagsMap);
-          titleToTagsKeys.forEach((key) => {
-            if (listing.title.toLowerCase().includes(key)) {
-              tags.push(...titleToTagsMap[key]);
-            }
-          });
-
           const returnFlat = {
             address: cleanedAddress,
             title: listing.title,
@@ -115,7 +96,7 @@ export const deutschewohnen: PropertyManagement = {
             coldRentPrice: listing.price,
             warmRentPrice: null,
             usableArea: listing.area,
-            tags,
+            tags: getTagsForTitle(listing.title),
             url: `https://www.deutsche-wohnen.com/expose/object/${listing.id}`,
             imageUrl: listing.images[0]?.filePath
               ? `https://immo-api.deutsche-wohnen.com${listing.images[0]?.filePath}`

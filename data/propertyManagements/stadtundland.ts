@@ -5,9 +5,8 @@ import {
   type PropertyManagement,
 } from "../propertyManagementList";
 import { getAddress } from "../address";
-import type { Tags } from "../tags";
+import { getTagsForTitle } from "../tags";
 import { hashString, parseUncleanFloat, parseUncleanInt } from "~/utils/util";
-import { typedObjectKeys } from "~/utils/typeHelper";
 
 export const stadtundland: PropertyManagement = {
   slug: "stadtundland",
@@ -95,24 +94,6 @@ export const stadtundland: PropertyManagement = {
             return false;
           }
 
-          const tags: Tags = [];
-
-          const titleToTagsMap = {
-            altbau: ["altbau"],
-            neubau: ["neubau"],
-            wbs: ["wbs"],
-            garage: ["garage"],
-            stellplatz: ["stellplatz"],
-            parkplatz: ["parkplatz"],
-          } as const;
-
-          const titleToTagsKeys = typedObjectKeys(titleToTagsMap);
-          titleToTagsKeys.forEach((key) => {
-            if (title.toLowerCase().includes(key)) {
-              tags.push(...titleToTagsMap[key]);
-            }
-          });
-
           const returnFlat = {
             address,
             title,
@@ -121,7 +102,7 @@ export const stadtundland: PropertyManagement = {
             coldRentPrice,
             warmRentPrice: parseUncleanInt(mappedTableData.warmRentPrice),
             usableArea: parseUncleanFloat(mappedTableData.usableArea),
-            tags,
+            tags: getTagsForTitle(title),
             url: idSource,
             imageUrl,
           } satisfies Flat;
