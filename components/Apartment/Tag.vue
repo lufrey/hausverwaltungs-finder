@@ -10,8 +10,21 @@ defineProps<{
 <template>
   <NuxtLink
     :to="`/overview?tags=${tag}`"
-    class="py-0.25 rounded-full px-2.5 text-xs"
+    class="py-0.25 flex items-center gap-1 rounded-full px-2.5 text-xs"
   >
     {{ tags[tag] }}
+    <svg
+      v-if="tag === 'new'"
+      class="h-3 w-3 text-accent"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 14 14"
+    >
+      <path
+        d="M4.4,8.95c3.17,0,4.55-1.33,4.55-4.55,0,3.22,1.37,4.55,4.55,4.55-3.18,0-4.55,1.37-4.55,4.55,0-3.18-1.38-4.55-4.55-4.55ZM.5,3.42c2.04,0,2.92-.86,2.92-2.92,0,2.07.88,2.92,2.92,2.92-2.04,0-2.92.88-2.92,2.92,0-2.04-.89-2.92-2.92-2.92Z"
+        fill="currentColor"
+        stroke="currentColor"
+        stroke-linejoin="round"
+      />
+    </svg>
   </NuxtLink>
 </template>
