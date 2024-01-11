@@ -8,7 +8,8 @@ const { urlStateWithArrayValues } = useUrlState<{
   tags: Tags;
   propertyManagements: string[];
   districts: string[];
-  limit: string;
+  page: string;
+  pageSize: string;
 }>();
 
 // @ts-ignore TODO: self healing url params with schema
@@ -40,20 +41,20 @@ const tableHeaders = {
 };
 
 const countText = computed(() => {
-  const count = flatsQuery.data?.value?.data.length ?? 0;
   const total = flatsQuery.data?.value?.totalElementsCount ?? 0;
-  if (count === 0) {
+  const filtered = flatsQuery.data?.value?.filteredElementsCount ?? 0;
+  if (filtered === 0) {
     return "Keine Wohnungen";
   }
-  if (count === total) {
-    return `Alle Wohnungen (${count})`;
+  if (filtered === total) {
+    return `Alle Wohnungen (${total})`;
   }
-  return `Wohnungen (${count} von ${total})`;
+  return `Wohnungen (${filtered} von ${total})`;
 });
 </script>
 <template>
   <div>
-    <table class="-mx-4 hidden w-full lg:table">
+    <table class="hidden w-full lg:table">
       <thead class="bg-background">
         <tr class="">
           <th class="-m-4 rounded-l-xl p-4 font-medium">
@@ -101,6 +102,26 @@ const countText = computed(() => {
         />
       </tbody>
     </table>
+
+    <div
+      colspan="100"
+      class="w-full rounded-xl bg-background p-4"
+    >
+      <Pagination
+        :total-elements-count="flats?.totalElementsCount ?? 0"
+        :filtered-elements-count="flats?.filteredElementsCount ?? 0"
+        :current-page="
+          urlStateWithArrayValues.page
+            ? Number(urlStateWithArrayValues.page)
+            : 1
+        "
+        :page-size="
+          urlStateWithArrayValues.pageSize
+            ? Number(urlStateWithArrayValues.pageSize)
+            : 25
+        "
+      />
+    </div>
 
     <div class="lg:hidden">
       <h2 class="mb-4 text-xl">

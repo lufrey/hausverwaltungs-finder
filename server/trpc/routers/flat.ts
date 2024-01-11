@@ -61,8 +61,8 @@ export const flatRouter = router({
     .input(
       z
         .object({
-          limit: z.coerce.number().optional().default(100),
-          offset: z.number().optional().default(0),
+          pageSize: z.array(z.coerce.number()).optional().default([25]),
+          page: z.array(z.coerce.number()).optional().default([1]),
           tags: z.array(z.string()).optional(),
           propertyManagements: z.array(z.string()).optional(),
           districts: z.array(z.string()).optional(),
@@ -145,7 +145,7 @@ export const flatRouter = router({
           })
           .from(flat)
           .where(isNull(flat.deleted))
-      )[0].count;
+      )[0].count as number;
 
       // get the flatIds of all flats that fulfill the filters
       const flatIdsQuery = db
@@ -159,8 +159,8 @@ export const flatRouter = router({
         .innerJoin(address, eq(flat.addressId, address.id))
         .groupBy(flat.id)
         .where(and(...filters))
-        .limit(input.limit)
-        .offset(input.offset);
+        .limit(input.pageSize[0])
+        .offset((input.page[0] - 1) * input.pageSize[0]);
 
       // run the full query, there will be multiples, because of the m:n relation to the tags
       const query = db
