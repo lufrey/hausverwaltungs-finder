@@ -58,12 +58,24 @@ export const propertyManagementRouter = router({
 
       const browser = await getBrowser();
 
-      const scrapedData = await Promise.all(
-        propertyManagements.map(async ({ getFlats, slug }) => ({
-          slug,
-          flats: (await getFlats(browser)).filter(Boolean),
-        })),
-      );
+      const scrapedData = (
+        await Promise.all(
+          propertyManagements.map(async ({ getFlats, slug }) => {
+            let data = null;
+            try {
+              data = await getFlats(browser);
+            } catch (e) {
+              console.error(e);
+              return false;
+            }
+
+            return {
+              slug,
+              flats: data.filter(Boolean),
+            };
+          }),
+        )
+      ).filter(Boolean);
 
       const dbPromises = scrapedData.map(async ({ slug, flats }) => {
         const addresses = flats.map((f) => f.address).filter(Boolean);

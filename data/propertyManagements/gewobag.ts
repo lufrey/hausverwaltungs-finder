@@ -61,9 +61,10 @@ export const gewobag: PropertyManagement = {
             ? warmRentPriceText.substring(3) // ab 841,75€
             : "";
 
-          const imageUrl = await el.$eval("img[alt='Hausansicht']", (img) => {
-            return img.src;
-          });
+          const imageEl = await el.$("img[alt='Hausansicht");
+          const imageUrl = imageEl
+            ? await imageEl.evaluate((img) => img.src)
+            : await el.$eval("img", (img) => img.src);
 
           if (!addressRaw) {
             return false;
