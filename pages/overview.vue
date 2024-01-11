@@ -38,6 +38,18 @@ const tableHeaders = {
     sortable: false,
   },
 };
+
+const countText = computed(() => {
+  const count = flatsQuery.data?.value?.data.length ?? 0;
+  const total = flatsQuery.data?.value?.totalElementsCount ?? 0;
+  if (count === 0) {
+    return "Keine Wohnungen";
+  }
+  if (count === total) {
+    return `Alle Wohnungen (${count})`;
+  }
+  return `Wohnungen (${count} von ${total})`;
+});
 </script>
 <template>
   <div>
@@ -45,7 +57,7 @@ const tableHeaders = {
       <thead class="bg-background">
         <tr class="">
           <th class="-m-4 rounded-l-xl p-4 font-medium">
-            Immobilien ({{ flats?.length ?? 0 }})
+            {{ countText }}
           </th>
           <th
             v-for="[headerKey, header] in Object.entries(tableHeaders)"
@@ -71,7 +83,7 @@ const tableHeaders = {
           <td class="p-2"></td>
         </tr>
         <ApartmentDetails
-          v-for="flat in flats"
+          v-for="flat in flats?.data"
           :id="flat.id"
           :key="flat.id"
           :room-count="flat.roomCount"
@@ -91,10 +103,12 @@ const tableHeaders = {
     </table>
 
     <div class="lg:hidden">
-      <h2 class="mb-4 text-xl">Alle Wohnungen ({{ flats?.length ?? 0 }})</h2>
+      <h2 class="mb-4 text-xl">
+        Alle Wohnungen ({{ flats?.data.length ?? 0 }})
+      </h2>
       <main>
         <ApartmentDetails
-          v-for="flat in flats"
+          v-for="flat in flats?.data"
           :id="flat.id"
           :key="flat.id"
           :room-count="flat.roomCount"

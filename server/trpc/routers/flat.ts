@@ -125,6 +125,28 @@ export const flatRouter = router({
         input.maxUsableArea && sql`usableArea <= ${input.maxUsableArea}`,
       ].filter(Boolean);
 
+      const filteredElementsCount = (
+        await db
+          .select({
+            count: sql`COUNT(*)`,
+            isNew: countsAsNewFilter,
+          })
+          .from(flat)
+          .leftJoin(flatToTag, eq(flat.id, flatToTag.flatId))
+          .innerJoin(address, eq(flat.addressId, address.id))
+          .groupBy(flat.id)
+          .where(and(...filters))
+      ).length;
+
+      const totalElementsCount = (
+        await db
+          .select({
+            count: sql`COUNT(*)`,
+          })
+          .from(flat)
+          .where(isNull(flat.deleted))
+      )[0].count;
+
       // get the flatIds of all flats that fulfill the filters
       const flatIdsQuery = db
         .select({
@@ -183,6 +205,11 @@ export const flatRouter = router({
           }
         >,
       );
-      return Object.values(data);
+
+      return {
+        totalElementsCount,
+        filteredElementsCount,
+        data: Object.values(data),
+      };
     }),
 });
