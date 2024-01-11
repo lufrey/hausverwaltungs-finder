@@ -15,18 +15,32 @@ const maxPage = computed(() => {
   return Math.ceil(props.filteredElementsCount / props.pageSize);
 });
 
-const updatePage = (page: number) => {
+const pageSizeOptions = [25, 50, 100];
+
+const updatePagination = (page: number, pageSize: number) => {
+  const pageSizeToGoTo = pageSizeOptions.includes(pageSize)
+    ? pageSize
+    : pageSizeOptions[0];
+
   // automatically fix page, when it is out of bounds
   const pageToGoTo = Math.min(
     Math.max(1, page),
-    Math.ceil(props.filteredElementsCount / props.pageSize),
+    Math.ceil(props.filteredElementsCount / pageSizeToGoTo),
   );
-  updateQueryState({ page: String(pageToGoTo) });
+
+  updateQueryState({
+    page: String(pageToGoTo),
+    pageSize: String(pageSizeToGoTo),
+  });
 };
 
 if (props.currentPage > maxPage.value) {
-  updatePage(maxPage.value);
+  updatePagination(maxPage.value, props.pageSize);
 }
+
+onMounted(() => {
+  updatePagination(props.currentPage, props.pageSize);
+});
 </script>
 
 <template>
@@ -35,16 +49,16 @@ if (props.currentPage > maxPage.value) {
       <label class="">Einträge pro Seite</label>
       <select
         class="rounded-md bg-white text-center shadow-inner [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-        :value="props.pageSize"
+        :value="pageSize"
         @change="
           ($event: Event) => {
             const target = $event.target as HTMLSelectElement;
-            updateQueryState({ pageSize: target.value });
+            updatePagination(currentPage, Number(target.value));
           }
         "
       >
         <option
-          v-for="ps in [25, 50, 100]"
+          v-for="ps in pageSizeOptions"
           :key="ps"
           :value="ps"
           :selected="ps === props.pageSize"
@@ -58,14 +72,14 @@ if (props.currentPage > maxPage.value) {
         <button
           :disabled="currentPage === 1"
           class="rounded-full bg-background p-2 text-accent transition-colors duration-200 hover:bg-accent hover:text-white disabled:opacity-50"
-          @click="updatePage(1)"
+          @click="updatePagination(1, pageSize)"
         >
           &lt;&lt;
         </button>
         <button
           :disabled="currentPage === 1"
           class="rounded-full bg-background p-2 text-accent transition-colors duration-200 hover:bg-accent hover:text-white disabled:opacity-50"
-          @click="updatePage(currentPage - 1)"
+          @click="updatePagination(currentPage - 1, pageSize)"
         >
           &lt;
         </button>
@@ -76,14 +90,14 @@ if (props.currentPage > maxPage.value) {
         <button
           :disabled="currentPage === maxPage"
           class="rounded-full bg-background p-2 text-accent transition-colors duration-200 hover:bg-accent hover:text-white disabled:opacity-50"
-          @click="updatePage(currentPage + 1)"
+          @click="updatePagination(currentPage + 1, pageSize)"
         >
           &gt;
         </button>
         <button
           :disabled="currentPage === maxPage"
           class="rounded-full bg-background p-2 text-accent transition-colors duration-200 hover:bg-accent hover:text-white disabled:opacity-50"
-          @click="updatePage(maxPage)"
+          @click="updatePagination(maxPage, pageSize)"
         >
           &gt;&gt;
         </button>
