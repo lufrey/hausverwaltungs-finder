@@ -35,6 +35,14 @@ export function formatArea(input: number | null) {
   return (input.toFixed(1) + "&nbsp;m²").replace(".", ",");
 }
 
+export function formatPrice(input: number | null, rounded = false) {
+  if (!input) {
+    return "-";
+  }
+  const val = rounded ? Math.round(input) : input.toFixed(2);
+  return (val + "&nbsp;€").replace(".", ",");
+}
+
 export function hashString(input: string) {
   return crypto.subtle
     .digest("SHA-1", new TextEncoder().encode(input))

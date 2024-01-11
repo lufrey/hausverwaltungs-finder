@@ -7,8 +7,6 @@ import { omit } from "~/utils/typeHelper";
 import { berlinDistricts } from "~/data/districts";
 import { type Tags, tagsSchema } from "~/data/tags";
 
-const sqlTrue = sql`true`;
-
 const countsAsNewTime = 60 * 60 * 12;
 export const countsAsNewFilter = sql<
   0 | 1
@@ -68,6 +66,11 @@ export const flatRouter = router({
           tags: z.array(z.string()).optional(),
           propertyManagements: z.array(z.string()).optional(),
           districts: z.array(z.string()).optional(),
+          minPrice: z.coerce.number().optional(),
+          maxPrice: z.coerce.number().optional(),
+          roomCount: z.coerce.number().optional(),
+          minUsableArea: z.coerce.number().optional(),
+          maxUsableArea: z.coerce.number().optional(),
         })
         .optional()
         .default({}),
@@ -81,6 +84,47 @@ export const flatRouter = router({
       }
       const tagsToFilterFor = tagsSchema.safeParse(input.tags ?? []);
 
+      const filters = [
+        // not deleted
+        isNull(flat.deleted),
+
+        // property management filter
+        input.propertyManagements &&
+          inArray(flat.propertyManagementId, input.propertyManagements),
+
+        // district filter
+        input.districts &&
+          inArray(
+            address.postalCode,
+            input.districts
+              .map((d) => {
+                // @ts-ignore
+                const district = berlinDistricts[d];
+                return district?.zipCodes ?? [];
+              })
+              .flat(),
+          ),
+
+        // countsAsNew filter
+        onlyShowNew && sql`isNew = 1`,
+
+        // tag filter
+        tagsToFilterFor.success &&
+          tagsToFilterFor.data.length > 0 &&
+          inArray(flatToTag.tagId, tagsToFilterFor.data),
+
+        // price filter
+        input.minPrice && sql`warmRentPrice >= ${input.minPrice}`,
+        input.maxPrice && sql`warmRentPrice <= ${input.maxPrice}`,
+
+        // room count filter
+        input.roomCount && eq(flat.roomCount, input.roomCount),
+
+        // usable area filter
+        input.minUsableArea && sql`usableArea >= ${input.minUsableArea}`,
+        input.maxUsableArea && sql`usableArea <= ${input.maxUsableArea}`,
+      ].filter(Boolean);
+
       // get the flatIds of all flats that fulfill the filters
       const flatIdsQuery = db
         .select({
@@ -92,35 +136,7 @@ export const flatRouter = router({
         .leftJoin(flatToTag, eq(flat.id, flatToTag.flatId))
         .innerJoin(address, eq(flat.addressId, address.id))
         .groupBy(flat.id)
-        .where(
-          and(
-            // not deleted
-            isNull(flat.deleted),
-            // fulfills property management filter
-            input.propertyManagements
-              ? inArray(flat.propertyManagementId, input.propertyManagements)
-              : sqlTrue,
-            // fulfills district filter
-            input.districts
-              ? inArray(
-                  address.postalCode,
-                  input.districts
-                    .map((d) => {
-                      // @ts-ignore
-                      const district = berlinDistricts[d];
-                      return district?.zipCodes ?? [];
-                    })
-                    .flat(),
-                )
-              : sqlTrue,
-            // fulfills countsAsNew filter
-            onlyShowNew ? sql`isNew = 1` : sqlTrue,
-            // fulfills tag filter
-            tagsToFilterFor.success && tagsToFilterFor.data.length > 0
-              ? inArray(flatToTag.tagId, tagsToFilterFor.data)
-              : sqlTrue,
-          ),
-        )
+        .where(and(...filters))
         .limit(input.limit)
         .offset(input.offset);
 

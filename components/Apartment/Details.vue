@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { type Tags } from "@/data/tags";
-import { formatArea } from "~/utils/util";
+import { formatArea, formatPrice } from "~/utils/util";
 
 const props = withDefaults(
   defineProps<{
@@ -61,7 +61,7 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
               {{ title }}
             </h3>
           </NuxtLink>
-          <div class="flex gap-x-3">
+          <div class="flex flex-col gap-x-3 text-left">
             <h4 class="overflow-hidden text-ellipsis text-s font-light">
               {{ address.street }} {{ address.streetNumber }}
             </h4>
@@ -78,7 +78,10 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
         </div>
       </div>
     </td>
-    <td class="p-4">{{ coldRentPrice ?? warmRentPrice ?? "-" }}&nbsp;€</td>
+    <td
+      class="p-4"
+      v-html="formatPrice(shownPrice)"
+    ></td>
     <td class="p-4">
       {{ roomCount ?? "-" }}
     </td>
@@ -160,9 +163,10 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
       </div>
     </div>
     <div class="flex shrink-0 flex-grow flex-col items-end gap-1">
-      <span class="price block text-l font-light leading-5"
-        >{{ coldRentPrice ?? warmRentPrice ?? "-" }}&nbsp;€</span
-      >
+      <span
+        class="price block text-l font-light leading-5"
+        v-html="formatPrice(shownPrice)"
+      ></span>
       <span
         class="block text-s font-light"
         v-html="formatArea(usableArea)"

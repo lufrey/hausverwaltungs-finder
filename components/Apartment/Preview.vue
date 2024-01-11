@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { type Tags } from "@/data/tags";
+import { formatPrice } from "~/utils/util";
 
 const props = defineProps<{
   id: string;
@@ -65,9 +66,10 @@ const { img } = useApartment(props);
       </div>
     </div>
     <div class="flex shrink-0 flex-grow flex-col items-end gap-1">
-      <span class="price block text-l font-light leading-5"
-        >{{ coldRentPrice ?? warmRentPrice ?? "-" }}&nbsp;€</span
-      >
+      <span
+        class="price block text-l font-light leading-5"
+        v-html="formatPrice(warmRentPrice ?? coldRentPrice, true)"
+      ></span>
       <span
         class="block text-s font-light"
         v-html="formatArea(usableArea)"
