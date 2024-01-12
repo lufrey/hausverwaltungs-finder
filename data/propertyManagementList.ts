@@ -5,6 +5,7 @@ import { tagsSchema } from "./tags";
 import { stadtundland } from "./propertyManagements/stadtundland";
 import { gewobag } from "./propertyManagements/gewobag";
 import { deutschewohnen } from "./propertyManagements/deutschewohnen";
+import { berlinovo } from "./propertyManagements/berlinovo";
 
 export const flatSchema = z.object({
   id: z.string(),
@@ -36,4 +37,5 @@ export const propertyManagementList: PropertyManagement[] = [
   stadtundland,
   gewobag,
   deutschewohnen,
+  berlinovo,
 ];
