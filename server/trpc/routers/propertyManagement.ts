@@ -7,7 +7,7 @@ import { db } from "~/db/db";
 import { propertyManagementList } from "~/data/propertyManagementList";
 import { address, flat, flatToTag, propertyManagement, tag } from "~/db/schema";
 import { getBrowser } from "~/utils/getBrowser";
-import { isFulfilled } from "~/utils/typeHelper";
+import { isFulfilled, isRejected } from "~/utils/typeHelper";
 import { tags } from "~/data/tags";
 const insertFlatSchema = createInsertSchema(flat);
 
@@ -85,11 +85,12 @@ export const propertyManagementRouter = router({
           .filter((tag) => !!tags[tag])
           .map((tag) => ({ id: tag, name: tags[tag] }));
 
-        await db
-          .insert(tag)
-          .values(tagsToInsert)
-          .onConflictDoNothing()
-          .execute();
+        tagsToInsert.length &&
+          (await db
+            .insert(tag)
+            .values(tagsToInsert)
+            .onConflictDoNothing()
+            .execute());
 
         // upsert addresses
         await db
@@ -174,11 +175,12 @@ export const propertyManagementRouter = router({
             flat.tags.map((tag) => ({ flatId: flat.id, tagId: tag })),
           )
           .flat();
-        await db
-          .insert(flatToTag)
-          .values(flatToTagRelations)
-          .onConflictDoNothing()
-          .execute();
+        flatToTagRelations.length &&
+          (await db
+            .insert(flatToTag)
+            .values(flatToTagRelations)
+            .onConflictDoNothing()
+            .execute());
 
         const existingFlats = await db
           .select()
@@ -199,7 +201,13 @@ export const propertyManagementRouter = router({
             .execute();
         }
       });
-      await Promise.allSettled(dbPromises);
+      const settledDbPromises = await Promise.allSettled(dbPromises);
+      settledDbPromises
+        .filter((p) => isRejected(p))
+        .forEach((p) => {
+          console.error(p);
+        });
+
       if (input?.return) {
         return scrapedData;
       }
