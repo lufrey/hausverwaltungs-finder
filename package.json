@@ -16,7 +16,7 @@
     "@nuxtjs/eslint-config-typescript": "^12.1.0",
     "@nuxtjs/eslint-module": "^4.1.0",
     "@nuxtjs/google-fonts": "^3.0.2",
-    "@nuxtjs/tailwindcss": "latest",
+    "@nuxtjs/tailwindcss": "^6.10.4",
     "@total-typescript/ts-reset": "^0.5.1",
     "@typescript-eslint/eslint-plugin": "^6.11.0",
     "@typescript-eslint/parser": "^6.11.0",
@@ -43,6 +43,7 @@
     "puppeteer": "^21.5.2",
     "sharp": "^0.32.6",
     "trpc-nuxt": "^0.10.12",
+    "vue3-google-map": "^0.18.0",
     "zod": "^3.22.4"
   }
 }

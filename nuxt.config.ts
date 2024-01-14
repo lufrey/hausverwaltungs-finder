@@ -1,5 +1,5 @@
 import { defineNuxtConfig } from "nuxt/config";
-import "./env";
+import { env } from "./env";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -48,5 +48,10 @@ export default defineNuxtConfig({
   },
   experimental: {
     clientFallback: true,
+  },
+  runtimeConfig: {
+    public: {
+      googleMapsApiKey: env.NUXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    },
   },
 });

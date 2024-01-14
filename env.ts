@@ -19,5 +19,7 @@ export const env = createEnv({
     TURSO_TOKEN: z.string().min(1).optional(),
     CRON_TOKEN: z.string().min(1).optional(),
   },
-  client: {},
+  client: {
+    NUXT_PUBLIC_GOOGLE_MAPS_API_KEY: z.string().min(1),
+  },
 });

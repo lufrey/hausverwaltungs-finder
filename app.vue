@@ -57,6 +57,9 @@ useHead({
       content: "de",
     },
   ],
+  bodyAttrs: {
+    class: "antialiased min-h-dvh h-1",
+  },
 });
 </script>
 
@@ -65,3 +68,9 @@ useHead({
     <NuxtPage />
   </NuxtLayout>
 </template>
+
+<style>
+#__nuxt {
+  height: 100%;
+}
+</style>
