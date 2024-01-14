@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { GoogleMap, Marker } from "vue3-google-map";
+import { GoogleMap, Marker, InfoWindow } from "vue3-google-map";
+import { getFlatImageUrl } from "~/utils/flat";
+
 const { $client } = useNuxtApp();
 
 useHead({
@@ -13,17 +15,21 @@ definePageMeta({
 
 const flatsQuery = await $client.flat.getAll.useQuery();
 
-const flats = flatsQuery.data ?? [];
+const flats = flatsQuery.data ?? {
+  data: [],
+};
 
 const center = {
   lat: 52.520008,
   lng: 13.404954,
 };
+
+const infoWindowsOpen = ref<Record<string, boolean>>({});
 </script>
 <template>
   <div class="flex h-full flex-col">
     <GoogleMap
-      class="w-full grow"
+      class="w-full grow overflow-hidden rounded-xl"
       :center="center"
       :zoom="11"
       :api-key="$config.public.googleMapsApiKey"
@@ -37,7 +43,6 @@ const center = {
               lat: flat.address.latitude,
               lng: flat.address.longitude,
             },
-            title: flat.title,
           }"
           @click="
             () =>
@@ -48,7 +53,36 @@ const center = {
                 },
               })
           "
-        />
+          @mouseover="() => (infoWindowsOpen[flat.id] = true)"
+          @mouseout="() => (infoWindowsOpen[flat.id] = false)"
+        >
+          <InfoWindow :model-value="infoWindowsOpen[flat.id]">
+            <div class="flex w-40 flex-col gap-4 p-2">
+              <NuxtImg
+                :src="getFlatImageUrl(flat)"
+                :alt="flat.title"
+                class="aspect-square h-32 w-32 rounded-md"
+              />
+              <div class="break-words font-bold">
+                {{ flat.title }}
+              </div>
+              <ul>
+                <li>
+                  {{ flat.address.street }} {{ flat.address.streetNumber }}
+                </li>
+                <li>
+                  <ApartmentDistrict
+                    class="underline hover:no-underline"
+                    :zip-code="flat.address.postalCode"
+                  />
+                </li>
+                <li>{{ flat.roomCount }} Zimmer</li>
+                <li>{{ flat.usableArea }} m²</li>
+                <li>{{ flat.warmRentPrice ?? flat.coldRentPrice }} €</li>
+              </ul>
+            </div>
+          </InfoWindow>
+        </Marker>
       </ClientOnly>
     </GoogleMap>
   </div>

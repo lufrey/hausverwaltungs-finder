@@ -33,9 +33,19 @@ export type PropertyManagement = z.infer<typeof propertyManagementSchema> & {
   getFlats: (browser: Browser) => Promise<(Flat | false)[]>;
 };
 
-export const propertyManagementList: PropertyManagement[] = [
+export const propertyManagementList = [
   stadtundland,
   gewobag,
   deutschewohnen,
   berlinovo,
-];
+] as const satisfies Readonly<PropertyManagement[]>;
+
+export const propertyManagementMap = Object.fromEntries(
+  propertyManagementList.map((pm) => [
+    pm.slug,
+    {
+      name: pm.name,
+      website: pm.website,
+    },
+  ]),
+) as Record<string, PropertyManagement>;

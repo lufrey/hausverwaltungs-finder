@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { type Tags } from "@/data/tags";
+import { getFlatImageUrl } from "~/utils/flat";
 import { formatArea, formatPrice } from "~/utils/util";
 
 const props = withDefaults(
@@ -25,8 +26,11 @@ const props = withDefaults(
     as: "card",
   },
 );
+const img = getFlatImageUrl({
+  id: props.id,
+  hasImage: Boolean(props.imageSrc),
+});
 
-const { img } = useApartment(props);
 const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
 </script>
 

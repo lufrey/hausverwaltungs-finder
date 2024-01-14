@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { type Tags } from "@/data/tags";
+import { getFlatImageUrl } from "~/utils/flat";
 import { formatPrice } from "~/utils/util";
 
 const props = defineProps<{
@@ -19,7 +20,10 @@ const props = defineProps<{
   firstSeen: Date;
 }>();
 
-const { img } = useApartment(props);
+const img = getFlatImageUrl({
+  id: props.id,
+  hasImage: Boolean(props.imageSrc),
+});
 </script>
 
 <template>
