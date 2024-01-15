@@ -38,7 +38,7 @@ export const propertyManagementList = [
   gewobag,
   deutschewohnen,
   berlinovo,
-] as const satisfies Readonly<PropertyManagement[]>;
+] satisfies Readonly<PropertyManagement[]>;
 
 export const propertyManagementMap = Object.fromEntries(
   propertyManagementList.map((pm) => [

@@ -4,6 +4,7 @@ const propertyManagementsWithFlats = await $client.flat.getFeatured.query({
   limit: 7,
 });
 const flats = propertyManagementsWithFlats;
+const origin = useRequestURL().origin;
 </script>
 
 <template>
@@ -56,7 +57,7 @@ const flats = propertyManagementsWithFlats;
       title="Zur Karte"
     >
       <NuxtImg
-        src="/map-preview.png"
+        :src="`${origin}/api/image/map-preview`"
         alt="Vorschau der Karte"
         class="h-full w-full object-cover"
         format="webp"

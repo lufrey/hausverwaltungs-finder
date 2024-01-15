@@ -9,6 +9,7 @@ import { address, flat, flatToTag, propertyManagement, tag } from "~/db/schema";
 import { getBrowser } from "~/utils/getBrowser";
 import { isFulfilled, isRejected } from "~/utils/typeHelper";
 import { tags } from "~/data/tags";
+import { updateMapPreview } from "~/server/updateMapPreview";
 const insertFlatSchema = createInsertSchema(flat);
 
 export const propertyManagementRouter = router({
@@ -207,6 +208,9 @@ export const propertyManagementRouter = router({
         .forEach((p) => {
           console.error(p);
         });
+
+      // start map preview update
+      updateMapPreview();
 
       if (input?.return) {
         return scrapedData;
