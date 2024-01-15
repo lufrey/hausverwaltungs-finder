@@ -32,7 +32,7 @@ export async function updateMapPreview() {
     .map((f) => `${f.address.latitude},${f.address.longitude}`)
     .join("|");
 
-  const markerFileUrl = "https://apartifind.lksfr.de/marker.png";
+  const markerFileUrl = "https://apartifind.lksfr.de/marker.png?v=1.0";
 
   url.searchParams.set("markers", `icon:${markerFileUrl}|${markers}`);
   // load image and save it to disk
