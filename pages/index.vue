@@ -52,18 +52,16 @@ const flats = propertyManagementsWithFlats;
     </div>
     <NuxtLink
       to="/map"
-      class="map_preview relative rounded-3xl bg-[green]"
+      class="map_preview relative overflow-hidden rounded-3xl border border-black bg-[green]"
+      title="Zur Karte"
     >
-      <img
-        src="/map_preview.png"
-        alt=""
-        class="object-cover"
+      <NuxtImg
+        src="/map-preview.png"
+        alt="Vorschau der Karte"
+        class="h-full w-full object-cover"
+        format="webp"
       />
-      <img
-        class="absolute bottom-0 right-0 mb-3 mr-3"
-        src="/zoom_in.svg"
-        alt=""
-      />
+      <IconZoomIn class="absolute bottom-0 right-0 mb-3 mr-3" />
     </NuxtLink>
 
     <div class="decoration relative overflow-hidden rounded-3xl">

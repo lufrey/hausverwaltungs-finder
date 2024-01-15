@@ -21,5 +21,6 @@ export const env = createEnv({
   },
   client: {
     NUXT_PUBLIC_GOOGLE_MAPS_API_KEY: z.string().min(1),
+    NUXT_PUBLIC_GOOGLE_MAPS_MAP_ID: z.string().min(1),
   },
 });

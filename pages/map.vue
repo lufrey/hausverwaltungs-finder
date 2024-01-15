@@ -33,6 +33,7 @@ const infoWindowsOpen = ref<Record<string, boolean>>({});
       :center="center"
       :zoom="11"
       :api-key="$config.public.googleMapsApiKey"
+      :map-id="$config.public.googleMapsId"
     >
       <ClientOnly>
         <Marker

@@ -25,3 +25,6 @@ db/sqlite.db
 .env
 .env.*
 !.env.sample
+
+# Generated Map Preview
+public/map-preview.png
