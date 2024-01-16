@@ -13,7 +13,10 @@ definePageMeta({
   },
 });
 
-const flatsQuery = await $client.flat.getAll.useQuery();
+const flatsQuery = await $client.flat.getAll.useQuery({
+  pageSize: [1000],
+  page: [1],
+});
 
 const flats = flatsQuery.data ?? {
   data: [],

@@ -7,7 +7,7 @@ import {
 export default defineEventHandler(async () => {
   // if it doesn't exist, create it
   if (!fs.existsSync(mapPreviewImagePath)) {
-    return await updateMapPreview();
+    await updateMapPreview();
   }
 
   return fs.readFileSync(mapPreviewImagePath);
