@@ -8,18 +8,11 @@ const config: Partial<Config> = {
       poppins: ["Poppins", "sans-serif"],
     },
     fontSize: {
-      xs: "12px",
-      s: "14px",
-      m: "18px",
-      l: "20px",
-      xl: "32px",
-      xxl: [
-        "6rem",
-        {
-          lineHeight: "6.5rem",
-          fontWeight: "700",
-        },
-      ],
+      xs: "0.75rem",
+      s: "0.875rem",
+      m: "1.125rem",
+      l: "1.25rem",
+      xl: "2rem",
     },
     extend: {
       colors: {

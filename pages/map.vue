@@ -27,9 +27,9 @@ const center = {
 const infoWindowsOpen = ref<Record<string, boolean>>({});
 </script>
 <template>
-  <div class="flex h-full flex-col">
+  <div class="h-full overflow-hidden rounded-xl bg-background">
     <GoogleMap
-      class="w-full grow overflow-hidden rounded-xl"
+      class="h-full w-full"
       :center="center"
       :zoom="11"
       :api-key="$config.public.googleMapsApiKey"
@@ -45,7 +45,7 @@ const infoWindowsOpen = ref<Record<string, boolean>>({});
               lng: flat.address.longitude,
             },
             icon: {
-              url: `${$config.public.deploymentUrl}/marker.svg`,
+              url: `${$config.public.deploymentUrl}/marker.svg?v=1.0`,
               scaledSize: {
                 width: 32,
                 height: 32,

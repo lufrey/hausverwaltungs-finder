@@ -103,29 +103,9 @@ const countText = computed(() => {
       </tbody>
     </table>
 
-    <div
-      colspan="100"
-      class="w-full rounded-xl bg-background p-4"
-    >
-      <Pagination
-        :total-elements-count="flats?.totalElementsCount ?? 0"
-        :filtered-elements-count="flats?.filteredElementsCount ?? 0"
-        :current-page="
-          urlStateWithArrayValues.page
-            ? Number(urlStateWithArrayValues.page)
-            : 1
-        "
-        :page-size="
-          urlStateWithArrayValues.pageSize
-            ? Number(urlStateWithArrayValues.pageSize)
-            : 25
-        "
-      />
-    </div>
-
     <div class="lg:hidden">
       <h2 class="mb-4 text-xl">
-        Alle Wohnungen ({{ flats?.data.length ?? 0 }})
+        {{ countText }}
       </h2>
       <main>
         <ApartmentDetails
@@ -145,6 +125,22 @@ const countText = computed(() => {
           :first-seen="new Date(flat.firstSeen)"
         />
       </main>
+    </div>
+    <div class="w-full rounded-xl bg-background p-4">
+      <Pagination
+        :total-elements-count="flats?.totalElementsCount ?? 0"
+        :filtered-elements-count="flats?.filteredElementsCount ?? 0"
+        :current-page="
+          urlStateWithArrayValues.page
+            ? Number(urlStateWithArrayValues.page)
+            : 1
+        "
+        :page-size="
+          urlStateWithArrayValues.pageSize
+            ? Number(urlStateWithArrayValues.pageSize)
+            : 25
+        "
+      />
     </div>
   </div>
 </template>

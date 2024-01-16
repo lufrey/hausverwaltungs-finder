@@ -44,8 +44,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex items-center justify-between">
-    <div class="flex gap-4">
+  <div class="flex items-center justify-between gap-2">
+    <div class="flex gap-2 md:gap-4">
       <label class="">Einträge pro Seite</label>
       <select
         class="rounded-md bg-white text-center shadow-inner [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
@@ -71,32 +71,32 @@ onMounted(() => {
       <div class="flex items-center gap-2">
         <button
           :disabled="currentPage === 1"
-          class="rounded-full bg-background p-2 text-accent transition-colors duration-200 hover:bg-accent hover:text-white disabled:opacity-50"
+          class="hidden rounded-full bg-background p-2 leading-4 text-accent transition-colors duration-200 hover:bg-accent hover:text-white disabled:opacity-50 md:block"
           @click="updatePagination(1, pageSize)"
         >
           &lt;&lt;
         </button>
         <button
           :disabled="currentPage === 1"
-          class="rounded-full bg-background p-2 text-accent transition-colors duration-200 hover:bg-accent hover:text-white disabled:opacity-50"
+          class="rounded-full bg-background p-2 leading-4 text-accent transition-colors duration-200 hover:bg-accent hover:text-white disabled:opacity-50"
           @click="updatePagination(currentPage - 1, pageSize)"
         >
           &lt;
         </button>
         <span>
-          Seite {{ currentPage }} von
-          {{ maxPage }}
+          <span class="hidden md:inline-block">Seite&nbsp;</span
+          >{{ currentPage }}&nbsp;von&nbsp;{{ maxPage }}
         </span>
         <button
           :disabled="currentPage === maxPage"
-          class="rounded-full bg-background p-2 text-accent transition-colors duration-200 hover:bg-accent hover:text-white disabled:opacity-50"
+          class="rounded-full bg-background p-2 leading-4 text-accent transition-colors duration-200 hover:bg-accent hover:text-white disabled:opacity-50"
           @click="updatePagination(currentPage + 1, pageSize)"
         >
           &gt;
         </button>
         <button
           :disabled="currentPage === maxPage"
-          class="rounded-full bg-background p-2 text-accent transition-colors duration-200 hover:bg-accent hover:text-white disabled:opacity-50"
+          class="hidden rounded-full bg-background p-2 leading-4 text-accent transition-colors duration-200 hover:bg-accent hover:text-white disabled:opacity-50 md:block"
           @click="updatePagination(maxPage, pageSize)"
         >
           &gt;&gt;
