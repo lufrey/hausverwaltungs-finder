@@ -45,7 +45,7 @@ const infoWindowsOpen = ref<Record<string, boolean>>({});
               lng: flat.address.longitude,
             },
             icon: {
-              url: `https://${$config.public.deploymentUrl}/marker.svg`,
+              url: `${$config.public.deploymentUrl}/marker.svg`,
               scaledSize: {
                 width: 32,
                 height: 32,
