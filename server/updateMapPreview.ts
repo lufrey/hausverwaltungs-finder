@@ -34,7 +34,7 @@ export async function updateMapPreview() {
     .map((f) => `${f.address.latitude},${f.address.longitude}`)
     .join("|");
 
-  const markerFileUrl = `${config.deploymentUrl}/marker.png?v=1.0`;
+  const markerFileUrl = `${config.public.deploymentUrl}/marker.png?v=1.0`;
 
   url.searchParams.set("markers", `icon:${markerFileUrl}|${markers}`);
   // load image and save it to disk
