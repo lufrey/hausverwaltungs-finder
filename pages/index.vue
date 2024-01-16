@@ -22,7 +22,7 @@ const origin = useRequestURL().origin;
       />
     </div>
     <div
-      class="apartmentlist relative mb-6 flex flex-col gap-4 rounded-3xl bg-background p-5 pb-16"
+      class="apartmentlist relative flex flex-col gap-4 rounded-3xl bg-background p-5 pb-16"
     >
       <ApartmentPreview
         v-for="flat in flats"
@@ -53,7 +53,7 @@ const origin = useRequestURL().origin;
     </div>
     <NuxtLink
       to="/map"
-      class="map_preview relative overflow-hidden rounded-3xl border border-black"
+      class="map_preview relative mt-8 overflow-hidden rounded-3xl border border-black md:mt-0 lg:aspect-square"
       title="Zur Karte"
     >
       <NuxtImg
@@ -65,7 +65,9 @@ const origin = useRequestURL().origin;
       <IconZoomIn class="absolute bottom-0 right-0 mb-3 mr-3" />
     </NuxtLink>
 
-    <div class="decoration relative overflow-hidden rounded-3xl">
+    <div
+      class="decoration relative hidden min-h-32 overflow-hidden rounded-3xl md:block"
+    >
       <ImageSlider
         :images="[
           'simone-hutsch-YsEOuVd7afg-unsplash.jpg',

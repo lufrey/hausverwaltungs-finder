@@ -39,7 +39,7 @@ const formState = ref({
 
 <template>
   <div
-    class="mailing_list relative mb-6 mt-4 rounded-3xl border border-black bg-secondary p-5 pb-16"
+    class="mailing_list relative mt-10 rounded-3xl border border-black bg-secondary p-5 pb-16 lg:mt-4"
   >
     <span
       class="mail-tile-header absolute -top-8 left-[-1px] rounded-t-3xl border border-black bg-secondary px-5 pt-2 text-xl"
@@ -69,7 +69,7 @@ const formState = ref({
       :suggestions="
         Object.entries(berlinDistricts).map(([id, district]) => ({
           id,
-          title: district.title,
+          title: district.name,
         }))
       "
       placeholder="Bezirk"

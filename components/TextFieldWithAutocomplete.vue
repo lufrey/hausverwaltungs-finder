@@ -34,7 +34,7 @@
       />
       <div
         v-if="showSuggestions"
-        class="absolute left-0 top-full mt-1 w-full rounded-md bg-white drop-shadow-md"
+        class="absolute left-0 top-full z-10 mt-1 max-h-60 w-full overflow-scroll rounded-md bg-white drop-shadow-md"
       >
         <div
           v-for="(suggestion, index) in filteredSuggestions"
