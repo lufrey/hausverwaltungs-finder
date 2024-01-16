@@ -50,6 +50,7 @@ export default defineNuxtConfig({
     clientFallback: true,
   },
   runtimeConfig: {
+    deploymentUrl: "https://apartifind.lksfr.de",
     public: {
       googleMapsApiKey: env.NUXT_PUBLIC_GOOGLE_MAPS_API_KEY,
       googleMapsId: env.NUXT_PUBLIC_GOOGLE_MAPS_MAP_ID,

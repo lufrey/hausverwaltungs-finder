@@ -44,6 +44,13 @@ const infoWindowsOpen = ref<Record<string, boolean>>({});
               lat: flat.address.latitude,
               lng: flat.address.longitude,
             },
+            icon: {
+              url: `https://${$config.deploymentUrl}/marker.svg`,
+              scaledSize: {
+                width: 32,
+                height: 32,
+              },
+            },
           }"
           @click="
             () =>

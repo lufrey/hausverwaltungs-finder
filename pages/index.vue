@@ -53,7 +53,7 @@ const origin = useRequestURL().origin;
     </div>
     <NuxtLink
       to="/map"
-      class="map_preview relative overflow-hidden rounded-3xl border border-black bg-[green]"
+      class="map_preview relative overflow-hidden rounded-3xl border border-black"
       title="Zur Karte"
     >
       <NuxtImg
