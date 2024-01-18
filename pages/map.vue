@@ -13,7 +13,10 @@ definePageMeta({
   },
 });
 
+const { urlState } = useFlatFilterUrlState();
+
 const flatsQuery = await $client.flat.getAll.useQuery({
+  ...urlState.value,
   pageSize: [1000],
   page: [1],
 });

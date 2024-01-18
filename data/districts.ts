@@ -283,7 +283,7 @@ export const berlinDistricts = {
   },
   wilhelmstadt: {
     name: "Wilhelmstadt",
-    zipCodes: ["13593"],
+    zipCodes: ["13593", "13595"],
   },
   falkenhagenerfeld: {
     name: "Falkenhagener Feld",
@@ -369,10 +369,7 @@ export const berlinDistricts = {
     name: "Rahnsdorf",
     zipCodes: ["12589"],
   },
-  wlhelmstadt: {
-    name: "Wlhelmstadt",
-    zipCodes: ["13595"],
-  },
+
   blankenburg: {
     name: "Blankenburg",
     zipCodes: ["13129"],

@@ -6,10 +6,7 @@ const props = defineProps<{
   pageSize: number;
 }>();
 
-const { updateQueryState } = useUrlState<{
-  page: string;
-  pageSize: string;
-}>();
+const { updateQueryState } = usePaginationUrlState();
 
 const maxPage = computed(() => {
   return Math.ceil(props.filteredElementsCount / props.pageSize);
@@ -17,7 +14,7 @@ const maxPage = computed(() => {
 
 const pageSizeOptions = [25, 50, 100];
 
-const updatePagination = (page: number, pageSize: number) => {
+const updatePagination = (page: number, pageSize: number, replace = true) => {
   const pageSizeToGoTo = pageSizeOptions.includes(pageSize)
     ? pageSize
     : pageSizeOptions[0];
@@ -28,10 +25,14 @@ const updatePagination = (page: number, pageSize: number) => {
     Math.ceil(props.filteredElementsCount / pageSizeToGoTo),
   );
 
-  updateQueryState({
-    page: String(pageToGoTo),
-    pageSize: String(pageSizeToGoTo),
-  });
+  updateQueryState(
+    {
+      page: [pageToGoTo],
+      pageSize: [pageSizeToGoTo],
+    },
+    // decide whether to replace or push state
+    replace || page !== pageToGoTo || pageSize !== pageSizeToGoTo,
+  );
 };
 
 if (props.currentPage > maxPage.value) {
@@ -39,7 +40,7 @@ if (props.currentPage > maxPage.value) {
 }
 
 onMounted(() => {
-  updatePagination(props.currentPage, props.pageSize);
+  updatePagination(props.currentPage, props.pageSize, true);
 });
 </script>
 

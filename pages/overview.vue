@@ -1,20 +1,11 @@
 <script setup lang="ts">
-import type { Tags } from "~/data/tags";
 useHead({
   title: "Alle Wohnungen",
 });
 const { $client } = useNuxtApp();
-const { urlStateWithArrayValues } = useUrlState<{
-  tags: Tags;
-  propertyManagements: string[];
-  districts: string[];
-  page: string;
-  pageSize: string;
-}>();
+const { urlState } = useFlatFilterUrlState();
 
-// @ts-ignore TODO: self healing url params with schema
-const flatsQuery = await $client.flat.getAll.useQuery(urlStateWithArrayValues);
-
+const flatsQuery = await $client.flat.getAll.useQuery(urlState);
 const flats = flatsQuery.data ?? [];
 
 const tableHeaders = {
@@ -54,6 +45,7 @@ const countText = computed(() => {
 </script>
 <template>
   <div>
+    <Filters />
     <table class="hidden w-full lg:table">
       <thead class="bg-background">
         <tr class="">
@@ -130,16 +122,8 @@ const countText = computed(() => {
       <Pagination
         :total-elements-count="flats?.totalElementsCount ?? 0"
         :filtered-elements-count="flats?.filteredElementsCount ?? 0"
-        :current-page="
-          urlStateWithArrayValues.page
-            ? Number(urlStateWithArrayValues.page)
-            : 1
-        "
-        :page-size="
-          urlStateWithArrayValues.pageSize
-            ? Number(urlStateWithArrayValues.pageSize)
-            : 25
-        "
+        :current-page="urlState.page ? urlState.page[0] : 1"
+        :page-size="urlState.pageSize ? urlState.pageSize[0] : 25"
       />
     </div>
   </div>
