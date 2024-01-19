@@ -4,9 +4,18 @@ useHead({
 });
 const { $client } = useNuxtApp();
 const { urlState } = useFlatFilterUrlState();
+const { registerLoadingRef, unregisterLoadingRef } = useLoadingIndicator();
 
 const flatsQuery = await $client.flat.getAll.useQuery(urlState);
 const flats = flatsQuery.data ?? [];
+
+onMounted(() => {
+  registerLoadingRef(flatsQuery.status, (status) => status.value === "pending");
+});
+
+onUnmounted(() => {
+  unregisterLoadingRef(flatsQuery.status);
+});
 
 const tableHeaders = {
   coldRentPrice: {

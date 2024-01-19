@@ -15,6 +15,9 @@ const config: Partial<Config> = {
       xl: "2rem",
     },
     extend: {
+      screens: {
+        xs: "400px",
+      },
       colors: {
         main: "#10101E",
         background: "#E1E1EF",
