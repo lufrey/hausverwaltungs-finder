@@ -17,6 +17,7 @@ export const env = createEnv({
     LOCAL_SQLITE_PATH: z.string().min(1).optional(),
     TURSO_URL: z.string().url().optional(),
     TURSO_TOKEN: z.string().min(1).optional(),
+    OPENAI_API_KEY: z.string().min(1),
   },
   client: {},
 });

@@ -43,6 +43,7 @@
     "better-sqlite3": "^9.0.0",
     "drizzle-orm": "^0.28.6",
     "drizzle-zod": "^0.5.1",
+    "openai": "^4.24.7",
     "puppeteer": "^21.4.1",
     "sharp": "^0.32.6",
     "trpc-nuxt": "^0.10.12",
