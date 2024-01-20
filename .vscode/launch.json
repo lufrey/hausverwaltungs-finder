@@ -1,0 +1,9 @@
+
+{
+    "name": "Run and debug",
+    "type": "node",
+    "request": "launch",
+    "cwd": "${workspaceFolder}",
+    "runtimeExecutable": "npm",
+    "runtimeArgs": ["run", "dev"]
+} 
