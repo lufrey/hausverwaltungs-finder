@@ -15,11 +15,13 @@ definePageMeta({
 
 const { urlState } = useFlatFilterUrlState();
 
-const flatsQuery = await $client.flat.getAll.useQuery({
+const queryParams = computed(() => ({
   ...urlState.value,
   pageSize: [1000],
   page: [1],
-});
+}));
+
+const flatsQuery = await $client.flat.getAll.useQuery(queryParams);
 
 const flats = flatsQuery.data ?? {
   data: [],

@@ -4,6 +4,7 @@ import { tagKeys } from "~/data/tags";
 
 export const useUrlState = <TSchema extends ZodSchema>(schema: TSchema) => {
   const { currentRoute, push, replace } = useRouter();
+  console.log(schema);
 
   const updateQueryState = (
     state: Partial<TSchema["_input"]>,
@@ -23,9 +24,13 @@ export const useUrlState = <TSchema extends ZodSchema>(schema: TSchema) => {
     });
   };
 
+  // reset all query params, that are in the schema
   const resetQueryState = () => {
+    // @ts-ignore
+    const keys = Object.keys(schema.shape);
+    const query = omit(currentRoute.value.query, keys);
     push({
-      query: {},
+      query,
     });
   };
 
