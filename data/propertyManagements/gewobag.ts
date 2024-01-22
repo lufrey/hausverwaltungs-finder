@@ -28,7 +28,14 @@ export const gewobag: PropertyManagement = {
     }
 
     const readPage = async () => {
-      await page.waitForSelector(".angebot-content");
+      const isEmpty = await Promise.race([
+        page.waitForSelector(".empty-mietangebote"),
+        page.waitForSelector(".site-footer"),
+      ]).then((el) =>
+        el?.evaluate((el) => el.classList.contains("empty-mietangebote")),
+      );
+      if (isEmpty) return [];
+
       const els = await page.$$("article.angebot-big-layout");
 
       return await Promise.all(
