@@ -78,15 +78,21 @@ export const getApartmentTags = async (
         );
 
         const data = threadMessages.data;
-        const AIanswer = data[0].content[0].text.value;
+        const AIanswer =
+          data[0].content[0].type === "text"
+            ? data[0].content[0].text.value
+            : "";
         // console.log("AI: ", AIanswer);
 
         const tagsArray = AIanswer.split(",").map((item) => {
-          return item
-            .replaceAll('"', "") // sometimes AI returns tags in quotes
-            .replace("keine", "") // if no Tags, AI will say "keine"
-            .toLowerCase()
-            .trim();
+          return (
+            item
+              // eslint-disable-next-line quotes
+              .replaceAll('"', "") // sometimes AI returns tags in quotes
+              .replace("keine", "") // if no Tags, AI will say "keine"
+              .toLowerCase()
+              .trim()
+          );
         });
 
         const validTags = Object.keys(tags);
