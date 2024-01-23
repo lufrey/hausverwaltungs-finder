@@ -1,4 +1,4 @@
-import { OpenAI } from "OpenAI";
+import { OpenAI } from "openai";
 import { eq } from "drizzle-orm";
 import { tags, tagsSchema } from "~/data/tags";
 import { env } from "~/env";
