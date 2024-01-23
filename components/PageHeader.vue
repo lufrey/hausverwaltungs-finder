@@ -1,9 +1,10 @@
 <script setup lang="ts">
 const { favorites } = useFavorite("");
+const showSiteMenu = ref(false);
 </script>
 
 <template>
-  <nav class="flex items-center justify-between">
+  <nav class="flex h-12 items-center justify-between">
     <NuxtLink
       to="/"
       class="logo text-xl font-medium tracking-tighter text-main"
@@ -13,8 +14,8 @@ const { favorites } = useFavorite("");
     <span class="tagline hidden text-l font-light opacity-50 md:block"
       >What's a housing crisis?</span
     >
-    <div class="nav_links flex items-center gap-8">
-      <div class="favorites relative hidden md:inline-block">
+    <div class="nav_links hidden items-center gap-8 md:flex">
+      <div class="favorites relative">
         <IconHeart
           :filled="false"
           class="h-8 w-8"
@@ -37,9 +38,28 @@ const { favorites } = useFavorite("");
             <img
               src="/github-mark.svg"
               alt="Klicke um auf GitHub zu diesem Projekt beizutragen"
-              class="github_logo ml-2 hidden w-6 sm:inline"
+              class="github_logo ml-2 inline w-6"
             />
           </NuxtLink>
+        </div>
+      </div>
+    </div>
+    <HamburgerMenu @click="() => (showSiteMenu = true)" />
+    <div
+      v-if="showSiteMenu"
+      class="fixed left-0 top-0 z-40 flex h-screen w-screen flex-col items-center bg-slate-400 px-4 pt-4"
+    >
+      <div class="ml-auto flex items-center">
+        <div
+          class="relative h-12 w-8 cursor-pointer"
+          @click="() => (showSiteMenu = false)"
+        >
+          <span
+            class="absolute top-0 h-0.5 w-8 translate-y-6 rotate-45 rounded-full bg-accent"
+          ></span>
+          <span
+            class="absolute top-0 h-0.5 w-8 translate-y-6 -rotate-45 rounded-full bg-accent"
+          ></span>
         </div>
       </div>
     </div>

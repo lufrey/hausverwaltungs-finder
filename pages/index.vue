@@ -11,7 +11,7 @@ const origin = useRequestURL().origin;
   <div class="layout flex flex-col gap-y-4">
     <div class="eyecatcher relative ml-[56px] rounded-3xl bg-main p-5 md:ml-0">
       <h1
-        class="eyecatcher__headline xs:text-[3.75rem] xs:leading-[3.5rem] ml-[-76px] mr-16 hyphens-manual text-[3rem] font-bold leading-[3rem] text-white [-webkit-text-stroke-color:#000] [-webkit-text-stroke-width:0.75px] [text-shadow:4px_4px_0px_#a555a2] sm:text-[4.5rem] sm:leading-[4.5rem] md:hyphens-auto md:text-[6rem] md:leading-[5.5rem] md:[-webkit-text-stroke-width:1px] md:[text-shadow:6px_6px_0px_#a555a2]"
+        class="eyecatcher__headline ml-[-76px] mr-16 hyphens-manual text-[3rem] font-bold leading-[3rem] text-white [-webkit-text-stroke-color:#000] [-webkit-text-stroke-width:0.75px] [text-shadow:4px_4px_0px_#a555a2] xs:text-[3.75rem] xs:leading-[3.5rem] sm:text-[4.5rem] sm:leading-[4.5rem] md:hyphens-auto md:text-[6rem] md:leading-[5.5rem] md:[-webkit-text-stroke-width:1px] md:[text-shadow:6px_6px_0px_#a555a2]"
       >
         Berlins Wohnungs&shy;markt auf einen&nbsp;Blick
       </h1>
@@ -101,15 +101,9 @@ const origin = useRequestURL().origin;
     grid-template-areas:
       "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
       "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
-      "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
-      "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
-      "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
-      "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
       "decoration decoration decoration decoration map_preview map_preview apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
       "decoration decoration decoration decoration map_preview map_preview apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
       "decoration decoration decoration decoration . . . . . . . ."
-      "decoration decoration decoration decoration mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list"
-      "decoration decoration decoration decoration mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list"
       "decoration decoration decoration decoration mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list";
   }
 }
