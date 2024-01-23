@@ -102,7 +102,7 @@ export const stadtundland: PropertyManagement = {
             coldRentPrice,
             warmRentPrice: parseUncleanInt(mappedTableData.warmRentPrice),
             usableArea: parseUncleanFloat(mappedTableData.usableArea),
-            tags: await getApartmentTags(title),
+            tags: await getApartmentTags(id, title),
             url: idSource,
             imageUrl,
           } satisfies Flat;

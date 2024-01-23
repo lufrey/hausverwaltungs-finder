@@ -90,7 +90,7 @@ export const gewobag: PropertyManagement = {
             coldRentPrice: null, // nicht auf der Übersichtsseite verfügbar. wenn dann jede angebotsseite aufrufen...
             warmRentPrice: parseUncleanInt(warmRentPrice),
             usableArea: parseUncleanFloat(usableArea),
-            tags: await getApartmentTags(title),
+            tags: await getApartmentTags(id, title),
             url: idSource,
             imageUrl,
           } satisfies Flat;

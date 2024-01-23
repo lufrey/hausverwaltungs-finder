@@ -88,7 +88,7 @@ export const deutschewohnen: PropertyManagement = {
             return false;
           }
 
-          const tags = await getApartmentTags(listing.title);
+          const tags = await getApartmentTags(id, listing.title);
 
           console.log("Tags für Wohnung: ", ...tags);
 

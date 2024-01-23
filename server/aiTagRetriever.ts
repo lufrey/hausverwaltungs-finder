@@ -1,7 +1,10 @@
 import { OpenAI } from "OpenAI";
+import { eq } from "drizzle-orm";
 import { tags, tagsSchema } from "~/data/tags";
 import { env } from "~/env";
 import { type Tags } from "~/data/tags"; // Import the 'Tags' type from the appropriate module
+import { db } from "~/db/db";
+import { flat, flatToTag, tag } from "~/db/schema";
 
 /**
  * TODO
@@ -32,8 +35,22 @@ import { type Tags } from "~/data/tags"; // Import the 'Tags' type from the appr
 const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
 
 export const getApartmentTags = async (
+  flatId: string,
   apartmentTitle: string,
 ): Promise<Tags> => {
+  const existingTags = await db
+    .select()
+    .from(tag)
+    .leftJoin(flatToTag, eq(flatToTag.tagId, tag.id))
+    .leftJoin(flat, eq(flat.id, flatToTag.flatId))
+    .where(eq(flat.id, flatId));
+
+  if (existingTags.length > 0) {
+    return tagsSchema.parse(
+      existingTags.map((tagObject) => tagObject.tag.name),
+    );
+  }
+
   const possibleTags = Object.keys(tags).join(", ");
 
   const run = await openai.beta.threads.createAndRun({

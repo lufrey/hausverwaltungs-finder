@@ -66,7 +66,7 @@ export const berlinovo: PropertyManagement = {
             return false;
           }
 
-          const tags = await getApartmentTags(title);
+          const tags = await getApartmentTags(id, title);
 
           const returnFlat = {
             address: addressPretty,
