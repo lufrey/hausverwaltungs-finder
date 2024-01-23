@@ -4,7 +4,6 @@ import { tags } from "~/data/tags";
 
 export const useUrlState = <TSchema extends ZodSchema>(schema: TSchema) => {
   const { currentRoute, push, replace } = useRouter();
-  console.log(schema);
 
   const updateQueryState = (
     state: Partial<TSchema["_input"]>,
@@ -91,9 +90,14 @@ export const useFlatFilterUrlState = () => {
     );
   });
 
-  url.updateQueryState(
-    { tags: validTags.value, districts: validDistricts.value },
-    true,
-  );
+  if (
+    validTags.value?.length !== url.urlState.value.tags?.length ||
+    validDistricts.value?.length !== url.urlState.value.districts?.length
+  ) {
+    url.updateQueryState(
+      { tags: validTags.value, districts: validDistricts.value },
+      true,
+    );
+  }
   return url;
 };

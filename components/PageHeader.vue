@@ -1,6 +1,41 @@
 <script setup lang="ts">
 const { favorites } = useFavorite("");
-const showSiteMenu = ref(false);
+
+const siteMenuVisibility = ref({
+  visible: false,
+  closing: true,
+});
+
+function showSiteMenu(state: boolean) {
+  siteMenuVisibility.value.closing = !state;
+  if (state) {
+    siteMenuVisibility.value.visible = true;
+  } else {
+    setTimeout(() => {
+      siteMenuVisibility.value.visible = false;
+    }, 300);
+  }
+}
+
+const route = useRoute();
+
+const nuxtApp = useNuxtApp();
+const _cleanup: Array<() => void> = [];
+
+onMounted(() => {
+  _cleanup.push(
+    nuxtApp.hook("vue:error", () => {
+      showSiteMenu(false);
+    }),
+  );
+  _cleanup.push(
+    nuxtApp.hook("page:loading:end", () => {
+      showSiteMenu(false);
+    }),
+  );
+});
+
+onUnmounted(() => _cleanup.forEach((hook) => hook()));
 </script>
 
 <template>
@@ -44,15 +79,20 @@ const showSiteMenu = ref(false);
         </div>
       </div>
     </div>
-    <HamburgerMenu @click="() => (showSiteMenu = true)" />
+    <HamburgerMenu @click="() => showSiteMenu(true)" />
     <div
-      v-if="showSiteMenu"
-      class="fixed left-0 top-0 z-40 flex h-screen w-screen flex-col items-center bg-slate-400 px-4 pt-4"
+      class="fixed left-0 top-0 z-40 flex h-screen w-screen flex-col items-center bg-background px-4 pb-16 pt-4 transition-opacity duration-300"
+      :class="{
+        'opacity-0': siteMenuVisibility.closing,
+        'opacity-100':
+          siteMenuVisibility.visible && !siteMenuVisibility.closing,
+        invisible: !siteMenuVisibility.visible,
+      }"
     >
       <div class="ml-auto flex items-center">
         <div
           class="relative h-12 w-8 cursor-pointer"
-          @click="() => (showSiteMenu = false)"
+          @click="() => showSiteMenu(false)"
         >
           <span
             class="absolute top-0 h-0.5 w-8 translate-y-6 rotate-45 rounded-full bg-accent"
@@ -61,6 +101,33 @@ const showSiteMenu = ref(false);
             class="absolute top-0 h-0.5 w-8 translate-y-6 -rotate-45 rounded-full bg-accent"
           ></span>
         </div>
+      </div>
+      <div class="my-auto flex flex-col gap-4 text-right">
+        <NuxtLink
+          v-for="link in [
+            {
+              name: 'Home',
+              path: '/',
+            },
+            {
+              name: 'Alle Wohnungen',
+              path: '/overview',
+            },
+            {
+              name: 'Karte',
+              path: '/map',
+            },
+          ]"
+          :key="link.path"
+          :to="link.path"
+          class="text-xl font-medium"
+          :class="{
+            'text-accent': route.path === link.path,
+            'text-main': route.path !== link.path,
+          }"
+        >
+          {{ link.name }}
+        </NuxtLink>
       </div>
     </div>
   </nav>

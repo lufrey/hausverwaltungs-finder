@@ -1,10 +1,10 @@
 <script setup lang="ts">
-const { isLoading } = useLoadingIndicator();
+const { isLoading } = useCustomLoadingIndicator();
 </script>
 
 <template>
   <div
-    class="fixed z-30 h-1 w-full opacity-0 transition-opacity duration-500"
+    class="fixed z-50 h-1 w-full opacity-0 transition-opacity duration-500"
     :class="{
       'opacity-100': isLoading,
     }"

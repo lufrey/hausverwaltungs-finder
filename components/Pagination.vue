@@ -6,7 +6,7 @@ const props = defineProps<{
   pageSize: number;
 }>();
 
-const { updateQueryState } = usePaginationUrlState();
+const { updateQueryState, urlState } = usePaginationUrlState();
 
 const maxPage = computed(() => {
   return Math.ceil(props.filteredElementsCount / props.pageSize);
@@ -40,7 +40,9 @@ if (props.currentPage > maxPage.value) {
 }
 
 onMounted(() => {
-  updatePagination(props.currentPage, props.pageSize, true);
+  if (urlState.value.page || urlState.value.pageSize) {
+    updatePagination(props.currentPage, props.pageSize, true);
+  }
 });
 </script>
 
