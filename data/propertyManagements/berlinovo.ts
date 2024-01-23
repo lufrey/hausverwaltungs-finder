@@ -5,8 +5,8 @@ import {
   type PropertyManagement,
 } from "../propertyManagementList";
 import { getAddress } from "../address";
-import { getTagsForTitle } from "../tags";
 import { hashString, parseUncleanFloat, parseUncleanInt } from "~/utils/util";
+import { getApartmentTags } from "~/server/aiTagRetriever";
 
 export const berlinovo: PropertyManagement = {
   slug: "berlinovo",
@@ -66,6 +66,8 @@ export const berlinovo: PropertyManagement = {
             return false;
           }
 
+          const tags = await getApartmentTags(title);
+
           const returnFlat = {
             address: addressPretty,
             title,
@@ -74,12 +76,12 @@ export const berlinovo: PropertyManagement = {
             coldRentPrice: parseUncleanFloat(coldRentPrice),
             warmRentPrice: parseUncleanInt(warmRentPrice),
             usableArea: 0, // nicht auf der Übersichtsseite verfügbar. wenn dann jede angebotsseite aufrufen...
-            tags: getTagsForTitle(title),
+            tags,
             url: idSource,
             imageUrl,
           } satisfies Flat;
           const result = flatSchema.safeParse(returnFlat);
-          console.log(result);
+          // console.log(result);
           if (result.success) {
             return result.data;
           }

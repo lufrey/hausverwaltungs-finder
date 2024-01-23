@@ -5,8 +5,8 @@ import {
   type PropertyManagement,
 } from "../propertyManagementList";
 import { getAddress } from "../address";
-import { getTagsForTitle } from "../tags";
 import { hashString } from "~/utils/util";
+import { getApartmentTags } from "~/server/aiTagRetriever";
 
 const listingSchema = z.object({
   id: z.string(),
@@ -88,6 +88,10 @@ export const deutschewohnen: PropertyManagement = {
             return false;
           }
 
+          const tags = await getApartmentTags(listing.title);
+
+          console.log("Tags für Wohnung: ", ...tags);
+
           const returnFlat = {
             address: cleanedAddress,
             title: listing.title,
@@ -96,7 +100,7 @@ export const deutschewohnen: PropertyManagement = {
             coldRentPrice: listing.price,
             warmRentPrice: null,
             usableArea: listing.area,
-            tags: getTagsForTitle(listing.title),
+            tags,
             url: `https://www.deutsche-wohnen.com/expose/object/${listing.id}`,
             imageUrl: listing.images[0]?.filePath
               ? `https://immo-api.deutsche-wohnen.com${listing.images[0]?.filePath}`

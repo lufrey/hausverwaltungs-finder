@@ -5,8 +5,8 @@ import {
   type PropertyManagement,
 } from "../propertyManagementList";
 import { getAddress } from "../address";
-import { getTagsForTitle } from "../tags";
 import { hashString, parseUncleanFloat, parseUncleanInt } from "~/utils/util";
+import { getApartmentTags } from "~/server/aiTagRetriever";
 
 export const gewobag: PropertyManagement = {
   slug: "gewobag",
@@ -90,7 +90,7 @@ export const gewobag: PropertyManagement = {
             coldRentPrice: null, // nicht auf der Übersichtsseite verfügbar. wenn dann jede angebotsseite aufrufen...
             warmRentPrice: parseUncleanInt(warmRentPrice),
             usableArea: parseUncleanFloat(usableArea),
-            tags: getTagsForTitle(title),
+            tags: await getApartmentTags(title),
             url: idSource,
             imageUrl,
           } satisfies Flat;

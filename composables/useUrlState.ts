@@ -1,6 +1,6 @@
 import { z, type ZodSchema } from "zod";
 import { berlinDistricts } from "~/data/districts";
-import { tagKeys } from "~/data/tags";
+import { tags } from "~/data/tags";
 
 export const useUrlState = <TSchema extends ZodSchema>(schema: TSchema) => {
   const { currentRoute, push, replace } = useRouter();
@@ -80,7 +80,9 @@ export const useFlatFilterUrlState = () => {
   );
 
   const validTags = computed(() => {
-    return url.urlState.value.tags?.filter((tag) => tagKeys.includes(tag));
+    return url.urlState.value.tags?.filter((tag) =>
+      typedObjectKeys(tags).includes(tag),
+    );
   });
 
   const validDistricts = computed(() => {
