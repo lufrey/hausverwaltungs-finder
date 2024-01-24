@@ -94,21 +94,22 @@ export const propertyManagementRouter = router({
             .execute());
 
         // upsert addresses
-        await db
-          .insert(address)
-          .values(addresses)
-          .onConflictDoUpdate({
-            target: address.id,
-            set: {
-              street: sql`excluded.street`,
-              city: sql`excluded.city`,
-              streetNumber: sql`excluded.streetNumber`,
-              postalCode: sql`excluded.postalCode`,
-              longitude: sql`excluded.longitude`,
-              latitude: sql`excluded.latitude`,
-            },
-            where: sql`address.id = excluded.id`,
-          });
+        addresses.length &&
+          (await db
+            .insert(address)
+            .values(addresses)
+            .onConflictDoUpdate({
+              target: address.id,
+              set: {
+                street: sql`excluded.street`,
+                city: sql`excluded.city`,
+                streetNumber: sql`excluded.streetNumber`,
+                postalCode: sql`excluded.postalCode`,
+                longitude: sql`excluded.longitude`,
+                latitude: sql`excluded.latitude`,
+              },
+              where: sql`address.id = excluded.id`,
+            }));
 
         // upsert flats
         const flatsToInsert = (
@@ -148,27 +149,28 @@ export const propertyManagementRouter = router({
           .filter(isFulfilled)
           .map((r) => r.value);
 
-        await db
-          .insert(flat)
-          .values(flatsToInsert)
-          .onConflictDoUpdate({
-            target: flat.id,
-            set: {
-              addressId: sql`excluded.addressId`,
-              coldRentPrice: sql`excluded.coldRentPrice`,
-              floor: sql`excluded.floor`,
-              image: sql`excluded.image`,
-              propertyManagementId: sql`excluded.propertyManagementId`,
-              roomCount: sql`excluded.roomCount`,
-              title: sql`excluded.title`,
-              usableArea: sql`excluded.usableArea`,
-              warmRentPrice: sql`excluded.warmRentPrice`,
-              lastSeen: sql`excluded.lastSeen`,
-              deleted: sql`excluded.deleted`,
-              url: sql`excluded.url`,
-            },
-            where: sql`flat.id = excluded.id`,
-          });
+        flatsToInsert.length &&
+          (await db
+            .insert(flat)
+            .values(flatsToInsert)
+            .onConflictDoUpdate({
+              target: flat.id,
+              set: {
+                addressId: sql`excluded.addressId`,
+                coldRentPrice: sql`excluded.coldRentPrice`,
+                floor: sql`excluded.floor`,
+                image: sql`excluded.image`,
+                propertyManagementId: sql`excluded.propertyManagementId`,
+                roomCount: sql`excluded.roomCount`,
+                title: sql`excluded.title`,
+                usableArea: sql`excluded.usableArea`,
+                warmRentPrice: sql`excluded.warmRentPrice`,
+                lastSeen: sql`excluded.lastSeen`,
+                deleted: sql`excluded.deleted`,
+                url: sql`excluded.url`,
+              },
+              where: sql`flat.id = excluded.id`,
+            }));
 
         // connect tags to flats
         const flatToTagRelations = flats

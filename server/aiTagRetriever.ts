@@ -38,17 +38,18 @@ export const getApartmentTags = async (
   flatId: string,
   apartmentTitle: string,
 ): Promise<Tags> => {
-  const existingTags = await db
-    .select()
-    .from(tag)
-    .leftJoin(flatToTag, eq(flatToTag.tagId, tag.id))
-    .leftJoin(flat, eq(flat.id, flatToTag.flatId))
-    .where(eq(flat.id, flatId));
-
-  if (existingTags.length > 0) {
-    return tagsSchema.parse(
-      existingTags.map((tagObject) => tagObject.tag.name),
-    );
+  const existingFlat = await db.query.flat.findFirst({
+    where: eq(flat.id, flatId),
+  });
+  if (existingFlat) {
+    return (
+      await db
+        .select()
+        .from(tag)
+        .leftJoin(flatToTag, eq(flatToTag.tagId, tag.id))
+        .leftJoin(flat, eq(flat.id, flatToTag.flatId))
+        .where(eq(flat.id, flatId))
+    ).map((res) => res.tag.id);
   }
 
   const possibleTags = Object.keys(tags).join(", ");
