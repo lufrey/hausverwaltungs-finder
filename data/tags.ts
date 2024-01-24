@@ -11,9 +11,10 @@ export const tags = {
   parkplatz: "Parkplatz",
   garage: "Garage",
   stellplatz: "Stellplatz",
+  erstbezug: "Erstbezug",
+  dachgeschoss: "Dachgeschoss",
+  familie: "Für Familie",
 };
-
-export const tagKeys = typedObjectKeys(tags);
 
 // this is necessary for the type to be inferred correctly
 const [firstKey, ...restOfKeys] = typedObjectKeys(tags);

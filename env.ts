@@ -17,7 +17,11 @@ export const env = createEnv({
     LOCAL_SQLITE_PATH: z.string().min(1).optional(),
     TURSO_URL: z.string().url().optional(),
     TURSO_TOKEN: z.string().min(1).optional(),
+    CRON_TOKEN: z.string().min(1).optional(),
     OPENAI_API_KEY: z.string().min(1),
   },
-  client: {},
+  client: {
+    NUXT_PUBLIC_GOOGLE_MAPS_API_KEY: z.string().min(1),
+    NUXT_PUBLIC_GOOGLE_MAPS_MAP_ID: z.string().min(1),
+  },
 });

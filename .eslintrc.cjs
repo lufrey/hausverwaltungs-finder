@@ -46,6 +46,8 @@ module.exports = {
     "vue/html-self-closing": "off",
     "func-call-spacing": "off",
     "no-fallthrough": "off",
+    "vue/no-multiple-template-root": "off",
+    curly: "off",
     // "@typescript-eslint/no-misused-promises": [
     //   2,
     //   {

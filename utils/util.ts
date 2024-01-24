@@ -28,6 +28,21 @@ export function parseUncleanFloat(input: string) {
   return parseFloat(cleanNumberString(input));
 }
 
+export function formatArea(input: number | null) {
+  if (!input) {
+    return "-";
+  }
+  return (input.toFixed(1) + "&nbsp;m²").replace(".", ",");
+}
+
+export function formatPrice(input: number | null, rounded = false) {
+  if (!input) {
+    return "-";
+  }
+  const val = rounded ? Math.round(input) : input.toFixed(2);
+  return (val + "&nbsp;€").replace(".", ",");
+}
+
 export function hashString(input: string) {
   return crypto.subtle
     .digest("SHA-1", new TextEncoder().encode(input))
@@ -36,10 +51,4 @@ export function hashString(input: string) {
         .call(new Uint8Array(buf), (x) => ("00" + x.toString(16)).slice(-2))
         .join("");
     });
-}
-
-export function countsAsNew(firstSeen: Date) {
-  const now = new Date();
-  const timeUntilItIsNotNewAnymore = 1000 * 60 * 60 * 24 * 2; // 2 days
-  return now.getTime() - firstSeen.getTime() < timeUntilItIsNotNewAnymore;
 }

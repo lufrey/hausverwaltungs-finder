@@ -3,11 +3,14 @@ import { z } from "zod";
 import { insertAddressSchema } from "./address";
 import { tagsSchema } from "./tags";
 import { stadtundland } from "./propertyManagements/stadtundland";
+import { gewobag } from "./propertyManagements/gewobag";
+import { deutschewohnen } from "./propertyManagements/deutschewohnen";
+import { berlinovo } from "./propertyManagements/berlinovo";
 
 export const flatSchema = z.object({
   id: z.string(),
   title: z.string(),
-  coldRentPrice: z.number(),
+  coldRentPrice: z.number().nullable().optional(),
   warmRentPrice: z.number().nullable().optional(),
   roomCount: z.number().nullable().optional(),
   usableArea: z.number().nullable().optional(),
@@ -30,16 +33,19 @@ export type PropertyManagement = z.infer<typeof propertyManagementSchema> & {
   getFlats: (browser: Browser) => Promise<(Flat | false)[]>;
 };
 
-export const propertyManagementList: PropertyManagement[] = [
+export const propertyManagementList = [
   stadtundland,
-  // {
-  //   id: "reanovo",
-  //   name: "Reanovo",
-  //   // @ts-ignore
-  //   getFlats: async () => {
-  //     const url = "https://reanovo.everreal.co/api/prism/public/expose?take=20";
-  //     const data = await fetch(url).then((r) => r.json());
-  //     return data;
-  //   },
-  // },
-];
+  gewobag,
+  deutschewohnen,
+  berlinovo,
+] satisfies Readonly<PropertyManagement[]>;
+
+export const propertyManagementMap = Object.fromEntries(
+  propertyManagementList.map((pm) => [
+    pm.slug,
+    {
+      name: pm.name,
+      website: pm.website,
+    },
+  ]),
+) as Record<string, PropertyManagement>;

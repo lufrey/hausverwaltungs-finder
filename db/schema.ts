@@ -5,13 +5,33 @@ import {
   integer,
   real,
   blob,
+  unique,
+  primaryKey,
 } from "drizzle-orm/sqlite-core";
-import type { tagKeys } from "~/data/tags";
+import type { Tags } from "~/data/tags";
+
+export const signups = sqliteTable("signups", {
+  id: text("id").primaryKey(),
+  email: text("email").notNull(),
+  createdAt: integer("createdAt", { mode: "timestamp" }).notNull(),
+  districts: text("districts", { mode: "json" }),
+  maxPrice: integer("maxPrice").notNull(),
+  minRooms: integer("minRooms").notNull(),
+});
+
+export const tag = sqliteTable("tag", {
+  id: text("id").$type<Tags[number]>().primaryKey(),
+  name: text("name").notNull(),
+});
+
+export const tagRelations = relations(tag, ({ many }) => ({
+  flatToTag: many(flatToTag),
+}));
 
 export const flat = sqliteTable("flat", {
   id: text("id").primaryKey(),
   title: text("title").notNull(),
-  coldRentPrice: integer("coldRentPrice").notNull(),
+  coldRentPrice: integer("coldRentPrice"),
   warmRentPrice: integer("warmRentPrice"),
   roomCount: integer("roomCount"),
   usableArea: real("usableArea"),
@@ -23,15 +43,32 @@ export const flat = sqliteTable("flat", {
   lastSeen: integer("lastSeen", { mode: "timestamp" }).notNull(),
   deleted: integer("deleted", { mode: "timestamp" }),
   url: text("url").notNull(),
-  tags: text("tags", { mode: "json" }).$type<typeof tagKeys>().notNull(),
 });
 
-export const flatRelations = relations(flat, ({ one }) => ({
+export const flatRelations = relations(flat, ({ one, many }) => ({
   address: one(address, { fields: [flat.addressId], references: [address.id] }),
   propertyManagement: one(propertyManagement, {
     fields: [flat.propertyManagementId],
     references: [propertyManagement.slug],
   }),
+  flatToTag: many(flatToTag),
+}));
+
+export const flatToTag = sqliteTable(
+  "flatToTag",
+  {
+    flatId: text("flatId").notNull(),
+    tagId: text("tagId").$type<Tags[number]>().notNull(),
+  },
+  (t) => ({
+    unq: unique().on(t.flatId, t.tagId),
+    pk: primaryKey({ columns: [t.flatId, t.tagId] }),
+  }),
+);
+
+export const flatToTagRelations = relations(flatToTag, ({ one }) => ({
+  flat: one(flat, { fields: [flatToTag.flatId], references: [flat.id] }),
+  tag: one(tag, { fields: [flatToTag.tagId], references: [tag.id] }),
 }));
 
 export const address = sqliteTable("address", {

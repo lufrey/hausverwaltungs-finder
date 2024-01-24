@@ -57,7 +57,39 @@ useHead({
       content: "de",
     },
   ],
+  bodyAttrs: {
+    class: "antialiased min-h-dvh h-1",
+  },
 });
+
+const loadingIndicator = useCustomLoadingIndicator();
+const nuxtApp = useNuxtApp();
+const _cleanup: Array<() => void> = [];
+const pageLoading = ref(false);
+onMounted(() => {
+  _cleanup.push(
+    nuxtApp.hook("page:loading:start", () => {
+      pageLoading.value = true;
+    }),
+  );
+
+  _cleanup.push(
+    nuxtApp.hook("page:loading:end", () => {
+      pageLoading.value = false;
+    }),
+  );
+
+  _cleanup.push(
+    nuxtApp.hook("vue:error", () => {
+      pageLoading.value = false;
+    }),
+  );
+
+  _cleanup.push(
+    loadingIndicator.registerLoadingRef(pageLoading, (l) => l.value),
+  );
+});
+onUnmounted(() => _cleanup.forEach((hook) => hook()));
 </script>
 
 <template>
@@ -65,3 +97,9 @@ useHead({
     <NuxtPage />
   </NuxtLayout>
 </template>
+
+<style>
+#__nuxt {
+  height: 100%;
+}
+</style>

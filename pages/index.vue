@@ -1,16 +1,17 @@
 <script setup lang="ts">
 const { $client } = useNuxtApp();
-const propertyManagementsWithFlats = await $client.flat.getFeatured.query();
-const flats = propertyManagementsWithFlats
-  .map((propertyManagement) => propertyManagement.flats)
-  .flat();
+const propertyManagementsWithFlats = await $client.flat.getFeatured.query({
+  limit: 7,
+});
+const flats = propertyManagementsWithFlats;
+const origin = useRequestURL().origin;
 </script>
 
 <template>
   <div class="layout flex flex-col gap-y-4">
     <div class="eyecatcher relative ml-[56px] rounded-3xl bg-main p-5 md:ml-0">
       <h1
-        class="eyecatcher__headline ml-[-76px] mr-16 hyphens-manual text-xxl text-white"
+        class="eyecatcher__headline ml-[-76px] mr-16 hyphens-manual text-[3rem] font-bold leading-[3rem] text-white [-webkit-text-stroke-color:#000] [-webkit-text-stroke-width:0.75px] [text-shadow:4px_4px_0px_#a555a2] xs:text-[3.75rem] xs:leading-[3.5rem] sm:text-[4.5rem] sm:leading-[4.5rem] md:hyphens-auto md:text-[6rem] md:leading-[5.5rem] md:[-webkit-text-stroke-width:1px] md:[text-shadow:6px_6px_0px_#a555a2]"
       >
         Berlins Wohnungs&shy;markt auf einen&nbsp;Blick
       </h1>
@@ -21,16 +22,17 @@ const flats = propertyManagementsWithFlats
       />
     </div>
     <div
-      class="apartmentlist relative mb-6 flex flex-col gap-4 rounded-3xl bg-background p-5 pb-16"
+      class="apartmentlist relative flex flex-col gap-4 rounded-3xl bg-background p-5 pb-16"
     >
-      <PreviewlistApartment
+      <ApartmentPreview
         v-for="flat in flats"
+        :id="flat.id"
         :key="flat.id"
         :title="flat.title"
         :address="flat.address"
         :cold-rent-price="flat.coldRentPrice"
+        :warm-rent-price="flat.warmRentPrice"
         :tags="flat.tags"
-        :favorite="false"
         :usable-area="flat.usableArea"
         :image-src="flat.hasImage ? `/api/image/${flat.id}` : null"
         :url="flat.url"
@@ -38,27 +40,34 @@ const flats = propertyManagementsWithFlats
       />
 
       <FatButton
-        button-text="Alle Wohnungen ansehen"
+        class="absolute -bottom-5 -right-4 md:-right-10"
         href="/overview"
-      />
+      >
+        Alle Wohnungen ansehen
+        <img
+          src="/arrow_right.svg"
+          alt=""
+          class="ml-4 inline"
+        />
+      </FatButton>
     </div>
     <NuxtLink
       to="/map"
-      class="map_preview relative rounded-3xl bg-[green]"
+      class="map_preview relative mt-8 overflow-hidden rounded-3xl border border-black md:mt-0 lg:aspect-square"
+      title="Zur Karte"
     >
-      <img
-        src="/map_preview.png"
-        alt=""
-        class="object-cover"
+      <NuxtImg
+        :src="`${origin}/api/image/map-preview`"
+        alt="Vorschau der Karte"
+        class="h-full w-full object-cover"
+        format="webp"
       />
-      <img
-        class="absolute bottom-0 right-0 mb-3 mr-3"
-        src="/zoom_in.svg"
-        alt=""
-      />
+      <IconZoomIn class="absolute bottom-0 right-0 mb-3 mr-3" />
     </NuxtLink>
 
-    <div class="decoration relative overflow-hidden rounded-3xl">
+    <div
+      class="decoration relative hidden min-h-32 overflow-hidden rounded-3xl md:block"
+    >
       <ImageSlider
         :images="[
           'simone-hutsch-YsEOuVd7afg-unsplash.jpg',
@@ -70,10 +79,6 @@ const flats = propertyManagementsWithFlats
   </div>
 </template>
 <style scoped>
-.eyecatcher__headline {
-  text-shadow: 6px 6px 0px #a555a2;
-  -webkit-text-stroke: 1px #000;
-}
 @media screen and (min-width: 768px) {
   .layout {
     display: grid;
@@ -96,15 +101,9 @@ const flats = propertyManagementsWithFlats
     grid-template-areas:
       "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
       "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
-      "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
-      "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
-      "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
-      "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
       "decoration decoration decoration decoration map_preview map_preview apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
       "decoration decoration decoration decoration map_preview map_preview apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
       "decoration decoration decoration decoration . . . . . . . ."
-      "decoration decoration decoration decoration mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list"
-      "decoration decoration decoration decoration mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list"
       "decoration decoration decoration decoration mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list";
   }
 }

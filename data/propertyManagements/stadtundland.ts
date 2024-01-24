@@ -5,9 +5,8 @@ import {
   type PropertyManagement,
 } from "../propertyManagementList";
 import { getAddress } from "../address";
-import type { Tags } from "../tags";
 import { hashString, parseUncleanFloat, parseUncleanInt } from "~/utils/util";
-import { typedObjectKeys } from "~/utils/typeHelper";
+import { getApartmentTags } from "~/server/aiTagRetriever";
 
 export const stadtundland: PropertyManagement = {
   slug: "stadtundland",
@@ -16,6 +15,16 @@ export const stadtundland: PropertyManagement = {
     const url = "https://www.stadtundland.de/immobiliensuche.php";
     const page = await browser.newPage();
     await page.goto(url);
+
+    try {
+      await page
+        .waitForSelector(".SP-ConsentBanner__button--onlyNecessary", {
+          timeout: 300,
+        })
+        .then(() => page.click(".SP-ConsentBanner__button--onlyNecessary"));
+    } catch (e) {
+      console.log("no cookie banner");
+    }
 
     await page.waitForSelector("#button-submit-gen-2");
     await page.click("#button-submit-gen-2");
@@ -85,24 +94,6 @@ export const stadtundland: PropertyManagement = {
             return false;
           }
 
-          const tags: Tags = [];
-
-          const titleToTagsMap = {
-            altbau: ["altbau"],
-            neubau: ["neubau"],
-            wbs: ["wbs"],
-            garage: ["garage"],
-            stellplatz: ["stellplatz"],
-            parkplatz: ["parkplatz"],
-          } as const;
-
-          const titleToTagsKeys = typedObjectKeys(titleToTagsMap);
-          titleToTagsKeys.forEach((key) => {
-            if (title.toLowerCase().includes(key)) {
-              tags.push(...titleToTagsMap[key]);
-            }
-          });
-
           const returnFlat = {
             address,
             title,
@@ -111,7 +102,7 @@ export const stadtundland: PropertyManagement = {
             coldRentPrice,
             warmRentPrice: parseUncleanInt(mappedTableData.warmRentPrice),
             usableArea: parseUncleanFloat(mappedTableData.usableArea),
-            tags,
+            tags: await getApartmentTags(id, title),
             url: idSource,
             imageUrl,
           } satisfies Flat;
