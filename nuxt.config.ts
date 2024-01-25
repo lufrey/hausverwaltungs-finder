@@ -56,4 +56,13 @@ export default defineNuxtConfig({
       googleMapsId: env.NUXT_PUBLIC_GOOGLE_MAPS_MAP_ID,
     },
   },
+  image: {
+    // this default is not really used, because it only works with NuxtPicture
+    format: ["avif", "webp", "jpg"],
+    domains: [
+      "localhost:3000",
+      "apartifind.lksfr.de",
+      "wohnungsmarktberlin.de",
+    ],
+  },
 });

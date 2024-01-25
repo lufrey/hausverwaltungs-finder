@@ -38,7 +38,7 @@ onUnmounted(() => {
       alt="Image Carousel"
       class="absolute h-full w-full object-cover"
       sizes="100vw sm:50vw md:400px"
-      format="webp"
+      format="avif,webp"
     />
   </transition-group>
 </template>

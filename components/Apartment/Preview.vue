@@ -37,7 +37,7 @@ const img = getFlatImageUrl({
           :src="img"
           :alt="`Vorschaubild ${title}`"
           class="h-16 w-16 rounded-lg"
-          format="webp"
+          format="avif,webp"
         />
       </NuxtLink>
     </div>

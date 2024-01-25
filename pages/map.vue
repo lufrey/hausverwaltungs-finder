@@ -78,6 +78,7 @@ const infoWindowsOpen = ref<Record<string, boolean>>({});
                 :src="getFlatImageUrl(flat)"
                 :alt="flat.title"
                 class="aspect-square h-32 w-32 rounded-md"
+                format="avif,webp"
               />
               <div class="break-words font-bold">
                 {{ flat.title }}
