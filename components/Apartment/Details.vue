@@ -39,84 +39,87 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
     v-if="Boolean(as === 'row')"
     class="text-m font-light leading-5"
   >
-    <td class="pb-4 pr-4">
-      <div class="flex grow-[2] items-center gap-x-2">
-        <div class="aspect-square h-full shrink-0">
-          <NuxtLink
-            :to="url"
-            target="_blank"
+    <td class="items-top flex gap-x-2">
+      <div class="aspect-square h-full shrink-0">
+        <NuxtLink
+          :to="url"
+          target="_blank"
+        >
+          <NuxtImg
+            :src="img"
+            :alt="`Vorschaubild ${title}`"
+            class="h-16 w-16 rounded-lg"
+            format="avif,webp"
+          />
+        </NuxtLink>
+      </div>
+      <div class="max-w-80 overflow-hidden align-top">
+        <NuxtLink
+          :to="url"
+          target="_blank"
+        >
+          <h3
+            class="overflow-hidden text-ellipsis whitespace-nowrap text-left font-normal"
           >
-            <NuxtImg
-              :src="img"
-              :alt="`Vorschaubild ${title}`"
-              class="h-16 w-16 rounded-lg"
-              format="avif,webp"
-            />
-          </NuxtLink>
-        </div>
-        <div class="flex max-w-sm flex-col overflow-hidden">
-          <NuxtLink
-            :to="url"
-            target="_blank"
-          >
-            <h3
-              class="overflow-hidden text-ellipsis whitespace-nowrap text-left font-normal"
+            {{ title }}
+          </h3>
+        </NuxtLink>
+        <div class="flex flex-col gap-x-3 text-left">
+          <h4 class="overflow-hidden text-ellipsis text-s font-light">
+            {{ address.street }} {{ address.streetNumber }}
+          </h4>
+          <div class="flex flex-row items-center gap-x-1">
+            <ApartmentTag
+              v-for="tag in tags"
+              :key="tag"
+              :tag="tag"
+              class="tag py-0.25 rounded-full bg-secondary px-2.5 text-xs text-accent"
             >
-              {{ title }}
-            </h3>
-          </NuxtLink>
-          <div class="flex flex-col gap-x-3 text-left">
-            <h4 class="overflow-hidden text-ellipsis text-s font-light">
-              {{ address.street }} {{ address.streetNumber }}
-            </h4>
-            <div class="flex flex-row items-center gap-x-1">
-              <ApartmentTag
-                v-for="tag in tags"
-                :key="tag"
-                :tag="tag"
-                class="tag py-0.25 rounded-full bg-secondary px-2.5 text-xs text-accent"
-              >
-              </ApartmentTag>
-            </div>
+            </ApartmentTag>
           </div>
         </div>
       </div>
     </td>
-    <td
-      class="p-4"
-      v-html="formatPrice(shownPrice)"
-    ></td>
-    <td class="p-4">
+    <td class="text-left align-top">
+      <span v-html="formatPrice(shownPrice)"></span>
+      <img
+        v-if="$props.warmRentPrice"
+        class="block h-5 w-5"
+        src="/high-temperature.png"
+        alt="Warmmiete"
+        title="Warmmiete"
+      />
+    </td>
+    <td class="align-top">
       {{ roomCount ?? "-" }}
     </td>
     <td
-      class="p-4"
+      class="text-left align-top"
       v-html="formatArea(usableArea)"
     ></td>
     <td
       v-if="shownPrice"
-      class="p-4"
+      class="text-left align-top"
     >
       {{
         usableArea
-          ? (shownPrice / usableArea).toFixed(2).replace(".", ",") +
-            "&nbsp;€/m²"
+          ? (shownPrice / usableArea).toFixed(2).replace(".", ",") + "&nbsp;€"
           : "-"
       }}
     </td>
     <td
       v-else
-      class="p-4"
+      class="align-top"
     >
       -
     </td>
-    <td class="p-4">
+    <td class="text-left align-top">
       <ApartmentDistrict
         class="underline hover:no-underline"
         :zip-code="address.postalCode"
       />
     </td>
-    <td class="pb-4 pl-4">
+    <td class="pr-4 align-top">
       <ApartmentFavoriteButton :id="id" />
     </td>
   </tr>
@@ -149,7 +152,7 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
           {{ title }}
         </h3>
       </NuxtLink>
-      <h4 class="overflow-hidden text-ellipsis text-s font-light">
+      <h4 class="max-w-40 overflow-hidden text-ellipsis text-s font-light">
         {{ address.street }} {{ address.streetNumber }} -
         <ApartmentDistrict
           class="hover:underline"

@@ -18,7 +18,7 @@ onUnmounted(() => unregisterLoadingRef(flatsQuery.status));
 
 const tableHeaders = {
   coldRentPrice: {
-    title: "Preis",
+    title: "Preis (K)",
     sortable: true,
   },
   roomCount: {
@@ -30,11 +30,15 @@ const tableHeaders = {
     sortable: true,
   },
   coldRentPricePerSquareMeter: {
-    title: "Preis pro m²",
+    title: "€/m²",
     sortable: true,
   },
   district: {
     title: "Bezirk",
+    sortable: false,
+  },
+  favorite: {
+    title: "",
     sortable: false,
   },
 };
@@ -54,16 +58,16 @@ const countText = computed(() => {
 <template>
   <div>
     <Filters />
-    <table class="hidden w-full lg:table">
+    <table class="hidden w-full border-separate border-spacing-y-4 lg:table">
       <thead class="bg-background">
         <tr class="">
-          <th class="-m-4 rounded-l-xl p-4 font-medium">
+          <th class="rounded-l-xl p-4 text-left font-medium">
             {{ countText }}
           </th>
           <th
             v-for="[headerKey, header] in Object.entries(tableHeaders)"
             :key="headerKey"
-            class="-m-4 p-4 font-medium last:rounded-r-xl"
+            class="w-max text-nowrap py-4 text-left font-medium last:rounded-r-xl"
           >
             <div
               v-if="header.sortable"
@@ -79,10 +83,6 @@ const countText = computed(() => {
         </tr>
       </thead>
       <tbody class="text-center">
-        <!-- this is necessary for spacing -->
-        <tr aria-hidden="true">
-          <td class="p-2"></td>
-        </tr>
         <ApartmentDetails
           v-for="flat in flats?.data"
           :id="flat.id"
