@@ -4,7 +4,7 @@ import { publicProcedure, router } from "../trpc";
 import { db } from "~/db/db";
 import { address, flat, flatToTag } from "~/db/schema";
 import { omit } from "~/utils/typeHelper";
-import { berlinDistricts } from "~/data/districts";
+import { berlinDistricts, districtIdSchema } from "~/data/districts";
 import { type Tags, tagsSchema } from "~/data/tags";
 
 const countsAsNewTime = 60 * 60 * 12;
@@ -97,10 +97,10 @@ export const flatRouter = router({
           inArray(
             address.postalCode,
             input.districts
-              .map((d) => {
-                // @ts-ignore
-                const district = berlinDistricts[d];
-                return district?.zipCodes ?? [];
+              .map((inputDistrict) => {
+                const res = districtIdSchema.safeParse(inputDistrict);
+                if (!res.success) return [];
+                return berlinDistricts[res.data].zipCodes;
               })
               .flat(),
           ),
