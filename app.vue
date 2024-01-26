@@ -80,6 +80,12 @@ onMounted(() => {
   );
 
   _cleanup.push(
+    nuxtApp.hook("page:finish", () => {
+      pageLoading.value = false;
+    }),
+  );
+
+  _cleanup.push(
     nuxtApp.hook("vue:error", () => {
       pageLoading.value = false;
     }),

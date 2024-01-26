@@ -23,15 +23,14 @@ const nuxtApp = useNuxtApp();
 const _cleanup: Array<() => void> = [];
 
 onMounted(() => {
-  _cleanup.push(
-    nuxtApp.hook("vue:error", () => {
-      showSiteMenu(false);
-    }),
-  );
-  _cleanup.push(
-    nuxtApp.hook("page:loading:end", () => {
-      showSiteMenu(false);
-    }),
+  (["vue:error", "page:finish", "page:loading:end"] as const).forEach(
+    (hook) => {
+      _cleanup.push(
+        nuxtApp.hook(hook, () => {
+          showSiteMenu(false);
+        }),
+      );
+    },
   );
 });
 
