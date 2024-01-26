@@ -8,96 +8,96 @@ const modalPreferences = reactive({
   areaMax: null,
 });
 
-const filterRanges = {
-  price: { min: 100, max: 10000 },
-  rooms: { min: 1, max: 10 },
-  area: { min: 1, max: 1000 },
+interface Metadata {
+  price: { min: number; max: number; unit: string };
+  rooms: { min: number; max: number; unit: string };
+  area: { min: number; max: number; unit: string };
+}
+
+const filterMetadata: Metadata = {
+  price: { min: 100, max: 10000, unit: "€" },
+  rooms: { min: 1, max: 10, unit: "Zimmer" },
+  area: { min: 1, max: 1000, unit: "m²" },
 };
 
-const createFilter = (minValue: null, maxValue: null, label: string) => {
-  if (minValue && maxValue) {
-    return `${label}: ${minValue}-${maxValue}`;
-  } else if (minValue) {
-    return `${label}: ${minValue}+`;
-  } else if (maxValue) {
-    return `${label}: ${maxValue}-`;
+const getFilterMetadata = (key: string) => {
+  for (const [metaKey, meta] of Object.entries(filterMetadata)) {
+    if (key.includes(metaKey)) {
+      return meta;
+    }
+  }
+  return null;
+};
+
+const getLimitByKeyName = (keyName: string) => {
+  if (keyName.toLowerCase().includes("min")) {
+    return "≥";
+  } else if (keyName.toLowerCase().includes("max")) {
+    return "≤";
+  } else {
+    return "";
+  }
+};
+
+const createFilter = (value: null, unit: string, lessOrMore: string) => {
+  if (value) {
+    return `${lessOrMore} ${value} ${unit}`;
   }
   return null;
 };
 
 const uiFilters = computed(() => {
   const filters: any[] = [];
-  const filterLabels = ["Preis", "Zimmer", "Fläche"];
-  const filterValues = [
-    ["priceMin", "priceMax"],
-    ["roomsMin", "roomsMax"],
-    ["areaMin", "areaMax"],
-  ];
 
-  filterValues.forEach((values, index) => {
-    const filter = createFilter(
-      modalPreferences[values[0] as keyof typeof modalPreferences],
-      modalPreferences[values[1] as keyof typeof modalPreferences],
-      filterLabels[index],
-    );
-    if (filter) {
-      filters.push({ id: values, filter });
+  for (const [key, value] of Object.entries(modalPreferences)) {
+    if (value) {
+      const filter = createFilter(
+        value,
+        getFilterMetadata(key)?.unit ?? "",
+        getLimitByKeyName(key),
+      );
+      filters.push({ filter, id: key });
     }
-  });
+  }
 
   return filters;
 });
 
-const resetFilter = (filterId: (string | number)[]) => {
-  modalPreferences[filterId[0] as keyof typeof modalPreferences] = null;
-  modalPreferences[filterId[1] as keyof typeof modalPreferences] = null;
+const resetFilter = (filterId: string) => {
+  modalPreferences[filterId as keyof typeof modalPreferences] = null;
+};
+
+const closeModal = () => {
+  modalOpen.value = false;
+  try {
+    document.removeEventListener("click", handleClickOutside);
+  } catch (error) {
+    // do nothing. Event lister must have been removed already
+  }
 };
 
 const applyFilters = () => {
-  const filterValues = [
-    ["priceMin", "priceMax"],
-    ["roomsMin", "roomsMax"],
-    ["areaMin", "areaMax"],
-  ];
+  closeModal();
 
-  filterValues.forEach((values, index) => {
-    if (
-      // dont apply if user didnt input anything
-      modalPreferences[values[0]] !== null &&
-      modalPreferences[values[1]] !== null
-    ) {
-      if (modalPreferences[values[0]] > modalPreferences[values[1]]) {
-        [modalPreferences[values[0]], modalPreferences[values[1]]] = [
-          modalPreferences[values[1]],
-          modalPreferences[values[0]],
-        ];
-      }
-
-      // Clamp the values to the min and max
-      const range = filterRanges[values[0].slice(0, -3)]; // Get the range for this filter
-      modalPreferences[values[0]] = Math.max(
-        range.min,
-        Math.min(range.max, modalPreferences[values[0]]),
-      );
-      modalPreferences[values[1]] = Math.max(
-        range.min,
-        Math.min(range.max, modalPreferences[values[1]]),
-      );
+  for (const [key, value] of Object.entries(modalPreferences)) {
+    if (value) {
+      const metadata = getFilterMetadata(key);
+      value > metadata.max &&
+        (modalPreferences[key as keyof typeof modalPreferences] = metadata.max);
+      value < metadata.min &&
+        (modalPreferences[key as keyof typeof modalPreferences] = metadata.min);
     }
-  });
-
-  // Apply the filters
+  }
 };
 
 const modalOpen = ref(false);
 const modalElement = ref<HTMLElement | null>(null);
 
-let handleClickOutside: (event: MouseEvent) => void; // needed to remove event listener
 // eslint-disable-next-line prefer-const
+let handleClickOutside: (event: MouseEvent) => void; // needed to remove event listener
 handleClickOutside = (event) => {
   if (modalElement.value && !modalElement.value.contains(event.target)) {
-    modalOpen.value = false;
-    document.removeEventListener("click", handleClickOutside);
+    closeModal();
   }
 };
 
@@ -135,16 +135,16 @@ const handleModelStatus = () => {
             type="number"
             class="w-32 rounded-md border-2 border-accent px-4 py-2"
             placeholder="Min"
-            :min="filterRanges.price.min"
-            :max="filterRanges.price.max"
+            :min="filterMetadata.price.min"
+            :max="filterMetadata.price.max"
           />
           <input
             v-model="modalPreferences.priceMax"
             type="number"
             class="w-32 rounded-md border-2 border-accent px-4 py-2"
             placeholder="Max"
-            :min="filterRanges.price.min"
-            :max="filterRanges.price.max"
+            :min="filterMetadata.price.min"
+            :max="filterMetadata.price.max"
           />
         </div>
       </div>
@@ -156,16 +156,16 @@ const handleModelStatus = () => {
             type="number"
             class="w-32 rounded-md border-2 border-accent px-4 py-2"
             placeholder="Min"
-            :min="filterRanges.rooms.min"
-            :max="filterRanges.rooms.max"
+            :min="filterMetadata.rooms.min"
+            :max="filterMetadata.rooms.max"
           />
           <input
             v-model="modalPreferences.roomsMax"
             type="number"
             class="w-32 rounded-md border-2 border-accent px-4 py-2"
             placeholder="Max"
-            :min="filterRanges.rooms.min"
-            :max="filterRanges.rooms.max"
+            :min="filterMetadata.rooms.min"
+            :max="filterMetadata.rooms.max"
           />
         </div>
       </div>
@@ -177,16 +177,16 @@ const handleModelStatus = () => {
             type="number"
             class="w-32 rounded-md border-2 border-accent px-4 py-2"
             placeholder="Min"
-            :min="filterRanges.area.min"
-            :max="filterRanges.area.max"
+            :min="filterMetadata.area.min"
+            :max="filterMetadata.area.max"
           />
           <input
             v-model="modalPreferences.areaMax"
             type="number"
             class="w-32 rounded-md border-2 border-accent px-4 py-2"
             placeholder="Max"
-            :min="filterRanges.area.min"
-            :max="filterRanges.area.max"
+            :min="filterMetadata.area.min"
+            :max="filterMetadata.area.max"
           />
         </div>
       </div>
@@ -204,7 +204,7 @@ const handleModelStatus = () => {
     >
       {{ filterObj.filter }}
       <span
-        class="ml-2 text-accent"
+        class="ml-2 cursor-pointer text-accent"
         @click="resetFilter(filterObj.id)"
         >x</span
       >
