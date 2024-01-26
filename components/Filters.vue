@@ -1,4 +1,7 @@
 <script setup lang="ts">
+const router = useRouter();
+const route = useRoute();
+
 interface Prefs {
   [key: string]: number | null;
 }
@@ -25,6 +28,12 @@ const filterMetadata: Metadata = {
   rooms: { min: 1, max: 10, unit: "Zimmer" },
   area: { min: 1, max: 1000, unit: "m²" },
 };
+
+// Initialize state from URL
+// hierdurch funktioniert die buildUrl() irgendwie nicht mehr...
+for (const [key, value] of Object.entries(route.query)) {
+  if (key in modalPreferences) modalPreferences[key] = Number(value);
+}
 
 const getFilterMetadata = (key: string) => {
   for (const [metaKey, meta] of Object.entries(filterMetadata)) {
@@ -71,6 +80,7 @@ const uiFilters = computed(() => {
 
 const resetFilter = (filterId: string) => {
   modalPreferences[filterId as keyof typeof modalPreferences] = null;
+  buildUrl();
 };
 
 const closeModal = () => {
@@ -94,6 +104,26 @@ const applyFilters = () => {
         (modalPreferences[key as keyof typeof modalPreferences] = metadata.min);
     }
   }
+  buildUrl();
+};
+
+// gibt es was besseres als einfache funktion die ich jedes mal selbst aufrufen muss wenn sich was ändert?
+// watch macht gerade kein Sinn weil es dann vor "Anwenden" button filtert
+const buildUrl = () => {
+  const query: Record<string, string> = {};
+
+  // Copy existing query parameters
+  for (const [key, value] of Object.entries(router.currentRoute.value.query)) {
+    query[key] = value as string;
+  }
+
+  for (const [key, value] of Object.entries(modalPreferences)) {
+    if (value !== null) {
+      query[key] = value.toString();
+    }
+  }
+
+  router.replace({ query }); // unterschied zu push?
 };
 
 const modalOpen = ref(false);

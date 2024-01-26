@@ -75,6 +75,12 @@ export const useFlatFilterUrlState = () => {
         tags: z.array(z.string()).optional(),
         propertyManagements: z.array(z.string()).optional(),
         districts: z.array(z.string()).optional(),
+        priceMin: z.array(z.number()).optional(),
+        priceMax: z.array(z.number()).optional(),
+        roomsMin: z.array(z.number()).optional(),
+        roomsMax: z.array(z.number()).optional(),
+        areaMin: z.array(z.number()).optional(),
+        areaMax: z.array(z.number()).optional(),
       })
       .merge(paginationSchema),
   );
