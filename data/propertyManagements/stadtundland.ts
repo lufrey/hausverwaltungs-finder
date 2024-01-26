@@ -42,7 +42,7 @@ export const stadtundland: PropertyManagement = {
         "zzgl. gültiger ust": "coldRentPrice",
         zimmer: "roomCount",
       } as const;
-      const tableKeys = Object.keys(tableKeyMap);
+      const tableKeys = typedObjectKeys(tableKeyMap);
       return await Promise.all(
         els.map(async (el) => {
           const title = await el.$eval(
@@ -61,14 +61,17 @@ export const stadtundland: PropertyManagement = {
           const id = await hashString(idSource);
 
           const tableData = await el.$eval(".SP-Table--static tbody", (el) => {
-            return Array.from(el.children).reduce((acc, cur) => {
-              const key =
-                cur.children[0].textContent?.toLowerCase().trim() ?? "";
-              const value =
-                cur.children[1].textContent?.toLowerCase().trim() ?? "";
-              acc[key] = value;
-              return acc;
-            }, {} as any);
+            return Array.from(el.children).reduce(
+              (acc, cur) => {
+                const key =
+                  cur.children[0].textContent?.toLowerCase().trim() ?? "";
+                const value =
+                  cur.children[1].textContent?.toLowerCase().trim() ?? "";
+                acc[key] = value;
+                return acc;
+              },
+              {} as Record<string, string>,
+            );
           });
 
           const mappedTableData = Object.entries(tableData).reduce(
@@ -78,7 +81,6 @@ export const stadtundland: PropertyManagement = {
                 key.includes(tableKey),
               );
               if (mappedKey) {
-                // @ts-ignore
                 acc[tableKeyMap[mappedKey]] = value;
               }
               return acc;

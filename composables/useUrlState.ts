@@ -1,8 +1,12 @@
-import { z, type ZodSchema } from "zod";
+import { z, type ZodOptional, type ZodArray, type ZodObject } from "zod";
 import { berlinDistricts } from "~/data/districts";
 import { tags } from "~/data/tags";
 
-export const useUrlState = <TSchema extends ZodSchema>(schema: TSchema) => {
+export const useUrlState = <
+  TSchema extends ZodObject<Record<string, ZodOptional<ZodArray<any>>>>,
+>(
+  schema: TSchema,
+) => {
   const { currentRoute, push, replace } = useRouter();
 
   const updateQueryState = (
@@ -25,7 +29,6 @@ export const useUrlState = <TSchema extends ZodSchema>(schema: TSchema) => {
 
   // reset all query params, that are in the schema
   const resetQueryState = () => {
-    // @ts-ignore
     const keys = Object.keys(schema.shape);
     const query = omit(currentRoute.value.query, keys);
     push({
@@ -34,9 +37,7 @@ export const useUrlState = <TSchema extends ZodSchema>(schema: TSchema) => {
   };
 
   const urlState = computed((): TSchema["_output"] => {
-    // @ts-ignore
     const query = Object.entries(currentRoute.value.query).reduce(
-      // @ts-ignore
       (acc, [key, value]) => ({
         ...acc,
         [key]: Array.isArray(value) ? value : [value],
