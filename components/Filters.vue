@@ -1,5 +1,9 @@
 <script setup lang="ts">
-const modalPreferences = reactive({
+interface Prefs {
+  [key: string]: number | null;
+}
+
+const modalPreferences: Prefs = reactive({
   priceMin: null,
   priceMax: null,
   roomsMin: null,
@@ -9,9 +13,11 @@ const modalPreferences = reactive({
 });
 
 interface Metadata {
-  price: { min: number; max: number; unit: string };
-  rooms: { min: number; max: number; unit: string };
-  area: { min: number; max: number; unit: string };
+  [key: string]: {
+    min: number;
+    max: number;
+    unit: string;
+  };
 }
 
 const filterMetadata: Metadata = {
@@ -39,7 +45,7 @@ const getLimitByKeyName = (keyName: string) => {
   }
 };
 
-const createFilter = (value: null, unit: string, lessOrMore: string) => {
+const createFilter = (value: number, unit: string, lessOrMore: string) => {
   if (value) {
     return `${lessOrMore} ${value} ${unit}`;
   }
@@ -80,8 +86,8 @@ const applyFilters = () => {
   closeModal();
 
   for (const [key, value] of Object.entries(modalPreferences)) {
-    if (value) {
-      const metadata = getFilterMetadata(key);
+    const metadata = getFilterMetadata(key);
+    if (value && metadata) {
       value > metadata.max &&
         (modalPreferences[key as keyof typeof modalPreferences] = metadata.max);
       value < metadata.min &&
