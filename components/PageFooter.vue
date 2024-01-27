@@ -21,12 +21,12 @@ const sections = [
     title: "Über",
     links: [
       {
-        title: "Email",
+        title: "E-Mail",
         url: "mailto:",
       },
       {
         title: "Mitmachen",
-        url: "/github",
+        url: "https://github.com/lufrey/hausverwaltungs-finder",
       },
     ],
   },
@@ -66,8 +66,9 @@ const sections = [
               <NuxtLink
                 :to="link.url"
                 class="hover:underline"
-                >{{ link.title }}</NuxtLink
               >
+                {{ link.title }}
+              </NuxtLink>
             </li>
           </ul>
         </div>

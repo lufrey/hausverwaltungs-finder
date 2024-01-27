@@ -107,24 +107,22 @@ const countText = computed(() => {
       <h2 class="mb-4 text-xl">
         {{ countText }}
       </h2>
-      <main>
-        <ApartmentDetails
-          v-for="flat in flats?.data"
-          :id="flat.id"
-          :key="flat.id"
-          :room-count="flat.roomCount"
-          :title="flat.title"
-          :address="flat.address!"
-          :cold-rent-price="flat.coldRentPrice"
-          :warm-rent-price="flat.warmRentPrice"
-          :tags="flat.tags"
-          :favorite="false"
-          :usable-area="flat.usableArea"
-          :image-src="flat.hasImage ? `/api/image/${flat.id}` : null"
-          :url="flat.url"
-          :first-seen="new Date(flat.firstSeen)"
-        />
-      </main>
+      <ApartmentDetails
+        v-for="flat in flats?.data"
+        :id="flat.id"
+        :key="flat.id"
+        :room-count="flat.roomCount"
+        :title="flat.title"
+        :address="flat.address!"
+        :cold-rent-price="flat.coldRentPrice"
+        :warm-rent-price="flat.warmRentPrice"
+        :tags="flat.tags"
+        :favorite="false"
+        :usable-area="flat.usableArea"
+        :image-src="flat.hasImage ? `/api/image/${flat.id}` : null"
+        :url="flat.url"
+        :first-seen="new Date(flat.firstSeen)"
+      />
     </div>
     <div class="w-full rounded-xl bg-background p-4">
       <Pagination

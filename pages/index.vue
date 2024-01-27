@@ -113,7 +113,23 @@ const origin = useRequestURL().origin;
         <h3 class="mb-2 mt-4 inline-block bg-accent px-2 text-l text-white">
           Wer?
         </h3>
-        <p>Lukas Frey & Malie Bertram</p>
+        <p>
+          <NuxtLink
+            to="mailto:wohnungsmark@lukasfrey.com"
+            class="underline"
+          >
+            <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
+            Lukas Frey</NuxtLink
+          >
+          &
+          <NuxtLink
+            to="mailto:malie.bertram@student.htw-berlin.de"
+            class="underline"
+          >
+            <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
+            Malie Bertram</NuxtLink
+          >
+        </p>
       </section>
     </div>
   </div>
