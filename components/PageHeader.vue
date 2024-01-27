@@ -43,9 +43,9 @@ onUnmounted(() => _cleanup.forEach((hook) => hook()));
     >
       ApartiFind
     </NuxtLink>
-    <span class="tagline hidden text-l font-light opacity-50 md:block"
-      >What's a housing crisis?</span
-    >
+    <h2 class="tagline hidden text-l font-light opacity-50 md:block">
+      What's a housing crisis?
+    </h2>
     <div class="nav_links hidden items-center gap-8 md:flex">
       <div class="favorites relative">
         <IconHeart
@@ -56,24 +56,6 @@ onUnmounted(() => _cleanup.forEach((hook) => hook()));
           class="top absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-s"
           ><ClientOnly fallback="0">{{ favorites.length }}</ClientOnly></span
         >
-      </div>
-      <div class="mx-auto flex items-center justify-center">
-        <div
-          class="bg-gradient rota flex w-full rounded-full bg-gradient-to-b from-primary to-accent p-[3px] hover:from-accent hover:to-accent"
-        >
-          <NuxtLink
-            to="https://github.com/lufrey/hausverwaltungs-finder"
-            target="_blank"
-            class="contribute rounded-full bg-white px-5 py-2"
-          >
-            <span>Mitwirken</span>
-            <img
-              src="/github-mark.svg"
-              alt="Klicke um auf GitHub zu diesem Projekt beizutragen"
-              class="github_logo ml-2 inline w-6"
-            />
-          </NuxtLink>
-        </div>
       </div>
     </div>
     <HamburgerMenu @click="() => showSiteMenu(true)" />
