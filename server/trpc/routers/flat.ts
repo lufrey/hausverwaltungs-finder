@@ -1,4 +1,15 @@
-import { and, eq, inArray, isNull, sql, getTableColumns } from "drizzle-orm";
+import {
+  and,
+  eq,
+  inArray,
+  isNull,
+  sql,
+  getTableColumns,
+  gte,
+  lte,
+  count,
+  or,
+} from "drizzle-orm";
 import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
 import { db } from "~/db/db";
@@ -6,6 +17,7 @@ import { address, flat, flatToTag } from "~/db/schema";
 import { omit } from "~/utils/typeHelper";
 import { berlinDistricts, districtIdSchema } from "~/data/districts";
 import { type Tags, tagsSchema } from "~/data/tags";
+import { flatFilterUrlSchema } from "~/composables/useUrlState";
 
 const countsAsNewTime = 60 * 60 * 12;
 export const countsAsNewFilter = sql<
@@ -59,21 +71,22 @@ export const flatRouter = router({
     }),
   getAll: publicProcedure
     .input(
-      z
-        .object({
-          pageSize: z.array(z.coerce.number()).optional().default([25]),
-          page: z.array(z.coerce.number()).optional().default([1]),
-          tags: z.array(z.string()).optional(),
-          propertyManagements: z.array(z.string()).optional(),
-          districts: z.array(z.string()).optional(),
-          minPrice: z.coerce.number().optional(),
-          maxPrice: z.coerce.number().optional(),
-          roomCount: z.coerce.number().optional(),
-          minUsableArea: z.coerce.number().optional(),
-          maxUsableArea: z.coerce.number().optional(),
-        })
+      flatFilterUrlSchema
         .optional()
-        .default({}),
+        .default({})
+        .transform((input) => {
+          return {
+            ...input,
+            page: input.page?.[0] ?? 1,
+            pageSize: input.pageSize?.[0] ?? 25,
+            areaMin: input.areaMin?.[0],
+            areaMax: input.areaMax?.[0],
+            priceMin: input.priceMin?.[0],
+            priceMax: input.priceMax?.[0],
+            roomsMin: input.roomsMin?.[0],
+            roomsMax: input.roomsMax?.[0],
+          };
+        }),
     )
     .query(async ({ input }) => {
       // when filtering for "new", we need to filter
@@ -114,21 +127,31 @@ export const flatRouter = router({
           inArray(flatToTag.tagId, tagsToFilterFor.data),
 
         // price filter
-        input.minPrice && sql`warmRentPrice >= ${input.minPrice}`,
-        input.maxPrice && sql`warmRentPrice <= ${input.maxPrice}`,
+        // TODO: besseres handling für kalt/warmmiete
+        input.priceMin &&
+          or(
+            gte(flat.warmRentPrice, input.priceMin),
+            gte(flat.coldRentPrice, input.priceMin),
+          ),
+        input.priceMax &&
+          or(
+            lte(flat.warmRentPrice, input.priceMax),
+            lte(flat.coldRentPrice, input.priceMax),
+          ),
 
         // room count filter
-        input.roomCount && eq(flat.roomCount, input.roomCount),
+        input.roomsMin && gte(flat.roomCount, input.roomsMin),
+        input.roomsMax && lte(flat.roomCount, input.roomsMax),
 
         // usable area filter
-        input.minUsableArea && sql`usableArea >= ${input.minUsableArea}`,
-        input.maxUsableArea && sql`usableArea <= ${input.maxUsableArea}`,
+        input.areaMin && gte(flat.usableArea, input.areaMin),
+        input.areaMax && lte(flat.usableArea, input.areaMax),
       ].filter(Boolean);
 
       const filteredElementsCount = (
         await db
           .select({
-            count: sql`COUNT(*)`,
+            count: count(),
             isNew: countsAsNewFilter,
           })
           .from(flat)
@@ -141,11 +164,11 @@ export const flatRouter = router({
       const totalElementsCount = (
         await db
           .select({
-            count: sql`COUNT(*)`,
+            count: count(),
           })
           .from(flat)
           .where(isNull(flat.deleted))
-      )[0].count as number;
+      )[0].count;
 
       // get the flatIds of all flats that fulfill the filters
       const flatIdsQuery = db
@@ -159,8 +182,8 @@ export const flatRouter = router({
         .innerJoin(address, eq(flat.addressId, address.id))
         .groupBy(flat.id)
         .where(and(...filters))
-        .limit(input.pageSize[0])
-        .offset((input.page[0] - 1) * input.pageSize[0]);
+        .limit(input.pageSize)
+        .offset((input.page - 1) * input.pageSize);
 
       // run the full query, there will be multiples, because of the m:n relation to the tags
       const query = db
