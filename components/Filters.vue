@@ -132,7 +132,12 @@ const modalElement = ref<HTMLElement | null>(null);
 // eslint-disable-next-line prefer-const
 let handleClickOutside: (event: MouseEvent) => void; // needed to remove event listener
 handleClickOutside = (event) => {
-  if (modalElement.value && !modalElement.value.contains(event.target)) {
+  console.log(event.target);
+  if (
+    modalElement.value &&
+    event.target instanceof Element &&
+    !modalElement.value.contains(event.target)
+  ) {
     closeModal();
   }
 };
