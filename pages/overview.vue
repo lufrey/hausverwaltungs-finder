@@ -14,6 +14,13 @@ onMounted(() => {
   registerLoadingRef(flatsQuery.status, (status) => status.value === "pending");
 });
 
+watch(flats, () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+});
+
 onUnmounted(() => unregisterLoadingRef(flatsQuery.status));
 
 const tableHeaders = {

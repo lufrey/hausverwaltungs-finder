@@ -96,7 +96,6 @@ export const flatRouter = router({
         input.tags = input.tags?.filter((tag) => tag !== "new");
       }
       const tagsToFilterFor = tagsSchema.safeParse(input.tags ?? []);
-
       const filters = [
         // not deleted
         isNull(flat.deleted),

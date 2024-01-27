@@ -47,12 +47,14 @@ const sections = [
 </script>
 
 <template>
-  <footer class="mt-20 flex bg-gray-100 pb-10 text-right">
+  <footer
+    class="mt-10 flex bg-gray-100 pb-10 text-center md:mt-20 md:text-right"
+  >
     <div
       class="mx-auto w-full max-w-[1180px] px-4 pt-4 font-poppins md:px-14 xl:pt-8"
     >
-      <div class="grid grid-cols-4">
-        <div class="krasse_graphik"></div>
+      <div class="grid grid-cols-3 md:grid-cols-4">
+        <div class="krasse_graphik hidden md:block"></div>
         <div
           v-for="section in sections"
           :key="section.title"
