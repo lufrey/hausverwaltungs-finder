@@ -1,7 +1,7 @@
 // this file is here for intellisense
 
 import type { Config } from "tailwindcss";
-const config: Partial<Config> = {
+const config = {
   content: ["./src/**/*.{html,js}"],
   theme: {
     fontFamily: {
@@ -39,6 +39,6 @@ const config: Partial<Config> = {
       },
     },
   },
-};
+} satisfies Config;
 
 export default config;

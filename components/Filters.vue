@@ -165,7 +165,7 @@ const handleModelStatus = () => {
     <div
       v-if="modalOpen"
       ref="modalElement"
-      class="before:content-' ' absolute top-12 flex flex-col gap-4 rounded-md bg-white p-4 shadow-xl before:absolute before:left-6 before:top-[-4px] before:h-2 before:w-2 before:rotate-45 before:bg-white before:shadow-md"
+      class="before:content-' ' absolute top-12 z-20 flex flex-col gap-4 rounded-md bg-white p-4 shadow-xl before:absolute before:left-6 before:top-[-4px] before:h-2 before:w-2 before:rotate-45 before:bg-white before:shadow-md"
     >
       <div>
         <strong>Preis (€)</strong>
