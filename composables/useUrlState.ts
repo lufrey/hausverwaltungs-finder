@@ -1,9 +1,9 @@
-import { z, type ZodOptional, type ZodObject } from "zod";
+import { z, type ZodOptional, type ZodObject, type ZodNullable } from "zod";
 import { berlinDistricts } from "~/data/districts";
 import { tags } from "~/data/tags";
 
 export const useUrlState = <
-  TSchema extends ZodObject<Record<string, ZodOptional<any>>>,
+  TSchema extends ZodObject<Record<string, ZodNullable<ZodOptional<any>>>>,
 >(
   schema: TSchema,
 ) => {
@@ -19,11 +19,20 @@ export const useUrlState = <
       return;
     }
     const func = useReplace ? replace : push;
-    func({
-      query: {
-        ...currentRoute.value.query,
-        ...res.data,
+    const newQuery = Object.entries(res.data).reduce(
+      (acc, [key, value]) => {
+        if (value === null || value === undefined) {
+          acc[key] = undefined;
+        } else {
+          acc[key] = value;
+        }
+        return acc;
       },
+      { ...currentRoute.value.query } as Record<string, unknown>,
+    );
+
+    func({
+      query: newQuery,
     });
   };
 
@@ -60,8 +69,8 @@ export const useUrlState = <
 };
 
 const paginationSchema = z.object({
-  page: z.coerce.number().array().length(1).optional(),
-  pageSize: z.coerce.number().array().length(1).optional(),
+  page: z.coerce.number().array().length(1).optional().nullable(),
+  pageSize: z.coerce.number().array().length(1).optional().nullable(),
 });
 
 export const usePaginationUrlState = () => {
@@ -70,15 +79,15 @@ export const usePaginationUrlState = () => {
 
 export const flatFilterUrlSchema = z
   .object({
-    tags: z.array(z.string()).optional(),
-    propertyManagements: z.array(z.string()).optional(),
-    districts: z.array(z.string()).optional(),
-    priceMin: z.array(z.coerce.number()).optional(),
-    priceMax: z.array(z.coerce.number()).optional(),
-    roomsMin: z.array(z.coerce.number()).optional(),
-    roomsMax: z.array(z.coerce.number()).optional(),
-    areaMin: z.array(z.coerce.number()).optional(),
-    areaMax: z.array(z.coerce.number()).optional(),
+    tags: z.array(z.string()).optional().nullable(),
+    propertyManagements: z.array(z.string()).optional().nullable(),
+    districts: z.array(z.string()).optional().nullable(),
+    priceMin: z.array(z.coerce.number()).optional().nullable(),
+    priceMax: z.array(z.coerce.number()).optional().nullable(),
+    roomsMin: z.array(z.coerce.number()).optional().nullable(),
+    roomsMax: z.array(z.coerce.number()).optional().nullable(),
+    areaMin: z.array(z.coerce.number()).optional().nullable(),
+    areaMax: z.array(z.coerce.number()).optional().nullable(),
   })
   .merge(paginationSchema);
 

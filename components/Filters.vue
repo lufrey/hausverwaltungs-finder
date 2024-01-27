@@ -1,19 +1,17 @@
 <script setup lang="ts">
-const router = useRouter();
-const route = useRoute();
+const { updateQueryState, urlState } = useFlatFilterUrlState();
 
-interface Prefs {
-  [key: string]: number | null;
-}
-
-const modalPreferences: Prefs = reactive({
+const modalPreferences = reactive({
   priceMin: null,
   priceMax: null,
   roomsMin: null,
   roomsMax: null,
   areaMin: null,
   areaMax: null,
-});
+} as Record<
+  "priceMin" | "priceMax" | "roomsMin" | "roomsMax" | "areaMin" | "areaMax",
+  number | null
+>);
 
 interface Metadata {
   [key: string]: {
@@ -31,13 +29,21 @@ const filterMetadata: Metadata = {
 
 // Initialize state from URL
 // hierdurch funktioniert die buildUrl() irgendwie nicht mehr...
-for (const [key, value] of Object.entries(route.query)) {
-  if (key in modalPreferences) modalPreferences[key] = Number(value);
-}
+watch(urlState, () => {
+  syncStateWithUrl();
+});
+
+const syncStateWithUrl = () => {
+  for (const key of typedObjectKeys(modalPreferences)) {
+    modalPreferences[key] = urlState.value[key]?.[0] ?? null;
+  }
+};
+
+syncStateWithUrl();
 
 const getFilterMetadata = (key: string) => {
   for (const [metaKey, meta] of Object.entries(filterMetadata)) {
-    if (key.includes(metaKey)) {
+    if (key.startsWith(metaKey)) {
       return meta;
     }
   }
@@ -54,7 +60,11 @@ const getLimitByKeyName = (keyName: string) => {
   }
 };
 
-const createFilter = (value: number, unit: string, lessOrMore: string) => {
+const createFilter = (
+  value: number | string,
+  unit: string,
+  lessOrMore: string,
+) => {
   if (value) {
     return `${lessOrMore} ${value} ${unit}`;
   }
@@ -78,11 +88,6 @@ const uiFilters = computed(() => {
   return filters;
 });
 
-const resetFilter = (filterId: string) => {
-  modalPreferences[filterId as keyof typeof modalPreferences] = null;
-  buildUrl();
-};
-
 const closeModal = () => {
   modalOpen.value = false;
   try {
@@ -95,43 +100,23 @@ const closeModal = () => {
 const applyFilters = () => {
   closeModal();
 
+  const query: Record<string, number | number[] | null | string> = {};
   for (const [key, value] of Object.entries(modalPreferences)) {
-    const metadata = getFilterMetadata(key);
-    if (value && metadata) {
-      value > metadata.max &&
-        (modalPreferences[key as keyof typeof modalPreferences] = metadata.max);
-      value < metadata.min &&
-        (modalPreferences[key as keyof typeof modalPreferences] = metadata.min);
+    if (typeof value === "number" && filterMetadata[key]) {
+      query[key] = Math.min(
+        Math.max(value, filterMetadata[key].min),
+        filterMetadata[key].max,
+      );
     }
+    query[key] = value ? [value] : null;
   }
-  buildUrl();
-};
-
-// gibt es was besseres als einfache funktion die ich jedes mal selbst aufrufen muss wenn sich was ändert?
-// watch macht gerade kein Sinn weil es dann vor "Anwenden" button filtert
-const buildUrl = () => {
-  const query: Record<string, string> = {};
-
-  // Copy existing query parameters
-  for (const [key, value] of Object.entries(router.currentRoute.value.query)) {
-    query[key] = value as string;
-  }
-
-  for (const [key, value] of Object.entries(modalPreferences)) {
-    if (value !== null) {
-      query[key] = value.toString();
-    }
-  }
-
-  router.replace({ query }); // unterschied zu push?
+  updateQueryState(query);
 };
 
 const modalOpen = ref(false);
 const modalElement = ref<HTMLElement | null>(null);
 
-// eslint-disable-next-line prefer-const
-let handleClickOutside: (event: MouseEvent) => void; // needed to remove event listener
-handleClickOutside = (event) => {
+const handleClickOutside = (event: MouseEvent) => {
   if (
     modalElement.value &&
     event.target instanceof Element &&
@@ -182,7 +167,7 @@ const handleModelStatus = () => {
             v-model="modalPreferences.priceMax"
             type="number"
             class="w-32 rounded-md border-2 border-accent px-4 py-2"
-            placeholder="Max"
+            :placeholder="filterMetadata.price.max + ' Max'"
             :min="filterMetadata.price.min"
             :max="filterMetadata.price.max"
           />
@@ -245,7 +230,7 @@ const handleModelStatus = () => {
       {{ filterObj.filter }}
       <span
         class="ml-2 cursor-pointer text-accent"
-        @click="resetFilter(filterObj.id)"
+        @click="updateQueryState({ [filterObj.id]: undefined })"
         >x</span
       >
     </div>
