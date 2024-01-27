@@ -1,6 +1,6 @@
 import type { WatchStopHandle } from "vue";
 
-const isLoading = ref(false);
+const isLoading = ref(true);
 const watchers = new Map<
   Ref,
   {

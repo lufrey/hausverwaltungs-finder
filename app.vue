@@ -74,7 +74,7 @@ onMounted(() => {
   );
 
   _cleanup.push(
-    nuxtApp.hook("page:finish", () => {
+    nuxtApp.hook("page:loading:end", () => {
       pageLoading.value = false;
     }),
   );
@@ -97,9 +97,3 @@ onUnmounted(() => _cleanup.forEach((hook) => hook()));
     <NuxtPage />
   </NuxtLayout>
 </template>
-
-<style>
-#__nuxt {
-  height: 100%;
-}
-</style>

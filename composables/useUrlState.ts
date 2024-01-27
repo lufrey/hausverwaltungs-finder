@@ -21,14 +21,10 @@ export const useUrlState = <
     const func = useReplace ? replace : push;
     const newQuery = Object.entries(res.data).reduce(
       (acc, [key, value]) => {
-        if (value === null || value === undefined) {
-          acc[key] = undefined;
-        } else {
-          acc[key] = value;
-        }
+        acc[key] = value ?? undefined;
         return acc;
       },
-      { ...currentRoute.value.query } as Record<string, unknown>,
+      { ...currentRoute.value.query },
     );
 
     func({
@@ -94,26 +90,22 @@ export const flatFilterUrlSchema = z
 export const useFlatFilterUrlState = () => {
   const url = useUrlState(flatFilterUrlSchema);
 
-  // TODO: check if computed is necessary
-  const validTags = computed(() => {
-    return url.urlState.value.tags?.filter((tag) =>
-      typedObjectKeys(tags).includes(tag),
-    );
-  });
-  const validDistricts = computed(() => {
-    return url.urlState.value.districts?.filter(
-      (district) => district in berlinDistricts,
-    );
-  });
-
-  url.updateQueryState(
-    {
-      ...url.urlState.value,
-      tags: validTags.value,
-      districts: validDistricts.value,
-    },
-    true,
+  const validTags = url.urlState.value.tags?.filter((tag) =>
+    typedObjectKeys(tags).includes(tag),
   );
+  const validDistricts = url.urlState.value.districts?.filter(
+    (district) => district in berlinDistricts,
+  );
+
+  const validQueryState = {
+    ...url.urlState.value,
+    tags: validTags,
+    districts: validDistricts,
+  };
+
+  if (JSON.stringify(validQueryState) !== JSON.stringify(url.urlState.value)) {
+    url.updateQueryState(validQueryState, true);
+  }
 
   return url;
 };
