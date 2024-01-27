@@ -9,6 +9,6 @@ const { isLoading } = useCustomLoadingIndicator();
       'opacity-100': isLoading,
     }"
   >
-    <div class="h-full w-full animate-pulse bg-accent opacity-0"></div>
+    <div class="h-full w-full animate-pulse bg-accent"></div>
   </div>
 </template>

@@ -36,7 +36,7 @@ onUnmounted(() => _cleanup.forEach((hook) => hook()));
 </script>
 
 <template>
-  <nav class="flex h-12 items-center justify-between">
+  <nav class="flex h-12 items-center gap-4 md:justify-between">
     <NuxtLink
       to="/"
       class="logo text-xl font-medium tracking-tighter text-main"
@@ -46,7 +46,7 @@ onUnmounted(() => _cleanup.forEach((hook) => hook()));
     <h2 class="tagline hidden text-l font-light opacity-50 md:block">
       What's a housing crisis?
     </h2>
-    <div class="nav_links hidden items-center gap-8 md:flex">
+    <div class="nav_links ml-auto items-center gap-4 md:ml-0 md:flex">
       <div class="favorites relative">
         <IconHeart
           :filled="false"
