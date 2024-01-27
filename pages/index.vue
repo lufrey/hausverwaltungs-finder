@@ -115,7 +115,7 @@ const origin = useRequestURL().origin;
         </h3>
         <p>
           <NuxtLink
-            to="mailto:wohnungsmark@lukasfrey.com"
+            to="mailto:wohnungsmarkt@lukasfrey.com"
             class="underline"
           >
             <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->

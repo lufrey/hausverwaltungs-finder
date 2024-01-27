@@ -8,7 +8,7 @@ const sections = [
         url: "/",
       },
       {
-        title: "Übersicht",
+        title: "Wohnungsübersicht",
         url: "/overview",
       },
       {
@@ -22,7 +22,7 @@ const sections = [
     links: [
       {
         title: "E-Mail",
-        url: "mailto:",
+        url: "mailto:wohnungsmarkt@lukasfrey.com",
       },
       {
         title: "Mitmachen",
@@ -34,12 +34,16 @@ const sections = [
     title: "Credits",
     links: [
       {
-        title: "Icons",
-        url: "https://www.flaticon.com/free-icons/temperature",
+        title: "Apartment Graphic",
+        url: "https://www.freepik.com/free-ai-image/3d-rendering-abstract-building_72611443.htm",
       },
       {
-        title: "Icons",
-        url: "https://www.flaticon.com/free-icons/temperature",
+        title: "Photo by Simone Hutsch",
+        url: "https://unsplash.com/photos/architectural-photography-of-gray-and-yellow-building-YsEOuVd7afg",
+      },
+      {
+        title: "Photo by Wasimul Hossain",
+        url: "https://unsplash.com/photos/a-building-with-a-clock-on-the-top-of-it-XoIXsOnTOM0",
       },
     ],
   },
@@ -47,14 +51,18 @@ const sections = [
 </script>
 
 <template>
-  <footer
-    class="mt-10 flex bg-gray-100 pb-10 text-center md:mt-20 md:text-right"
-  >
+  <footer class="mt-10 flex bg-gray-100 pb-10 md:mt-20 lg:text-right">
     <div
       class="mx-auto w-full max-w-[1180px] px-4 pt-4 font-poppins md:px-14 xl:pt-8"
     >
-      <div class="grid grid-cols-3 md:grid-cols-4">
-        <div class="krasse_graphik hidden md:block"></div>
+      <div class="grid w-full gap-6 md:grid-cols-3 lg:grid-cols-4">
+        <div class="relative hidden lg:block">
+          <NuxtImg
+            src="/3d-rendering-abstract-building.png"
+            alt="Krasse Graphik"
+            class="md:absolute md:-bottom-[100px] lg:h-72"
+          />
+        </div>
         <div
           v-for="section in sections"
           :key="section.title"
