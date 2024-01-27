@@ -74,7 +74,7 @@ onMounted(() => {
   );
 
   _cleanup.push(
-    nuxtApp.hook("page:loading:end", () => {
+    nuxtApp.hook("page:finish", () => {
       pageLoading.value = false;
     }),
   );

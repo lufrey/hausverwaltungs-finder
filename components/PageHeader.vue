@@ -23,15 +23,13 @@ const nuxtApp = useNuxtApp();
 const _cleanup: Array<() => void> = [];
 
 onMounted(() => {
-  (["vue:error", "page:finish", "page:loading:end"] as const).forEach(
-    (hook) => {
-      _cleanup.push(
-        nuxtApp.hook(hook, () => {
-          showSiteMenu(false);
-        }),
-      );
-    },
-  );
+  (["vue:error", "page:finish"] as const).forEach((hook) => {
+    _cleanup.push(
+      nuxtApp.hook(hook, () => {
+        showSiteMenu(false);
+      }),
+    );
+  });
 });
 
 onUnmounted(() => _cleanup.forEach((hook) => hook()));
@@ -124,6 +122,7 @@ onUnmounted(() => _cleanup.forEach((hook) => hook()));
             'text-accent': route.path === link.path,
             'text-main': route.path !== link.path,
           }"
+          @click="() => route.path === link.path && showSiteMenu(false)"
         >
           {{ link.name }}
         </NuxtLink>
