@@ -15,6 +15,10 @@ const sections = [
         title: "Karte",
         url: "/map",
       },
+      {
+        title: "Datenschutz",
+        url: "/privacy",
+      },
     ],
   },
   {
