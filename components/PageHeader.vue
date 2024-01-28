@@ -57,7 +57,7 @@ onUnmounted(() => _cleanup.forEach((hook) => hook()));
         class="hidden md:block"
       >
         <lord-icon
-          src="https://cdn.lordicon.com/cnpvyndp.json"
+          src="/icons/home.json"
           trigger="hover"
           style="width: 32px; height: 32px"
         />
@@ -68,7 +68,7 @@ onUnmounted(() => _cleanup.forEach((hook) => hook()));
         class="hidden md:block"
       >
         <lord-icon
-          src="https://cdn.lordicon.com/nizfqlnk.json"
+          src="/icons/overview.json"
           trigger="hover"
           style="width: 32px; height: 32px"
         />
@@ -79,14 +79,14 @@ onUnmounted(() => _cleanup.forEach((hook) => hook()));
         class="hidden md:block"
       >
         <lord-icon
-          src="https://cdn.lordicon.com/yymhadbu.json"
+          src="/icons/map.json"
           trigger="hover"
           style="width: 32px; height: 32px"
         />
       </NuxtLink>
       <div class="favorites relative cursor-pointer">
         <lord-icon
-          src="https://cdn.lordicon.com/xyboiuok.json"
+          src="/icons/heart.json"
           trigger="morph"
           state="morph-heart"
           style="width: 32px; height: 32px"
