@@ -243,7 +243,7 @@ onUnmounted(() => {
     </div>
   </div>
 </template>
-<style scoped>
+<style scoped inline>
 /* For Webkit-based browsers (Chrome, Safari and Opera) */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;

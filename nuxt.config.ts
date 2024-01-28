@@ -86,5 +86,4 @@ export default defineNuxtConfig({
       "wohnungsmarktberlin.de",
     ],
   },
-  css: ["~/assets/global.css"],
 });

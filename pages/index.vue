@@ -140,7 +140,7 @@ const origin = useRequestURL().origin;
     </div>
   </div>
 </template>
-<style scoped>
+<style scoped inline>
 @media screen and (min-width: 768px) {
   .layout {
     display: grid;

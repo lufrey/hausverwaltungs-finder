@@ -71,6 +71,7 @@ const sections = [
             src="/3d-rendering-abstract-building.png"
             alt="Krasse Graphik"
             class="md:absolute md:-bottom-[100px] lg:h-72"
+            format="avif,webp"
           />
         </div>
         <div
