@@ -27,8 +27,6 @@ const filterMetadata: Metadata = {
   area: { min: 1, max: 1000, unit: "m²" },
 };
 
-// Initialize state from URL
-// hierdurch funktioniert die buildUrl() irgendwie nicht mehr...
 watch(urlState, () => {
   syncStateWithUrl();
 });
@@ -140,9 +138,9 @@ const handleModelStatus = () => {
 </script>
 
 <template>
-  <div class="relative mb-4 flex gap-2">
+  <div class="relative mb-4 flex gap-2 overflow-x-visible">
     <button
-      class="rounded-xl border-2 border-accent px-4 py-2"
+      class="text-nowrap rounded-xl border-2 border-accent px-4 py-2"
       @click="handleModelStatus"
     >
       Filter ▼
@@ -225,6 +223,7 @@ const handleModelStatus = () => {
         Anwenden
       </button>
     </div>
+    <div class="scrollbar-hide flex gap-2 overflow-y-scroll whitespace-nowrap">
     <div
       v-for="filterObj in uiFilters"
       :key="filterObj.filter"
@@ -236,6 +235,19 @@ const handleModelStatus = () => {
         @click="updateQueryState({ [filterObj.id]: undefined })"
         >x</span
       >
+      </div>
     </div>
   </div>
 </template>
+<style scoped>
+/* For Webkit-based browsers (Chrome, Safari and Opera) */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* For IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+</style>
