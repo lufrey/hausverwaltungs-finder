@@ -1,5 +1,7 @@
 import type { ZodSchema } from "zod";
 
+const localStorageContent = ref<string | any>({});
+
 const jsonSafeParse = (value: string) => {
   try {
     return JSON.parse(value) as unknown;
@@ -42,12 +44,16 @@ export const useLocalStorage = <T>(key: string, schema: ZodSchema<T>) => {
     }
     const result = schema.safeParse(value);
     if (result.success) {
+      localStorageContent.value[key] = result.data;
       localStorage.setItem(key, JSON.stringify(result.data));
     }
   };
 
+  localStorageContent.value[key] = get();
+
   return {
     get,
     set,
+    state: computed(() => localStorageContent.value[key]) as Ref<T | null>,
   };
 };

@@ -16,8 +16,8 @@ definePageMeta({
   },
 });
 const { theme } = resolveConfig(tailwindConfig);
-
 const { urlState } = useFlatFilterUrlState();
+const consent = useConsent();
 
 const queryParams = computed(() => ({
   ...urlState.value,
@@ -34,17 +34,20 @@ const flats = flatsQuery.data ?? {
 const infoWindowsOpen = ref<Record<string, boolean>>({});
 </script>
 <template>
-  <div class="flex h-full min-h-[80vh] w-full flex-col">
+  <div class="flex h-full w-full flex-col">
     <Filters />
-    <div class="h-full grow overflow-hidden rounded-xl bg-background">
-      <GoogleMap
-        class="h-full w-full"
-        :center="berlinCoordinates"
-        :zoom="11"
-        :api-key="$config.public.googleMapsApiKey"
-        :map-id="$config.public.googleMapsId"
-      >
-        <ClientOnly>
+    <div
+      class="h-full min-h-[70vh] grow overflow-hidden rounded-xl bg-background"
+    >
+      <ClientOnly>
+        <GoogleMap
+          v-if="consent.state?.value?.maps"
+          class="h-full w-full"
+          :center="berlinCoordinates"
+          :zoom="11"
+          :api-key="$config.public.googleMapsApiKey"
+          :map-id="$config.public.googleMapsId"
+        >
           <Polygon
             :options="{
               paths: ringbahnCoordinates,
@@ -109,8 +112,20 @@ const infoWindowsOpen = ref<Record<string, boolean>>({});
               </div>
             </InfoWindow>
           </Marker>
-        </ClientOnly>
-      </GoogleMap>
+        </GoogleMap>
+        <div
+          v-else
+          class="flex h-full w-full flex-col items-center justify-center gap-4 p-8"
+        >
+          <p class="text-center">
+            Um die Karte zu sehen, musst du der Nutzung von Google Maps
+            zustimmen.
+          </p>
+          <SimpleButton @click="consent.set({ maps: true })">
+            Zustimmen
+          </SimpleButton>
+        </div>
+      </ClientOnly>
     </div>
   </div>
 </template>

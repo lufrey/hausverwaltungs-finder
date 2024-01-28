@@ -135,6 +135,10 @@ const handleModelStatus = () => {
     document.removeEventListener("click", handleClickOutside);
   }
 };
+
+onUnmounted(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
 </script>
 
 <template>

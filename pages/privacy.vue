@@ -1,13 +1,5 @@
 <script setup lang="ts">
-const consentStatus = ref("");
-const removeGoogleMapsConsent = () => {
-  if (!localStorage?.getItem("mapsConsent"))
-    return "Es liegt keine Einwilligung vor. Google Maps wird nicht geladen.";
-  else {
-    localStorage.removeItem("mapsConsent");
-    return "Einwilligung wurde widerrufen. Google Maps wird nicht mehr geladen.";
-  }
-};
+const consent = useConsent();
 </script>
 
 <template>
@@ -78,18 +70,19 @@ const removeGoogleMapsConsent = () => {
     </ul>
 
     <h3 class="pb-2 pt-6 text-m font-semibold">Widerrufung der Einwilligung</h3>
-    <p>
-      Mit folgendem Button kannst du deine Zustimmung zu den Google Diensten
-      widerrufen. Die Karte wird danach nicht mehr ausgespielt.
-    </p>
-    <button
-      class="duration-250 rounded-md border border-black px-4 py-2 transition-colors hover:bg-black hover:text-white"
-      @click="consentStatus = removeGoogleMapsConsent()"
-    >
-      Einwilligung widerrufen
-    </button>
-    <p v-if="consentStatus">{{ consentStatus }}</p>
-
+    <div v-if="!consent.state?.value?.maps">
+      Du hast aktuell keine Einwilligung erteilt. Die Karte wird nicht
+      angezeigt. Es gibt also auch nichts zu widerrufen.
+    </div>
+    <div v-else>
+      <p>
+        Mit folgendem Button kannst du deine Zustimmung zu den Google Diensten
+        widerrufen. Die Karte wird danach nicht mehr ausgespielt.
+      </p>
+      <SimpleButton @click="consent.set({ maps: false })">
+        Einwilligung widerrufen
+      </SimpleButton>
+    </div>
     <h2 class="pb-2 pt-6 text-l font-semibold">
       Kontakt zum Datenschutzbeauftragten
     </h2>
