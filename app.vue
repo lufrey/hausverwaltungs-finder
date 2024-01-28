@@ -97,11 +97,3 @@ onUnmounted(() => _cleanup.forEach((hook) => hook()));
     <NuxtPage />
   </NuxtLayout>
 </template>
-
-<style inline>
-#__nuxt {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-</style>

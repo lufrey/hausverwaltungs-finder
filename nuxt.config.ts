@@ -21,6 +21,9 @@ export default defineNuxtConfig({
       enabled: true,
     },
   },
+  features: {
+    inlineStyles: true,
+  },
   vite: {
     build: {
       target: "esnext",

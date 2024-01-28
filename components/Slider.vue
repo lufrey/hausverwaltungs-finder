@@ -47,7 +47,7 @@ defineEmits(["update:modelValue"]);
   </div>
 </template>
 
-<style>
+<style scoped inline>
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
