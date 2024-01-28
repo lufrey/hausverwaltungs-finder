@@ -24,7 +24,7 @@ const origin = useRequestURL().origin;
       />
     </div>
     <div
-      class="apartmentlist relative flex flex-col gap-4 rounded-3xl bg-background p-5 pb-16"
+      class="apartmentlist relative flex flex-col gap-4 rounded-3xl border border-black bg-background p-5 pb-16"
     >
       <ApartmentPreview
         v-for="flat in flats"

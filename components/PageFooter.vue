@@ -55,7 +55,9 @@ const sections = [
 </script>
 
 <template>
-  <footer class="mt-10 flex bg-gray-100 pb-10 md:mt-20 lg:text-right">
+  <footer
+    class="mt-10 flex border-t border-black bg-gray-100 pb-10 md:mt-20 lg:text-right"
+  >
     <div
       class="mx-auto w-full max-w-[1180px] px-4 pt-4 font-poppins md:px-14 xl:pt-8"
     >
@@ -87,7 +89,9 @@ const sections = [
           </ul>
         </div>
       </div>
-      <span class="my-4 block w-full bg-background pt-[1px]"></span>
+      <span
+        class="my-4 ml-auto block w-full bg-background pt-[1px] lg:w-3/4"
+      ></span>
       <div class="">{{ new Date().getFullYear() }} © ApartiFind</div>
     </div>
   </footer>
