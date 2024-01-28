@@ -142,7 +142,7 @@ const handleModelStatus = () => {
 <template>
   <div class="relative mb-4 flex gap-2">
     <button
-      class="rounded-full border-2 border-accent px-4 py-2"
+      class="rounded-xl border-2 border-accent px-4 py-2"
       @click="handleModelStatus"
     >
       Filter ▼
@@ -150,24 +150,25 @@ const handleModelStatus = () => {
     <div
       v-if="modalOpen"
       ref="modalElement"
-      class="before:content-' ' absolute top-12 z-20 flex flex-col gap-4 rounded-md bg-white p-4 shadow-xl before:absolute before:left-6 before:top-[-4px] before:h-2 before:w-2 before:rotate-45 before:bg-white before:shadow-md"
+      class="absolute top-12 z-20 flex flex-col gap-4 rounded-xl border border-black bg-white p-4 shadow-xl"
     >
       <div>
         <strong>Preis (€)</strong>
-        <div class="flex gap-2">
+        <div class="flex items-center gap-2">
           <input
             v-model="modalPreferences.priceMin"
             type="number"
-            class="w-32 rounded-md border-2 border-accent px-4 py-2"
-            placeholder="Min"
+            class="w-36 rounded-md border-2 border-accent px-4 py-2"
+            :placeholder="'min. ' + filterMetadata.price.min.toLocaleString()"
             :min="filterMetadata.price.min"
             :max="filterMetadata.price.max"
           />
+          <span>-</span>
           <input
             v-model="modalPreferences.priceMax"
             type="number"
-            class="w-32 rounded-md border-2 border-accent px-4 py-2"
-            :placeholder="filterMetadata.price.max + ' Max'"
+            class="w-36 rounded-md border-2 border-accent px-4 py-2"
+            :placeholder="'max. ' + filterMetadata.price.max.toLocaleString()"
             :min="filterMetadata.price.min"
             :max="filterMetadata.price.max"
           />
@@ -175,20 +176,21 @@ const handleModelStatus = () => {
       </div>
       <div>
         <strong>Zimmer</strong>
-        <div class="flex gap-2">
+        <div class="flex items-center gap-2">
           <input
             v-model="modalPreferences.roomsMin"
             type="number"
-            class="w-32 rounded-md border-2 border-accent px-4 py-2"
-            placeholder="Min"
+            class="w-36 rounded-md border-2 border-accent px-4 py-2"
+            :placeholder="'min. ' + filterMetadata.rooms.min.toLocaleString()"
             :min="filterMetadata.rooms.min"
             :max="filterMetadata.rooms.max"
           />
+          <span>-</span>
           <input
             v-model="modalPreferences.roomsMax"
             type="number"
-            class="w-32 rounded-md border-2 border-accent px-4 py-2"
-            placeholder="Max"
+            class="w-36 rounded-md border-2 border-accent px-4 py-2"
+            :placeholder="'max. ' + filterMetadata.rooms.max.toLocaleString()"
             :min="filterMetadata.rooms.min"
             :max="filterMetadata.rooms.max"
           />
@@ -196,20 +198,21 @@ const handleModelStatus = () => {
       </div>
       <div>
         <strong>Fläche (m²)</strong>
-        <div class="flex gap-2">
+        <div class="flex items-center gap-2">
           <input
             v-model="modalPreferences.areaMin"
             type="number"
-            class="w-32 rounded-md border-2 border-accent px-4 py-2"
-            placeholder="Min"
+            class="w-36 rounded-md border-2 border-accent px-4 py-2"
+            :placeholder="'min. ' + filterMetadata.area.min.toLocaleString()"
             :min="filterMetadata.area.min"
             :max="filterMetadata.area.max"
           />
+          <span>-</span>
           <input
             v-model="modalPreferences.areaMax"
             type="number"
-            class="w-32 rounded-md border-2 border-accent px-4 py-2"
-            placeholder="Max"
+            class="w-36 rounded-md border-2 border-accent px-4 py-2"
+            :placeholder="'max. ' + filterMetadata.area.max.toLocaleString()"
             :min="filterMetadata.area.min"
             :max="filterMetadata.area.max"
           />
