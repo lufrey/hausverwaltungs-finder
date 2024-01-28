@@ -39,14 +39,18 @@ onUnmounted(() => _cleanup.forEach((hook) => hook()));
   <nav class="flex h-12 items-center gap-4 md:justify-between">
     <NuxtLink
       to="/"
-      class="logo text-xl font-medium tracking-tighter text-main"
+      class="logo text-xl font-medium tracking-tighter text-main md:flex-1"
     >
       ApartiFind
     </NuxtLink>
-    <h2 class="tagline hidden text-l font-light opacity-50 md:block">
+    <h2
+      class="tagline hidden whitespace-nowrap text-center text-l font-light opacity-50 md:block md:flex-1"
+    >
       What's a housing crisis?
     </h2>
-    <div class="nav_links ml-auto items-center gap-4 md:ml-0 md:flex">
+    <div
+      class="nav_links ml-auto items-center gap-4 text-right md:ml-0 md:flex md:flex-1 md:justify-end"
+    >
       <div class="favorites relative">
         <IconHeart
           :filled="false"
@@ -60,7 +64,7 @@ onUnmounted(() => _cleanup.forEach((hook) => hook()));
     </div>
     <HamburgerMenu @click="() => showSiteMenu(true)" />
     <div
-      class="fixed left-0 top-0 z-40 flex h-screen w-screen flex-col items-center bg-background px-4 pb-16 pt-4 transition-opacity duration-300"
+      class="fixed left-0 top-0 z-40 flex h-screen w-[calc(100vw-1rem)] flex-col items-center bg-background px-4 pb-16 pt-4 transition-opacity duration-300"
       :class="{
         'opacity-0': siteMenuVisibility.closing,
         'opacity-100':
