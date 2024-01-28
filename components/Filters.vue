@@ -224,17 +224,17 @@ const handleModelStatus = () => {
       </button>
     </div>
     <div class="scrollbar-hide flex gap-2 overflow-y-scroll whitespace-nowrap">
-    <div
-      v-for="filterObj in uiFilters"
-      :key="filterObj.filter"
-      class="rounded-full border-accent bg-secondary px-4 py-2"
-    >
-      {{ filterObj.filter }}
-      <span
-        class="ml-2 cursor-pointer text-accent"
-        @click="updateQueryState({ [filterObj.id]: undefined })"
-        >x</span
+      <div
+        v-for="filterObj in uiFilters"
+        :key="filterObj.filter"
+        class="text-nowrap rounded-full border-accent bg-secondary px-4 py-2"
       >
+        {{ filterObj.filter }}
+        <span
+          class="ml-2 cursor-pointer text-accent"
+          @click="updateQueryState({ [filterObj.id]: undefined })"
+          >x</span
+        >
       </div>
     </div>
   </div>
