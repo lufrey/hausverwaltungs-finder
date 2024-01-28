@@ -34,7 +34,7 @@ const flats = flatsQuery.data ?? {
 const infoWindowsOpen = ref<Record<string, boolean>>({});
 </script>
 <template>
-  <div class="flex h-full min-h-[70dvh] w-full flex-col">
+  <div class="flex h-full min-h-[80vh] w-full flex-col">
     <Filters />
     <div class="h-full grow overflow-hidden rounded-xl bg-background">
       <GoogleMap

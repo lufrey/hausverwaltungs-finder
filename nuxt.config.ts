@@ -26,6 +26,11 @@ export default defineNuxtConfig({
       target: "esnext",
     },
   },
+  vue: {
+    compilerOptions: {
+      isCustomElement: (tag) => ["lord-icon"].includes(tag),
+    },
+  },
   nitro: {
     esbuild: {
       options: {

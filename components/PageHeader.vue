@@ -60,8 +60,7 @@ onUnmounted(() => _cleanup.forEach((hook) => hook()));
           src="https://cdn.lordicon.com/cnpvyndp.json"
           trigger="hover"
           style="width: 32px; height: 32px"
-        >
-        </lord-icon>
+        />
       </NuxtLink>
       <NuxtLink
         to="/overview"
@@ -72,8 +71,7 @@ onUnmounted(() => _cleanup.forEach((hook) => hook()));
           src="https://cdn.lordicon.com/nizfqlnk.json"
           trigger="hover"
           style="width: 32px; height: 32px"
-        >
-        </lord-icon>
+        />
       </NuxtLink>
       <NuxtLink
         to="/map"
@@ -84,18 +82,21 @@ onUnmounted(() => _cleanup.forEach((hook) => hook()));
           src="https://cdn.lordicon.com/yymhadbu.json"
           trigger="hover"
           style="width: 32px; height: 32px"
-        >
-        </lord-icon>
-      </NuxtLink>
-      <div class="favorites relative">
-        <IconHeart
-          :filled="false"
-          class="h-8 w-8"
         />
-        <span
-          class="top absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-s"
-          ><ClientOnly fallback="0">{{ favorites.length }}</ClientOnly></span
-        >
+      </NuxtLink>
+      <div class="favorites relative cursor-pointer">
+        <lord-icon
+          src="https://cdn.lordicon.com/xyboiuok.json"
+          trigger="morph"
+          state="morph-heart"
+          style="width: 32px; height: 32px"
+        />
+        <ClientOnly>
+          <span
+            class="top absolute right-0 inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-accent text-[0.5rem] font-bold leading-none text-white"
+            ><ClientOnly fallback="0">{{ favorites.length }}</ClientOnly></span
+          >
+        </ClientOnly>
       </div>
     </div>
     <HamburgerMenu @click="() => showSiteMenu(true)" />

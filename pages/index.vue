@@ -79,12 +79,14 @@ const origin = useRequestURL().origin;
     </div>
     <div class="about rounded-3xl border border-black p-5">
       <h2
-        class="inline-block bg-primary px-2 py-1 text-xl font-semibold leading-10 text-white"
+        class="inline-block rounded-md bg-primary px-2 py-1 text-xl font-semibold leading-10 text-white"
       >
         Über dieses Projekt
       </h2>
       <section>
-        <h3 class="mb-2 mt-4 inline-block bg-accent px-2 text-l text-white">
+        <h3
+          class="mb-2 mt-4 inline-block rounded-md bg-accent px-2 text-l text-white"
+        >
           Was?
         </h3>
 
@@ -94,7 +96,9 @@ const origin = useRequestURL().origin;
         </p>
       </section>
       <section>
-        <h3 class="mb-2 mt-4 inline-block bg-accent px-2 text-l text-white">
+        <h3
+          class="mb-2 mt-4 inline-block rounded-md bg-accent px-2 text-l text-white"
+        >
           Warum?
         </h3>
         <p>Versuch mal in Berlin eine bezahlbare Wohnung zu finden...</p>
@@ -110,7 +114,9 @@ const origin = useRequestURL().origin;
         </p>
       </section>
       <section>
-        <h3 class="mb-2 mt-4 inline-block bg-accent px-2 text-l text-white">
+        <h3
+          class="mb-2 mt-4 inline-block rounded-md bg-accent px-2 text-l text-white"
+        >
           Wer?
         </h3>
         <p>

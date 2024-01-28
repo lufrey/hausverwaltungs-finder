@@ -45,6 +45,10 @@ const sections = [
         title: "Photo by Wasimul Hossain",
         url: "https://unsplash.com/photos/a-building-with-a-clock-on-the-top-of-it-XoIXsOnTOM0",
       },
+      {
+        title: "Icons by Lordicon",
+        url: "https://lordicon.com/",
+      },
     ],
   },
 ];
