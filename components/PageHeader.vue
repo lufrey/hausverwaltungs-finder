@@ -6,6 +6,8 @@ const siteMenuVisibility = ref({
   closing: true,
 });
 
+const iconsContainer = ref<HTMLElement | null>(null);
+
 function showSiteMenu(state: boolean) {
   siteMenuVisibility.value.closing = !state;
   if (state) {
@@ -27,12 +29,31 @@ onMounted(() => {
     _cleanup.push(
       nuxtApp.hook(hook, () => {
         showSiteMenu(false);
+        Array.from(
+          iconsContainer.value?.querySelectorAll("lord-icon") ?? [],
+        ).forEach((icon) => {
+          const playerInstance = (icon as any)?.playerInstance;
+          if (!playerInstance) return;
+          playerInstance.loop = false;
+        });
       }),
     );
   });
 });
 
 onUnmounted(() => _cleanup.forEach((hook) => hook()));
+
+// start animation on linkclick
+const handleLinkClick = (e: PointerEvent) => {
+  if (!(e.target instanceof HTMLElement)) return;
+  const tagName = e.target.tagName.toLowerCase();
+  const icon =
+    tagName === "lord-icon" ? e.target : e.target.querySelector("lord-icon");
+  const playerInstance = (icon as any)?.playerInstance;
+  if (!playerInstance) return;
+  playerInstance.loop = true;
+  playerInstance.play();
+};
 </script>
 
 <template>
@@ -101,7 +122,7 @@ onUnmounted(() => _cleanup.forEach((hook) => hook()));
     </div>
     <HamburgerMenu @click="() => showSiteMenu(true)" />
     <div
-      class="fixed left-0 top-0 z-40 flex h-screen w-[calc(100vw-1rem)] flex-col items-center bg-background px-4 pb-16 pt-4 transition-opacity duration-300"
+      class="fixed left-0 top-0 z-40 flex h-screen w-full flex-col items-center bg-background px-4 pb-16 pt-4 transition-opacity duration-300"
       :class="{
         'opacity-0': siteMenuVisibility.closing,
         'opacity-100':
@@ -122,31 +143,44 @@ onUnmounted(() => _cleanup.forEach((hook) => hook()));
           ></span>
         </div>
       </div>
-      <div class="my-auto flex flex-col gap-4 text-right">
+      <div
+        ref="iconsContainer"
+        class="my-auto flex flex-col gap-4 text-right"
+      >
         <NuxtLink
           v-for="link in [
             {
               name: 'Home',
               path: '/',
+              iconSrc: '/icons/home.json',
             },
             {
               name: 'Alle Wohnungen',
               path: '/overview',
+              iconSrc: '/icons/overview.json',
             },
             {
               name: 'Karte',
               path: '/map',
+              iconSrc: '/icons/map.json',
             },
           ]"
           :key="link.path"
           :to="link.path"
-          class="text-xl font-medium"
+          class="flex items-center justify-end gap-4 text-xl font-medium"
           :class="{
             'text-accent': route.path === link.path,
             'text-main': route.path !== link.path,
           }"
+          @click="handleLinkClick"
         >
           {{ link.name }}
+          <lord-icon
+            :src="link.iconSrc"
+            style="width: 42px; height: 42px"
+            stroke="bold"
+            class="current-color"
+          />
         </NuxtLink>
       </div>
     </div>
