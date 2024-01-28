@@ -7,6 +7,7 @@ import {
 import { getAddress } from "../address";
 import { parseUncleanFloat, parseUncleanInt } from "~/utils/util";
 import { hashString } from "~/server/util";
+import { typedObjectKeys } from "~/utils/typeHelper";
 import { getApartmentTags } from "~/server/aiTagRetriever";
 
 export const stadtundland: PropertyManagement = {
