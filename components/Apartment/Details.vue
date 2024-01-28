@@ -82,13 +82,11 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
     </td>
     <td class="text-left align-top">
       <span v-html="formatPrice(shownPrice)"></span>
-      <img
+      <span
         v-if="$props.warmRentPrice"
-        class="block h-5 w-5"
-        src="/high-temperature.png"
-        alt="Warmmiete"
-        title="Warmmiete"
-      />
+        class="block text-s opacity-80"
+        >Warmmiete</span
+      >
     </td>
     <td class="align-top">
       {{ roomCount ?? "-" }}
