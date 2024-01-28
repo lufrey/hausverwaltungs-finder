@@ -49,8 +49,44 @@ onUnmounted(() => _cleanup.forEach((hook) => hook()));
       What's a housing crisis?
     </h2>
     <div
-      class="nav_links ml-auto items-center gap-4 text-right md:ml-0 md:flex md:flex-1 md:justify-end"
+      class="nav_links ml-auto items-baseline gap-4 text-right md:ml-0 md:flex md:flex-1 md:justify-end"
     >
+      <NuxtLink
+        to="/"
+        title="Startseite"
+        class="hidden md:block"
+      >
+        <lord-icon
+          src="https://cdn.lordicon.com/cnpvyndp.json"
+          trigger="hover"
+          style="width: 32px; height: 32px"
+        >
+        </lord-icon>
+      </NuxtLink>
+      <NuxtLink
+        to="/overview"
+        title="Listenansicht"
+        class="hidden md:block"
+      >
+        <lord-icon
+          src="https://cdn.lordicon.com/nizfqlnk.json"
+          trigger="hover"
+          style="width: 32px; height: 32px"
+        >
+        </lord-icon>
+      </NuxtLink>
+      <NuxtLink
+        to="/map"
+        title="Kartenansicht"
+        class="hidden md:block"
+      >
+        <lord-icon
+          src="https://cdn.lordicon.com/yymhadbu.json"
+          trigger="hover"
+          style="width: 32px; height: 32px"
+        >
+        </lord-icon>
+      </NuxtLink>
       <div class="favorites relative">
         <IconHeart
           :filled="false"
