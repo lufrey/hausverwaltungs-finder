@@ -52,7 +52,18 @@ export default defineNuxtConfig({
       },
     ],
     "@nuxt/image",
+    "@kgierke/nuxt-basic-auth",
   ],
+  basicAuth: {
+    enabled: true,
+    users: [
+      {
+        username: env.NUXT_BASIC_AUTH_USER,
+        password: env.NUXT_BASIC_AUTH_PASSWORD,
+      },
+    ],
+    allowedRoutes: ["^(?!/admin).*"],
+  },
   build: {
     transpile: ["trpc-nuxt"],
   },
