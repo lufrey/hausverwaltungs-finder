@@ -101,7 +101,8 @@ export const flatRouter = router({
         isNull(flat.deleted),
 
         // id filter
-        input.ids?.length && inArray(flat.id, input.ids),
+        input.ids &&
+          (input.ids.length ? inArray(flat.id, input.ids) : sql`FALSE`),
 
         // property management filter
         input.propertyManagements &&

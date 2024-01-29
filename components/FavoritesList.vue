@@ -28,7 +28,7 @@ watch(modalOpen, (newValue) => {
       <Modal
         :open="modalOpen"
         :on-close="() => (modalOpen = false)"
-        class="absolute right-0 top-12 z-20 flex min-w-96 flex-col gap-4 rounded-xl border border-black bg-white p-4 text-primary shadow-xl"
+        class="absolute right-0 top-12 z-20 flex flex-col gap-4 rounded-xl border border-black bg-white p-4 shadow-xl"
       >
         <div
           v-for="favorite in favorites ?? []"

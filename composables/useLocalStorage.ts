@@ -71,8 +71,12 @@ export function useLocalStorage<T>(
       localStorage.setItem(key, JSON.stringify(result.data));
     }
   };
-
-  localStorageContent.value[key] = get();
+  const res = get();
+  if (res === null && initial !== undefined) {
+    set(initial);
+  } else {
+    localStorageContent.value[key] = res;
+  }
 
   return {
     get,
