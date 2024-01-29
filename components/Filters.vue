@@ -206,7 +206,7 @@ const applyFilters = () => {
     </div>
   </div>
 </template>
-<style scoped inline>
+<style scoped>
 /* For Webkit-based browsers (Chrome, Safari and Opera) */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;

@@ -12,10 +12,3 @@
   </div>
   <PageFooter />
 </template>
-<style inline>
-#__nuxt {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-</style>

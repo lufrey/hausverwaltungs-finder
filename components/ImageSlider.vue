@@ -43,7 +43,7 @@ onUnmounted(() => {
   </transition-group>
 </template>
 
-<style scoped inline>
+<style scoped>
 .fade-move, /* apply transition to moving elements */
 .fade-enter-active,
 .fade-leave-active {

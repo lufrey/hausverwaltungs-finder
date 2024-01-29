@@ -57,6 +57,9 @@ useHead({
       content: "de",
     },
   ],
+  htmlAttrs: {
+    lang: "de",
+  },
   bodyAttrs: {
     class: "antialiased min-h-dvh h-1",
   },

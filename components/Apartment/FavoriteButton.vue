@@ -47,7 +47,7 @@ onMounted(async () => {
           ref="icon"
           src="/icons/heart.json"
           state="morph-heart"
-          class="current-color hover:animate-zoombounce -m-1"
+          class="current-color md:hover:animate-zoombounce -m-1"
           style="width: 28px; height: 28px"
         />
       </span>

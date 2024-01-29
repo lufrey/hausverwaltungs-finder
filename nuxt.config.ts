@@ -21,9 +21,6 @@ export default defineNuxtConfig({
       enabled: true,
     },
   },
-  features: {
-    inlineStyles: true,
-  },
   vite: {
     build: {
       target: "esnext",
@@ -52,6 +49,8 @@ export default defineNuxtConfig({
         families: {
           Poppins: [300, 400, 500, 600, 700],
         },
+        cloudflare: true,
+        display: "swap",
       },
     ],
     "@nuxt/image",
@@ -89,4 +88,5 @@ export default defineNuxtConfig({
       "wohnungsmarktberlin.de",
     ],
   },
+  css: ["~/assets/global.css"],
 });

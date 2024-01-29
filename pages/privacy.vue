@@ -93,7 +93,7 @@ const consent = useConsent();
   </div>
 </template>
 
-<style scoped inline>
+<style scoped>
 a {
   cursor: pointer;
   text-decoration: underline;
