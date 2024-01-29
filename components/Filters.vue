@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { updateQueryState, urlState } = useFlatFilterUrlState();
+const modalOpen = ref(false);
 
 const modalPreferences = reactive({
   priceMin: null,
@@ -86,17 +87,8 @@ const uiFilters = computed(() => {
   return filters;
 });
 
-const closeModal = () => {
-  modalOpen.value = false;
-  try {
-    document.removeEventListener("click", handleClickOutside);
-  } catch (error) {
-    // do nothing. Event lister must have been removed already
-  }
-};
-
 const applyFilters = () => {
-  closeModal();
+  modalOpen.value = false;
 
   const query: Record<string, number | number[] | null | string> = {};
   for (const [key, value] of Object.entries(modalPreferences)) {
@@ -110,48 +102,19 @@ const applyFilters = () => {
   }
   updateQueryState(query);
 };
-
-const modalOpen = ref(false);
-const modalElement = ref<HTMLElement | null>(null);
-
-const handleClickOutside = (event: MouseEvent) => {
-  if (
-    modalElement.value &&
-    event.target instanceof Element &&
-    !modalElement.value.contains(event.target)
-  ) {
-    closeModal();
-  }
-};
-
-const handleModelStatus = () => {
-  modalOpen.value = !modalOpen.value;
-  if (modalOpen.value) {
-    setTimeout(() => {
-      // needed because was being triggered immediately after opening, so it would close immediately since clicking outside
-      document.addEventListener("click", handleClickOutside);
-    }, 1);
-  } else {
-    document.removeEventListener("click", handleClickOutside);
-  }
-};
-
-onUnmounted(() => {
-  document.removeEventListener("click", handleClickOutside);
-});
 </script>
 
 <template>
   <div class="relative mb-4 flex gap-2 overflow-x-visible">
     <button
       class="text-nowrap rounded-xl border-2 border-accent px-4 py-2"
-      @click="handleModelStatus"
+      @click="modalOpen = !modalOpen"
     >
       Filter ▼
     </button>
-    <div
-      v-if="modalOpen"
-      ref="modalElement"
+    <Modal
+      :open="modalOpen"
+      :on-close="() => (modalOpen = false)"
       class="absolute top-12 z-20 flex flex-col gap-4 rounded-xl border border-black bg-white p-4 shadow-xl"
     >
       <div>
@@ -226,7 +189,7 @@ onUnmounted(() => {
       >
         Anwenden
       </button>
-    </div>
+    </Modal>
     <div class="scrollbar-hide flex gap-2 overflow-y-scroll whitespace-nowrap">
       <div
         v-for="filterObj in uiFilters"

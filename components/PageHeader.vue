@@ -1,6 +1,4 @@
 <script setup lang="ts">
-const { favorites } = useFavorite("");
-
 const siteMenuVisibility = ref({
   visible: false,
   closing: true,
@@ -105,20 +103,7 @@ const handleLinkClick = (e: PointerEvent) => {
           style="width: 32px; height: 32px"
         />
       </NuxtLink>
-      <div class="favorites relative cursor-pointer">
-        <lord-icon
-          src="/icons/heart.json"
-          trigger="morph"
-          state="morph-heart"
-          style="width: 32px; height: 32px"
-        />
-        <ClientOnly>
-          <span
-            class="top absolute right-0 inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-accent text-[0.5rem] font-bold leading-none text-white"
-            ><ClientOnly fallback="0">{{ favorites.length }}</ClientOnly></span
-          >
-        </ClientOnly>
-      </div>
+      <FavoritesList />
     </div>
     <HamburgerMenu @click="() => showSiteMenu(true)" />
     <div

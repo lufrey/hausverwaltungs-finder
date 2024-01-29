@@ -100,6 +100,9 @@ export const flatRouter = router({
         // not deleted
         isNull(flat.deleted),
 
+        // id filter
+        input.ids?.length && inArray(flat.id, input.ids),
+
         // property management filter
         input.propertyManagements &&
           inArray(flat.propertyManagementId, input.propertyManagements),

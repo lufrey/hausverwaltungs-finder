@@ -1,25 +1,63 @@
 import { z } from "zod";
 
-const { get, set } = useLocalStorage("favorites", z.array(z.string()));
-const favorites = ref<string[]>(get() ?? []);
+const { set, state: favoritesIds } = useLocalStorage(
+  "favorites",
+  z.array(z.string()),
+  [],
+);
+
+export const useFavorites = () => {
+  const { $client } = useNuxtApp();
+
+  const favoritesQuery = $client.flat.getAll.useQuery(
+    computed(() => ({
+      ids: favoritesIds.value,
+    })),
+    {
+      transform: (res) => res.data,
+    },
+  );
+
+  watch(favoritesQuery.data, (favoritesData) => {
+    // filter out deleted flats
+    if (favoritesData && favoritesData?.length !== favoritesIds.value.length) {
+      // TODO: maybe show change in snackbar
+      set(favoritesData?.map((flat) => flat.id) ?? []);
+    }
+  });
+
+  return {
+    remove: (id: string) => {
+      const newFavoritesIds = favoritesIds.value.filter(
+        (favoriteId: string) => favoriteId !== id,
+      );
+      set(newFavoritesIds);
+    },
+    add: (id: string) => {
+      const newFavorites = Array.from(new Set([...favoritesIds.value, id]));
+      set(newFavorites);
+    },
+    set,
+    favoritesIds,
+    favorites: favoritesQuery.data,
+  };
+};
 
 export const useFavorite = (id: string) => {
   const add = () => {
-    const newFavorites = Array.from(new Set([...favorites.value, id]));
+    const newFavorites = Array.from(new Set([...favoritesIds.value, id]));
     set(newFavorites);
-    favorites.value = newFavorites;
   };
 
   const remove = () => {
-    const newFavorites = favorites.value.filter(
+    const newFavorites = favoritesIds.value.filter(
       (favoriteId: string) => favoriteId !== id,
     );
     set(newFavorites);
-    favorites.value = newFavorites;
   };
 
   const toggle = () => {
-    if (favorites.value.includes(id)) {
+    if (favoritesIds.value.includes(id)) {
       remove();
     } else {
       add();
@@ -27,7 +65,7 @@ export const useFavorite = (id: string) => {
   };
 
   const isFavorite = computed(() => {
-    return favorites.value.includes(id);
+    return favoritesIds.value.includes(id);
   });
 
   return {
@@ -35,6 +73,6 @@ export const useFavorite = (id: string) => {
     toggle,
     remove,
     isFavorite,
-    favorites,
+    favorites: favoritesIds,
   };
 };

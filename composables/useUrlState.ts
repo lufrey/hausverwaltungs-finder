@@ -75,6 +75,7 @@ export const usePaginationUrlState = () => {
 
 export const flatFilterUrlSchema = z
   .object({
+    ids: z.array(z.string()).optional().nullable(),
     tags: z.array(z.string()).optional().nullable(),
     propertyManagements: z.array(z.string()).optional().nullable(),
     districts: z.array(z.string()).optional().nullable(),

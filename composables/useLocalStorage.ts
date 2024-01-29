@@ -10,7 +10,30 @@ const jsonSafeParse = (value: string) => {
   }
 };
 
-export const useLocalStorage = <T>(key: string, schema: ZodSchema<T>) => {
+export function useLocalStorage<T>(
+  key: string,
+  schema: ZodSchema<T>,
+  initial: T,
+): {
+  get: () => T | null;
+  set: (value: T) => void;
+  state: Ref<T>;
+};
+
+export function useLocalStorage<T>(
+  key: string,
+  schema: ZodSchema<T>,
+): {
+  get: () => T | null;
+  set: (value: T) => void;
+  state: Ref<T | null>;
+};
+
+export function useLocalStorage<T>(
+  key: string,
+  schema: ZodSchema<T>,
+  initial?: T,
+) {
   const get = () => {
     // return null if run on server
     if (typeof window === "undefined") {
@@ -54,6 +77,6 @@ export const useLocalStorage = <T>(key: string, schema: ZodSchema<T>) => {
   return {
     get,
     set,
-    state: computed(() => localStorageContent.value[key]) as Ref<T | null>,
+    state: computed(() => localStorageContent.value[key] ?? initial),
   };
-};
+}
