@@ -96,6 +96,9 @@ export default defineNuxtConfig({
       "apartifind.lksfr.de",
       "wohnungsmarktberlin.de",
     ],
+    ipx: {
+      maxAge: 60 * 60 * 24 * 30,
+    },
   },
   css: ["~/assets/global.css"],
 });
