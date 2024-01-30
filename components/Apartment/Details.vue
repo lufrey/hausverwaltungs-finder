@@ -49,6 +49,8 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
             :src="img"
             :alt="`Vorschaubild ${title}`"
             class="h-16 w-16 rounded-lg"
+            width="64"
+            height="64"
             format="avif,webp"
           />
         </NuxtLink>
@@ -135,6 +137,8 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
           :src="img"
           :alt="`Vorschaubild ${title}`"
           class="h-16 w-16 rounded-lg"
+          width="64"
+          height="64"
           format="avif,webp"
         />
       </NuxtLink>

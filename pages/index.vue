@@ -59,10 +59,13 @@ const origin = useRequestURL().origin;
       title="Zur Karte"
     >
       <NuxtImg
-        :src="`${origin}/api/image/map-preview`"
+        :src="`${origin}/map-preview.png`"
         alt="Vorschau der Karte"
         class="h-full w-full object-cover"
-        format="webp"
+        width="512"
+        height="512"
+        :preload="true"
+        format="avif,webp"
       />
       <IconZoomIn class="absolute right-4 top-4" />
     </NuxtLink>

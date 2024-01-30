@@ -28,3 +28,4 @@ db/sqlite.db
 
 # Generated Map Preview
 public/map-preview.png
+public/flat-images/*

@@ -10,6 +10,7 @@ import { getBrowser } from "~/utils/getBrowser";
 import { isFulfilled, isRejected } from "~/utils/typeHelper";
 import { tags } from "~/data/tags";
 import { updateMapPreview } from "~/server/updateMapPreview";
+import { saveFlatImages } from "~/server/saveFlatImages";
 const insertFlatSchema = createInsertSchema(flat);
 
 export const propertyManagementRouter = router({
@@ -213,6 +214,9 @@ export const propertyManagementRouter = router({
 
       // start map preview update
       updateMapPreview();
+
+      // start saving flat images to disk
+      saveFlatImages();
 
       if (input?.return) {
         return scrapedData;
