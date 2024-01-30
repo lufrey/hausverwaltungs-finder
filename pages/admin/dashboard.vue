@@ -2,6 +2,9 @@
 useHead({
   title: "Admin Dashboard",
 });
+definePageMeta({
+  middleware: ["auth"],
+});
 const { $client } = useNuxtApp();
 const NuxtLink = resolveComponent("NuxtLink");
 
@@ -32,8 +35,8 @@ const updatePropertyManagements = async (slugs?: string[]) => {
   };
 };
 
-const allFlats = computed(
-  () => propertyManagements.data.value?.map((p) => p.flats).flat(),
+const allFlats = computed(() =>
+  propertyManagements.data.value?.map((p) => p.flats).flat(),
 );
 </script>
 <template>

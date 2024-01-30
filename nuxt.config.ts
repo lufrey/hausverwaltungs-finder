@@ -1,5 +1,11 @@
+import { resolve } from "node:path";
 import { defineNuxtConfig } from "nuxt/config";
+
 import { env } from "./env";
+export const deploymentUrl =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : "https://apartifind.lksfr.de";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -38,6 +44,9 @@ export default defineNuxtConfig({
       },
     },
   },
+  alias: {
+    cookie: resolve(__dirname, "node_modules/cookie"),
+  },
   modules: [
     "@nuxtjs/tailwindcss",
     [
@@ -54,17 +63,11 @@ export default defineNuxtConfig({
       },
     ],
     "@nuxt/image",
-    "@kgierke/nuxt-basic-auth",
+    "@hebilicious/authjs-nuxt",
   ],
-  basicAuth: {
-    enabled: true,
-    users: [
-      {
-        username: env.NUXT_BASIC_AUTH_USER,
-        password: env.NUXT_BASIC_AUTH_PASSWORD,
-      },
-    ],
-    allowedRoutes: ["^(?!/admin).*"],
+  authJs: {
+    guestRedirectTo: "/api/auth/signin",
+    authenticatedRedirectTo: "/admin/dashboard",
   },
   build: {
     transpile: ["trpc-nuxt"],
@@ -73,8 +76,14 @@ export default defineNuxtConfig({
     clientFallback: true,
   },
   runtimeConfig: {
+    authJs: {
+      secret: env.NUXT_NEXTAUTH_SECRET,
+    },
     public: {
-      deploymentUrl: "https://apartifind.lksfr.de",
+      authJs: {
+        baseUrl: deploymentUrl,
+      },
+      deploymentUrl,
       googleMapsApiKey: env.NUXT_PUBLIC_GOOGLE_MAPS_API_KEY,
       googleMapsId: env.NUXT_PUBLIC_GOOGLE_MAPS_MAP_ID,
     },
