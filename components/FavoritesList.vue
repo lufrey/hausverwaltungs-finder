@@ -21,21 +21,65 @@ watch(modalOpen, (newValue) => {
       @click="() => (modalOpen = true)"
     />
     <ClientOnly>
-      <span
+      <div
         class="top absolute right-0 inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-accent text-[0.5rem] font-bold leading-none text-white"
-        ><ClientOnly fallback="0">{{ favorites?.length }}</ClientOnly></span
       >
+        <ClientOnly fallback="0">{{ favorites?.length }}</ClientOnly>
+      </div>
       <Modal
         :open="modalOpen"
         :on-close="() => (modalOpen = false)"
-        class="absolute right-0 top-12 z-20 flex flex-col gap-4 rounded-xl border border-black bg-white p-4 shadow-xl"
+        class="absolute -right-8 top-12 z-20 flex max-h-[30rem] w-72 flex-col gap-4 overflow-y-auto rounded-xl border border-black bg-white p-4 text-left shadow-xl md:right-0 md:w-80"
       >
         <div
-          v-for="favorite in favorites ?? []"
-          :key="favorite.id"
+          v-if="favorites?.length === 0"
+          class="text-center"
         >
-          {{ favorite.title }}
+          Du hast noch keine Favoriten gefunden :(
+          <br />
         </div>
+        <NuxtLink
+          v-for="favorite in favorites ?? []"
+          v-else
+          :key="favorite.id"
+          :to="favorite.url"
+          target="_blank"
+          title="Zur Wohnung"
+          class="flex items-center gap-2"
+        >
+          <NuxtImg
+            :src="getFlatImageUrl(favorite)"
+            :alt="`Vorschaubild ${favorite.title}`"
+            class="h-12 w-12 rounded-md xs:h-16 xs:w-16"
+            width="64"
+            height="64"
+            format="avif,webp"
+          />
+          <div class="flex grow flex-col">
+            <div class="flex items-center gap-2">
+              <span
+                class="line-clamp-2 max-w-40 grow overflow-hidden text-ellipsis text-s leading-snug md:line-clamp-3"
+              >
+                {{ favorite.title }}</span
+              >
+              <span class="text-s font-light">
+                <span
+                  class="block"
+                  v-html="
+                    formatPrice(
+                      favorite.warmRentPrice ?? favorite.coldRentPrice,
+                      true,
+                    )
+                  "
+                ></span>
+                <span
+                  class="block"
+                  v-html="formatArea(favorite.usableArea)"
+                ></span>
+              </span>
+            </div>
+          </div>
+        </NuxtLink>
       </Modal>
     </ClientOnly>
   </div>
