@@ -178,16 +178,24 @@ export const flatRouter = router({
       )[0].count;
 
       const orderByInput = [];
-      if (!input.orderBy?.[0]) {
-        orderByInput.push(desc(flat.firstSeen));
+      const orderFunc = input.order?.[0] === "asc" ? asc : desc;
+
+      if (!input.orderBy?.[0] || input.orderBy?.[0] === "main") {
+        orderByInput.push(orderFunc(flat.firstSeen));
+      } else if (input.orderBy?.[0] === "price") {
+        orderByInput.push(
+          orderFunc(
+            sql`COALESCE(${flat.warmRentPrice}, ${flat.coldRentPrice})`,
+          ),
+        );
+      } else if (input.orderBy?.[0] === "rentPricePerSquareMeter") {
+        orderByInput.push(
+          orderFunc(
+            sql`COALESCE(${flat.warmRentPrice}, ${flat.coldRentPrice}) / ${flat.usableArea}`,
+          ),
+        );
       } else {
-        const orderFunc = input.order?.[0] === "asc" ? asc : desc;
-        if (input.orderBy?.[0] === "price") {
-          orderByInput.push(orderFunc(flat.warmRentPrice));
-          orderByInput.push(orderFunc(flat.coldRentPrice));
-        } else {
-          orderByInput.push(orderFunc(flat[input.orderBy?.[0]]));
-        }
+        orderByInput.push(orderFunc(flat[input.orderBy?.[0]]));
       }
 
       // get the flatIds of all flats that fulfill the filters

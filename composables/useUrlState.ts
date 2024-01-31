@@ -86,7 +86,15 @@ export const flatFilterUrlSchema = z
     areaMin: z.array(z.coerce.number()).optional().nullable(),
     areaMax: z.array(z.coerce.number()).optional().nullable(),
     orderBy: z
-      .array(z.enum(["price", "usableArea", "roomCount"]))
+      .array(
+        z.enum([
+          "main",
+          "price",
+          "usableArea",
+          "roomCount",
+          "rentPricePerSquareMeter",
+        ]),
+      )
       .optional()
       .nullable(),
     order: z

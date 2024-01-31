@@ -31,7 +31,7 @@ const img = getFlatImageUrl({
   hasImage: Boolean(props.imageSrc),
 });
 
-const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
+const shownPrice = computed(() => props.warmRentPrice ?? props.coldRentPrice);
 </script>
 
 <template>
@@ -113,13 +113,13 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
     >
       -
     </td>
-    <td class="align-top">
+    <td class="break-words align-top">
       <ApartmentDistrict
         class="underline hover:no-underline"
         :zip-code="address.postalCode"
       />
     </td>
-    <td class="pr-4 align-top">
+    <td class="px-2 align-top">
       <ApartmentFavoriteButton :id="id" />
     </td>
   </tr>
