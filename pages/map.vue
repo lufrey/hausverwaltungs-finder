@@ -86,7 +86,8 @@ const infoWindowsOpen = ref<Record<string, boolean>>({});
           >
             <InfoWindow :model-value="infoWindowsOpen[flat.id]">
               <div class="flex w-40 flex-col gap-4 p-2">
-                <NuxtImg
+                <LazyNuxtImg
+                  v-if="infoWindowsOpen[flat.id]"
                   :src="getFlatImageUrl(flat)"
                   :alt="flat.title"
                   class="aspect-square h-32 w-32 rounded-md"
