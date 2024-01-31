@@ -9,7 +9,6 @@ const { registerLoadingRef, unregisterLoadingRef } =
 
 const flatsQuery = await $client.flat.getAll.useQuery(urlState);
 const flats = flatsQuery.data ?? [];
-
 onMounted(() => {
   registerLoadingRef(flatsQuery.status, (status) => status.value === "pending");
 });
@@ -22,28 +21,6 @@ watch(flats, () => {
 });
 
 onUnmounted(() => unregisterLoadingRef(flatsQuery.status));
-
-const tableHeaders = {
-  price: {
-    title: "Preis (K)",
-  },
-  roomCount: {
-    title: "Zimmer",
-  },
-  usableArea: {
-    title: "Fläche",
-  },
-  coldRentPricePerSquareMeter: {
-    title: "€/m²",
-  },
-  district: {
-    title: "Bezirk",
-    class: "w-[20%]",
-  },
-  favorite: {
-    title: "",
-  },
-} as Record<string, { title: string; class?: string }>;
 
 const sortOptions = flatFilterUrlSchema.shape.orderBy.unwrap().unwrap()
   .element.options;
@@ -59,6 +36,59 @@ const countText = computed(() => {
   }
   return `Wohnungen (${filtered} von ${total})`;
 });
+
+const tableHeaders = computed(
+  () =>
+    ({
+      main: {
+        title: countText.value,
+        class: "w-[30%] rounded-l-xl px-4 text-left",
+      },
+      price: {
+        title: "Preis (K)",
+      },
+      roomCount: {
+        title: "Zimmer",
+        class: "w-[10%]",
+      },
+      usableArea: {
+        title: "Fläche",
+      },
+      rentPricePerSquareMeter: {
+        title: "€/m²",
+      },
+      district: {
+        title: "Bezirk",
+        class: "w-[20%]",
+      },
+      favorite: {
+        title: "",
+        class: "w-[5%]",
+      },
+    }) as Record<string, { title: string; class?: string }>,
+);
+
+const sortOrders = computed(() => {
+  return Object.entries(tableHeaders.value).reduce(
+    (acc, [key]) => {
+      if (!urlState.value.orderBy?.[0] && key === "main") {
+        return {
+          ...acc,
+          [key]: urlState.value.order?.[0] ?? "desc",
+        };
+      }
+
+      return {
+        ...acc,
+        [key]:
+          urlState.value.orderBy?.[0] === key
+            ? urlState.value.order?.[0]
+            : undefined,
+      };
+    },
+    {} as Record<string, "asc" | "desc" | undefined>,
+  );
+});
 </script>
 <template>
   <div>
@@ -67,28 +97,21 @@ const countText = computed(() => {
       class="hidden w-full table-fixed border-separate border-spacing-y-4 text-center lg:table"
     >
       <thead class="bg-background">
-        <tr class="">
-          <th class="w-[30%] rounded-l-xl p-4 text-left font-medium">
-            {{ countText }}
-          </th>
+        <tr>
           <th
             v-for="[headerKey, header] in Object.entries(tableHeaders)"
             :key="headerKey"
-            class="w-max text-nowrap px-2 py-4 font-medium last:w-16 last:rounded-r-xl"
+            class="text-nowrap px-2 py-4 font-medium first:rounded-l-xl last:rounded-r-xl"
             :class="header.class"
           >
             <button
-              v-if="sortOptions.includes(headerKey)"
-              class="group m-auto flex items-center gap-2"
+              v-if="sortOptions.includes(headerKey) || headerKey === 'main'"
+              class="group m-auto flex items-center gap-1"
               @click="
-                (e) => {
+                () => {
                   updateQueryState({
                     orderBy: [headerKey as (typeof sortOptions)[number]],
-                    order:
-                      urlState.orderBy?.[0] === headerKey &&
-                      urlState.order?.[0] === 'asc'
-                        ? ['desc']
-                        : ['asc'],
+                    order: [sortOrders[headerKey] === 'asc' ? 'desc' : 'asc'],
                   });
                 }
               "
@@ -107,13 +130,11 @@ const countText = computed(() => {
               <lord-icon
                 src="/icons/arrow.json"
                 state="hover-ternd-flat-3"
-                class="-mx-2 -rotate-90 transition-all duration-500"
+                class="-mr-[20px] -rotate-90 transition-all duration-500"
                 :class="{
-                  'opacity-0': urlState.orderBy?.[0] !== headerKey,
-                  'group-hover:opacity-50': urlState.orderBy?.[0] !== headerKey,
-                  '-scale-x-100':
-                    urlState.orderBy?.[0] === headerKey &&
-                    urlState.order?.[0] === 'desc',
+                  'opacity-0': sortOrders[headerKey] === undefined,
+                  'group-hover:opacity-50': sortOrders[headerKey] === undefined,
+                  '-scale-x-100': sortOrders[headerKey] === 'desc',
                 }"
                 style="width: 20px; height: 20px"
               />
