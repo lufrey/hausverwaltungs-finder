@@ -1,11 +1,26 @@
-import { and, eq, inArray, isNull, sql, getTableColumns } from "drizzle-orm";
+import {
+  and,
+  eq,
+  inArray,
+  isNull,
+  sql,
+  getTableColumns,
+  gte,
+  lte,
+  count,
+  or,
+  asc,
+  desc,
+} from "drizzle-orm";
 import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
 import { db } from "~/db/db";
 import { address, flat, flatToTag } from "~/db/schema";
 import { omit } from "~/utils/typeHelper";
-import { berlinDistricts } from "~/data/districts";
+import { berlinDistricts, districtIdSchema } from "~/data/districts";
 import { type Tags, tagsSchema } from "~/data/tags";
+import { flatFilterUrlSchema } from "~/composables/useUrlState";
+import { hashString } from "~/server/util";
 
 const countsAsNewTime = 60 * 60 * 12;
 export const countsAsNewFilter = sql<
@@ -48,6 +63,7 @@ export const flatRouter = router({
         await db.query.flat.findMany({
           ...queryOptions,
           limit: input.limit,
+          orderBy: [desc(flat.firstSeen)],
         })
       ).map((flat) => {
         const tags = flat.flatToTag.map((flatToTag) => flatToTag.tagId);
@@ -59,21 +75,22 @@ export const flatRouter = router({
     }),
   getAll: publicProcedure
     .input(
-      z
-        .object({
-          pageSize: z.array(z.coerce.number()).optional().default([25]),
-          page: z.array(z.coerce.number()).optional().default([1]),
-          tags: z.array(z.string()).optional(),
-          propertyManagements: z.array(z.string()).optional(),
-          districts: z.array(z.string()).optional(),
-          minPrice: z.coerce.number().optional(),
-          maxPrice: z.coerce.number().optional(),
-          roomCount: z.coerce.number().optional(),
-          minUsableArea: z.coerce.number().optional(),
-          maxUsableArea: z.coerce.number().optional(),
-        })
+      flatFilterUrlSchema
         .optional()
-        .default({}),
+        .default({})
+        .transform((input) => {
+          return {
+            ...input,
+            page: input.page?.[0] ?? 1,
+            pageSize: input.pageSize?.[0] ?? 25,
+            areaMin: input.areaMin?.[0],
+            areaMax: input.areaMax?.[0],
+            priceMin: input.priceMin?.[0],
+            priceMax: input.priceMax?.[0],
+            roomsMin: input.roomsMin?.[0],
+            roomsMax: input.roomsMax?.[0],
+          };
+        }),
     )
     .query(async ({ input }) => {
       // when filtering for "new", we need to filter
@@ -83,10 +100,13 @@ export const flatRouter = router({
         input.tags = input.tags?.filter((tag) => tag !== "new");
       }
       const tagsToFilterFor = tagsSchema.safeParse(input.tags ?? []);
-
       const filters = [
         // not deleted
         isNull(flat.deleted),
+
+        // id filter
+        input.ids &&
+          (input.ids.length ? inArray(flat.id, input.ids) : sql`FALSE`),
 
         // property management filter
         input.propertyManagements &&
@@ -97,10 +117,10 @@ export const flatRouter = router({
           inArray(
             address.postalCode,
             input.districts
-              .map((d) => {
-                // @ts-ignore
-                const district = berlinDistricts[d];
-                return district?.zipCodes ?? [];
+              .map((inputDistrict) => {
+                const res = districtIdSchema.safeParse(inputDistrict);
+                if (!res.success) return [];
+                return berlinDistricts[res.data].zipCodes;
               })
               .flat(),
           ),
@@ -114,21 +134,31 @@ export const flatRouter = router({
           inArray(flatToTag.tagId, tagsToFilterFor.data),
 
         // price filter
-        input.minPrice && sql`warmRentPrice >= ${input.minPrice}`,
-        input.maxPrice && sql`warmRentPrice <= ${input.maxPrice}`,
+        // TODO: besseres handling für kalt/warmmiete
+        input.priceMin &&
+          or(
+            gte(flat.warmRentPrice, input.priceMin),
+            gte(flat.coldRentPrice, input.priceMin),
+          ),
+        input.priceMax &&
+          or(
+            lte(flat.warmRentPrice, input.priceMax),
+            lte(flat.coldRentPrice, input.priceMax),
+          ),
 
         // room count filter
-        input.roomCount && eq(flat.roomCount, input.roomCount),
+        input.roomsMin && gte(flat.roomCount, input.roomsMin),
+        input.roomsMax && lte(flat.roomCount, input.roomsMax),
 
         // usable area filter
-        input.minUsableArea && sql`usableArea >= ${input.minUsableArea}`,
-        input.maxUsableArea && sql`usableArea <= ${input.maxUsableArea}`,
+        input.areaMin && gte(flat.usableArea, input.areaMin),
+        input.areaMax && lte(flat.usableArea, input.areaMax),
       ].filter(Boolean);
 
       const filteredElementsCount = (
         await db
           .select({
-            count: sql`COUNT(*)`,
+            count: count(),
             isNew: countsAsNewFilter,
           })
           .from(flat)
@@ -141,11 +171,24 @@ export const flatRouter = router({
       const totalElementsCount = (
         await db
           .select({
-            count: sql`COUNT(*)`,
+            count: count(),
           })
           .from(flat)
           .where(isNull(flat.deleted))
-      )[0].count as number;
+      )[0].count;
+
+      const orderByInput = [];
+      if (!input.orderBy?.[0]) {
+        orderByInput.push(desc(flat.firstSeen));
+      } else {
+        const orderFunc = input.order?.[0] === "asc" ? asc : desc;
+        if (input.orderBy?.[0] === "price") {
+          orderByInput.push(orderFunc(flat.warmRentPrice));
+          orderByInput.push(orderFunc(flat.coldRentPrice));
+        } else {
+          orderByInput.push(orderFunc(flat[input.orderBy?.[0]]));
+        }
+      }
 
       // get the flatIds of all flats that fulfill the filters
       const flatIdsQuery = db
@@ -159,8 +202,9 @@ export const flatRouter = router({
         .innerJoin(address, eq(flat.addressId, address.id))
         .groupBy(flat.id)
         .where(and(...filters))
-        .limit(input.pageSize[0])
-        .offset((input.page[0] - 1) * input.pageSize[0]);
+        .orderBy(...orderByInput)
+        .limit(input.pageSize)
+        .offset((input.page - 1) * input.pageSize);
 
       // run the full query, there will be multiples, because of the m:n relation to the tags
       const query = db
@@ -178,7 +222,6 @@ export const flatRouter = router({
       const data = (await query).reduce(
         (acc, dataPoint) => {
           const flat = omit(dataPoint.flat, ["deleted", "image"]);
-
           // create the flat object for the first time
           if (!acc[dataPoint.flat.id]) {
             acc[dataPoint.flat.id] = {
@@ -212,4 +255,16 @@ export const flatRouter = router({
         data: Object.values(data),
       };
     }),
+  getMapPreviewHash: publicProcedure.query(async () => {
+    const flatIds = (
+      await db
+        .select({
+          id: flat.id,
+        })
+        .from(flat)
+        .where(isNull(flat.deleted))
+    ).map((x) => x.id);
+
+    return await hashString(flatIds.join(""));
+  }),
 });

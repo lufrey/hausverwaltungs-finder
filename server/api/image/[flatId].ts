@@ -9,10 +9,11 @@ export default defineEventHandler(async (e) => {
   try {
     const x = await db.query.flat.findFirst({
       where: (f, { eq }) => eq(f.id, flatId),
-
       columns: { image: true, id: true },
     });
-    return x?.image;
+    e.headers.set("Cache-Control", "public, max-age=86400");
+    // apply headers
+    e.respondWith(new Response(x?.image, { status: 200, headers: e.headers }));
   } catch (err) {
     console.error(err);
   }

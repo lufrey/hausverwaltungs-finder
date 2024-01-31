@@ -5,7 +5,7 @@ import {
   type PropertyManagement,
 } from "../propertyManagementList";
 import { getAddress } from "../address";
-import { hashString } from "~/utils/util";
+import { hashString } from "~/server/util";
 import { getApartmentTags } from "~/server/aiTagRetriever";
 
 const listingSchema = z.object({

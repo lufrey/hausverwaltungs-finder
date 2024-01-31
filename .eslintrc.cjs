@@ -48,6 +48,7 @@ module.exports = {
     "no-fallthrough": "off",
     "vue/no-multiple-template-root": "off",
     curly: "off",
+    "import/named": "off",
     // "@typescript-eslint/no-misused-promises": [
     //   2,
     //   {

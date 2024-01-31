@@ -57,6 +57,9 @@ useHead({
       content: "de",
     },
   ],
+  htmlAttrs: {
+    lang: "de",
+  },
   bodyAttrs: {
     class: "antialiased min-h-dvh h-1",
   },
@@ -97,9 +100,3 @@ onUnmounted(() => _cleanup.forEach((hook) => hook()));
     <NuxtPage />
   </NuxtLayout>
 </template>
-
-<style>
-#__nuxt {
-  height: 100%;
-}
-</style>

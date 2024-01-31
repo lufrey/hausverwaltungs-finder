@@ -1,5 +1,3 @@
-import crypto from "crypto";
-
 export function cleanNumberString(input?: string) {
   if (!input) {
     return "";
@@ -41,14 +39,4 @@ export function formatPrice(input: number | null, rounded = false) {
   }
   const val = rounded ? Math.round(input) : input.toFixed(2);
   return (val + "&nbsp;€").replace(".", ",");
-}
-
-export function hashString(input: string) {
-  return crypto.subtle
-    .digest("SHA-1", new TextEncoder().encode(input))
-    .then((buf) => {
-      return Array.prototype.map
-        .call(new Uint8Array(buf), (x) => ("00" + x.toString(16)).slice(-2))
-        .join("");
-    });
 }

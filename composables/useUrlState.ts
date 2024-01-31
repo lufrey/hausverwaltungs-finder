@@ -1,8 +1,12 @@
-import { z, type ZodSchema } from "zod";
+import { z, type ZodOptional, type ZodObject, type ZodNullable } from "zod";
 import { berlinDistricts } from "~/data/districts";
 import { tags } from "~/data/tags";
 
-export const useUrlState = <TSchema extends ZodSchema>(schema: TSchema) => {
+export const useUrlState = <
+  TSchema extends ZodObject<Record<string, ZodNullable<ZodOptional<any>>>>,
+>(
+  schema: TSchema,
+) => {
   const { currentRoute, push, replace } = useRouter();
 
   const updateQueryState = (
@@ -15,17 +19,21 @@ export const useUrlState = <TSchema extends ZodSchema>(schema: TSchema) => {
       return;
     }
     const func = useReplace ? replace : push;
-    func({
-      query: {
-        ...currentRoute.value.query,
-        ...res.data,
+    const newQuery = Object.entries(res.data).reduce(
+      (acc, [key, value]) => {
+        acc[key] = value ?? undefined;
+        return acc;
       },
+      { ...currentRoute.value.query },
+    );
+
+    func({
+      query: newQuery,
     });
   };
 
   // reset all query params, that are in the schema
   const resetQueryState = () => {
-    // @ts-ignore
     const keys = Object.keys(schema.shape);
     const query = omit(currentRoute.value.query, keys);
     push({
@@ -34,14 +42,12 @@ export const useUrlState = <TSchema extends ZodSchema>(schema: TSchema) => {
   };
 
   const urlState = computed((): TSchema["_output"] => {
-    // @ts-ignore
     const query = Object.entries(currentRoute.value.query).reduce(
-      // @ts-ignore
-      (acc, [key, value]) => ({
-        ...acc,
-        [key]: Array.isArray(value) ? value : [value],
-      }),
-      {},
+      (acc, [key, value]) => {
+        acc[key] = Array.isArray(value) ? value : [value];
+        return acc;
+      },
+      {} as Record<string, unknown[]>,
     );
 
     const res = schema.safeParse(query);
@@ -59,45 +65,56 @@ export const useUrlState = <TSchema extends ZodSchema>(schema: TSchema) => {
 };
 
 const paginationSchema = z.object({
-  page: z.coerce.number().array().length(1).optional(),
-  pageSize: z.coerce.number().array().length(1).optional(),
+  page: z.coerce.number().array().length(1).optional().nullable(),
+  pageSize: z.coerce.number().array().length(1).optional().nullable(),
 });
 
 export const usePaginationUrlState = () => {
   return useUrlState(paginationSchema);
 };
 
+export const flatFilterUrlSchema = z
+  .object({
+    ids: z.array(z.string()).optional().nullable(),
+    tags: z.array(z.string()).optional().nullable(),
+    propertyManagements: z.array(z.string()).optional().nullable(),
+    districts: z.array(z.string()).optional().nullable(),
+    priceMin: z.array(z.coerce.number()).optional().nullable(),
+    priceMax: z.array(z.coerce.number()).optional().nullable(),
+    roomsMin: z.array(z.coerce.number()).optional().nullable(),
+    roomsMax: z.array(z.coerce.number()).optional().nullable(),
+    areaMin: z.array(z.coerce.number()).optional().nullable(),
+    areaMax: z.array(z.coerce.number()).optional().nullable(),
+    orderBy: z
+      .array(z.enum(["price", "usableArea", "roomCount"]))
+      .optional()
+      .nullable(),
+    order: z
+      .array(z.enum(["asc", "desc"]))
+      .optional()
+      .nullable(),
+  })
+  .merge(paginationSchema);
+
 export const useFlatFilterUrlState = () => {
-  const url = useUrlState(
-    z
-      .object({
-        tags: z.array(z.string()).optional(),
-        propertyManagements: z.array(z.string()).optional(),
-        districts: z.array(z.string()).optional(),
-      })
-      .merge(paginationSchema),
+  const url = useUrlState(flatFilterUrlSchema);
+
+  const validTags = url.urlState.value.tags?.filter((tag) =>
+    typedObjectKeys(tags).includes(tag),
+  );
+  const validDistricts = url.urlState.value.districts?.filter(
+    (district) => district in berlinDistricts,
   );
 
-  const validTags = computed(() => {
-    return url.urlState.value.tags?.filter((tag) =>
-      typedObjectKeys(tags).includes(tag),
-    );
-  });
+  const validQueryState = {
+    ...url.urlState.value,
+    tags: validTags,
+    districts: validDistricts,
+  };
 
-  const validDistricts = computed(() => {
-    return url.urlState.value.districts?.filter(
-      (district) => district in berlinDistricts,
-    );
-  });
-
-  if (
-    validTags.value?.length !== url.urlState.value.tags?.length ||
-    validDistricts.value?.length !== url.urlState.value.districts?.length
-  ) {
-    url.updateQueryState(
-      { tags: validTags.value, districts: validDistricts.value },
-      true,
-    );
+  if (JSON.stringify(validQueryState) !== JSON.stringify(url.urlState.value)) {
+    url.updateQueryState(validQueryState, true);
   }
+
   return url;
 };

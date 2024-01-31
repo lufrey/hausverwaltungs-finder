@@ -5,7 +5,7 @@ import type { z } from "zod";
 import { db } from "~/db/db";
 import { address, flat } from "~/db/schema";
 import { env } from "~/env";
-import { hashString } from "~/utils/util";
+import { hashString } from "~/server/util";
 
 export const insertAddressSchema = createInsertSchema(address);
 

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-const { favorites } = useFavorite("");
-
 const siteMenuVisibility = ref({
   visible: false,
   closing: true,
 });
+
+const iconsContainer = ref<HTMLElement | null>(null);
 
 function showSiteMenu(state: boolean) {
   siteMenuVisibility.value.closing = !state;
@@ -23,65 +23,91 @@ const nuxtApp = useNuxtApp();
 const _cleanup: Array<() => void> = [];
 
 onMounted(() => {
-  _cleanup.push(
-    nuxtApp.hook("vue:error", () => {
-      showSiteMenu(false);
-    }),
-  );
-  _cleanup.push(
-    nuxtApp.hook("page:loading:end", () => {
-      showSiteMenu(false);
-    }),
-  );
+  (["vue:error", "page:loading:end"] as const).forEach((hook) => {
+    _cleanup.push(
+      nuxtApp.hook(hook, () => {
+        showSiteMenu(false);
+        Array.from(
+          iconsContainer.value?.querySelectorAll("lord-icon") ?? [],
+        ).forEach((icon) => {
+          const playerInstance = (icon as any)?.playerInstance;
+          if (!playerInstance) return;
+          playerInstance.loop = false;
+        });
+      }),
+    );
+  });
 });
 
 onUnmounted(() => _cleanup.forEach((hook) => hook()));
+
+// start animation on linkclick
+const handleLinkClick = (e: PointerEvent) => {
+  if (!(e.target instanceof HTMLElement)) return;
+  const tagName = e.target.tagName.toLowerCase();
+  const icon =
+    tagName === "lord-icon" ? e.target : e.target.querySelector("lord-icon");
+  const playerInstance = (icon as any)?.playerInstance;
+  if (!playerInstance) return;
+  playerInstance.loop = true;
+  playerInstance.play();
+};
 </script>
 
 <template>
-  <nav class="flex h-12 items-center justify-between">
+  <nav class="flex h-12 items-center gap-4 md:justify-between">
     <NuxtLink
       to="/"
-      class="logo text-xl font-medium tracking-tighter text-main"
+      class="logo text-xl font-medium tracking-tighter text-main md:flex-1"
     >
       ApartiFind
     </NuxtLink>
-    <span class="tagline hidden text-l font-light opacity-50 md:block"
-      >What's a housing crisis?</span
+    <h2
+      class="tagline hidden whitespace-nowrap text-center text-l font-light opacity-50 md:block md:flex-1"
     >
-    <div class="nav_links hidden items-center gap-8 md:flex">
-      <div class="favorites relative">
-        <IconHeart
-          :filled="false"
-          class="h-8 w-8"
+      What's a housing crisis?
+    </h2>
+    <div
+      class="nav_links ml-auto items-baseline gap-4 text-right md:ml-0 md:flex md:flex-1 md:justify-end"
+    >
+      <NuxtLink
+        to="/"
+        title="Startseite"
+        class="hidden md:block"
+      >
+        <lord-icon
+          src="/icons/home.json"
+          trigger="hover"
+          style="width: 32px; height: 32px"
         />
-        <span
-          class="top absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-s"
-          ><ClientOnly fallback="0">{{ favorites.length }}</ClientOnly></span
-        >
-      </div>
-      <div class="mx-auto flex items-center justify-center">
-        <div
-          class="bg-gradient rota flex w-full rounded-full bg-gradient-to-b from-primary to-accent p-[3px] hover:from-accent hover:to-accent"
-        >
-          <NuxtLink
-            to="https://github.com/lufrey/hausverwaltungs-finder"
-            target="_blank"
-            class="contribute rounded-full bg-white px-5 py-2"
-          >
-            <span>Mitwirken</span>
-            <img
-              src="/github-mark.svg"
-              alt="Klicke um auf GitHub zu diesem Projekt beizutragen"
-              class="github_logo ml-2 inline w-6"
-            />
-          </NuxtLink>
-        </div>
-      </div>
+      </NuxtLink>
+      <NuxtLink
+        to="/overview"
+        title="Listenansicht"
+        class="hidden md:block"
+      >
+        <lord-icon
+          src="/icons/overview.json"
+          trigger="hover"
+          style="width: 32px; height: 32px"
+        />
+      </NuxtLink>
+      <NuxtLink
+        to="/map"
+        title="Kartenansicht"
+        class="hidden md:block"
+      >
+        <lord-icon
+          src="/icons/map.json"
+          trigger="hover"
+          style="width: 32px; height: 32px"
+        />
+      </NuxtLink>
+      <FavoritesList />
     </div>
     <HamburgerMenu @click="() => showSiteMenu(true)" />
     <div
-      class="fixed left-0 top-0 z-40 flex h-screen w-screen flex-col items-center bg-background px-4 pb-16 pt-4 transition-opacity duration-300"
+      class="fixed left-0 top-0 z-40 flex h-screen w-full flex-col items-center bg-background px-4 pb-16 pt-4 transition-opacity duration-300"
       :class="{
         'opacity-0': siteMenuVisibility.closing,
         'opacity-100':
@@ -102,31 +128,44 @@ onUnmounted(() => _cleanup.forEach((hook) => hook()));
           ></span>
         </div>
       </div>
-      <div class="my-auto flex flex-col gap-4 text-right">
+      <div
+        ref="iconsContainer"
+        class="my-auto flex flex-col gap-4 text-right"
+      >
         <NuxtLink
           v-for="link in [
             {
               name: 'Home',
               path: '/',
+              iconSrc: '/icons/home.json',
             },
             {
               name: 'Alle Wohnungen',
               path: '/overview',
+              iconSrc: '/icons/overview.json',
             },
             {
               name: 'Karte',
               path: '/map',
+              iconSrc: '/icons/map.json',
             },
           ]"
           :key="link.path"
           :to="link.path"
-          class="text-xl font-medium"
+          class="flex items-center justify-end gap-4 text-xl font-medium"
           :class="{
             'text-accent': route.path === link.path,
             'text-main': route.path !== link.path,
           }"
+          @click="handleLinkClick"
         >
           {{ link.name }}
+          <lord-icon
+            :src="link.iconSrc"
+            style="width: 42px; height: 42px"
+            stroke="bold"
+            class="current-color"
+          />
         </NuxtLink>
       </div>
     </div>

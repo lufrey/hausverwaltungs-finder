@@ -1,5 +1,7 @@
 import type { ZodSchema } from "zod";
 
+const localStorageContent = ref<string | any>({});
+
 const jsonSafeParse = (value: string) => {
   try {
     return JSON.parse(value) as unknown;
@@ -8,7 +10,30 @@ const jsonSafeParse = (value: string) => {
   }
 };
 
-export const useLocalStorage = <T>(key: string, schema: ZodSchema<T>) => {
+export function useLocalStorage<T>(
+  key: string,
+  schema: ZodSchema<T>,
+  initial: T,
+): {
+  get: () => T | null;
+  set: (value: T) => void;
+  state: Ref<T>;
+};
+
+export function useLocalStorage<T>(
+  key: string,
+  schema: ZodSchema<T>,
+): {
+  get: () => T | null;
+  set: (value: T) => void;
+  state: Ref<T | null>;
+};
+
+export function useLocalStorage<T>(
+  key: string,
+  schema: ZodSchema<T>,
+  initial?: T,
+) {
   const get = () => {
     // return null if run on server
     if (typeof window === "undefined") {
@@ -42,12 +67,20 @@ export const useLocalStorage = <T>(key: string, schema: ZodSchema<T>) => {
     }
     const result = schema.safeParse(value);
     if (result.success) {
+      localStorageContent.value[key] = result.data;
       localStorage.setItem(key, JSON.stringify(result.data));
     }
   };
+  const res = get();
+  if (res === null && initial !== undefined) {
+    set(initial);
+  } else {
+    localStorageContent.value[key] = res;
+  }
 
   return {
     get,
     set,
+    state: computed(() => localStorageContent.value[key] ?? initial),
   };
-};
+}

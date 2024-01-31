@@ -2,7 +2,7 @@ import { and, eq, inArray, isNull, sql } from "drizzle-orm";
 import { z } from "zod";
 import sharp from "sharp";
 import { createInsertSchema } from "drizzle-zod";
-import { publicProcedure, router } from "../trpc";
+import { protectedProcedure, publicProcedure, router } from "../trpc";
 import { db } from "~/db/db";
 import { propertyManagementList } from "~/data/propertyManagementList";
 import { address, flat, flatToTag, propertyManagement, tag } from "~/db/schema";
@@ -28,7 +28,7 @@ export const propertyManagementRouter = router({
       },
     });
   }),
-  update: publicProcedure
+  update: protectedProcedure
     .input(
       z
         .object({

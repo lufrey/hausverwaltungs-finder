@@ -1,6 +1,5 @@
 <template>
   <div>
-    <label for="districts">Bezirke</label>
     <div
       class="relative mb-2 flex flex-row flex-wrap gap-1 rounded-md bg-white p-1"
     >

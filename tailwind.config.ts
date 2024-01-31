@@ -1,7 +1,7 @@
 // this file is here for intellisense
 
 import type { Config } from "tailwindcss";
-const config: Partial<Config> = {
+const config = {
   content: ["./src/**/*.{html,js}"],
   theme: {
     fontFamily: {
@@ -37,8 +37,21 @@ const config: Partial<Config> = {
         m: "15px",
         s: "10px",
       },
+      animation: {
+        zoombounce: "zoombounce 0.35s ease-in-out",
+      },
+      keyframes: {
+        zoombounce: {
+          "0%, 100%": {
+            transform: "scale(1)",
+          },
+          "50%": {
+            transform: "scale(1.15)",
+          },
+        },
+      },
     },
   },
-};
+} satisfies Config;
 
 export default config;

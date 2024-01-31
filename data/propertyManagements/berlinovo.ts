@@ -5,7 +5,8 @@ import {
   type PropertyManagement,
 } from "../propertyManagementList";
 import { getAddress } from "../address";
-import { hashString, parseUncleanFloat, parseUncleanInt } from "~/utils/util";
+import { parseUncleanFloat, parseUncleanInt } from "~/utils/util";
+import { hashString } from "~/server/util";
 import { getApartmentTags } from "~/server/aiTagRetriever";
 
 export const berlinovo: PropertyManagement = {

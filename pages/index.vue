@@ -1,17 +1,23 @@
 <script setup lang="ts">
 const { $client } = useNuxtApp();
-const propertyManagementsWithFlats = await $client.flat.getFeatured.query({
-  limit: 7,
-});
+const [propertyManagementsWithFlats, mapPreviewHash] = await Promise.all([
+  $client.flat.getFeatured.query({
+    limit: 10,
+  }),
+  $client.flat.getMapPreviewHash.query(),
+]);
+
 const flats = propertyManagementsWithFlats;
 const origin = useRequestURL().origin;
 </script>
 
 <template>
   <div class="layout flex flex-col gap-y-4">
-    <div class="eyecatcher relative ml-[56px] rounded-3xl bg-main p-5 md:ml-0">
+    <div
+      class="eyecatcher relative ml-[56px] flex rounded-3xl bg-main p-5 md:ml-0"
+    >
       <h1
-        class="eyecatcher__headline ml-[-76px] mr-16 hyphens-manual text-[3rem] font-bold leading-[3rem] text-white [-webkit-text-stroke-color:#000] [-webkit-text-stroke-width:0.75px] [text-shadow:4px_4px_0px_#a555a2] xs:text-[3.75rem] xs:leading-[3.5rem] sm:text-[4.5rem] sm:leading-[4.5rem] md:hyphens-auto md:text-[6rem] md:leading-[5.5rem] md:[-webkit-text-stroke-width:1px] md:[text-shadow:6px_6px_0px_#a555a2]"
+        class="eyecatcher__headline my-auto ml-[-76px] mr-16 hyphens-manual text-[3rem] font-bold leading-[3rem] text-white [-webkit-text-stroke-color:#000] [-webkit-text-stroke-width:0.75px] [text-shadow:4px_4px_0px_#a555a2] xs:text-[3.75rem] xs:leading-[3.5rem] sm:text-[4.5rem] sm:leading-[4.5rem] md:hyphens-auto md:text-[6rem] md:leading-[5.5rem] md:[-webkit-text-stroke-width:1px] md:[text-shadow:6px_6px_0px_#a555a2]"
       >
         Berlins Wohnungs&shy;markt auf einen&nbsp;Blick
       </h1>
@@ -22,7 +28,7 @@ const origin = useRequestURL().origin;
       />
     </div>
     <div
-      class="apartmentlist relative flex flex-col gap-4 rounded-3xl bg-background p-5 pb-16"
+      class="apartmentlist relative flex flex-col gap-4 rounded-3xl border border-black bg-background p-5 pb-16"
     >
       <ApartmentPreview
         v-for="flat in flats"
@@ -46,27 +52,31 @@ const origin = useRequestURL().origin;
         Alle Wohnungen ansehen
         <img
           src="/arrow_right.svg"
-          alt=""
+          width="32"
+          height="23"
+          aria-hidden="true"
           class="ml-4 inline"
         />
       </FatButton>
     </div>
     <NuxtLink
       to="/map"
-      class="map_preview relative mt-8 overflow-hidden rounded-3xl border border-black md:mt-0 lg:aspect-square"
+      class="map_preview relative mt-8 aspect-square overflow-hidden rounded-3xl border border-black md:mt-0"
       title="Zur Karte"
     >
       <NuxtImg
-        :src="`${origin}/api/image/map-preview`"
+        :src="`${origin}/map-preview.png?v=${mapPreviewHash}`"
         alt="Vorschau der Karte"
         class="h-full w-full object-cover"
-        format="webp"
+        width="512"
+        height="512"
+        format="avif,webp"
       />
-      <IconZoomIn class="absolute bottom-0 right-0 mb-3 mr-3" />
+      <IconZoomIn class="absolute right-4 top-4" />
     </NuxtLink>
 
     <div
-      class="decoration relative hidden min-h-32 overflow-hidden rounded-3xl md:block"
+      class="decoration relative hidden min-h-32 overflow-hidden rounded-3xl border border-black md:block"
     >
       <ImageSlider
         :images="[
@@ -75,7 +85,67 @@ const origin = useRequestURL().origin;
         ]"
       />
     </div>
-    <MailinglistSignup />
+    <div class="about rounded-3xl border border-black p-5">
+      <h2
+        class="inline-block rounded-md bg-primary px-2 py-1 text-xl font-semibold leading-10 text-white"
+      >
+        Über dieses Projekt
+      </h2>
+      <section>
+        <h3
+          class="mb-2 mt-4 inline-block rounded-md bg-accent px-2 text-l text-white"
+        >
+          Was?
+        </h3>
+
+        <p>
+          Wir scrapen die Webseiten der Berliner Wohnungsverwaltungen und
+          stellen die Wohnungen für alle zugänglich bereit.
+        </p>
+      </section>
+      <section>
+        <h3
+          class="mb-2 mt-4 inline-block rounded-md bg-accent px-2 text-l text-white"
+        >
+          Warum?
+        </h3>
+        <p>Versuch mal in Berlin eine bezahlbare Wohnung zu finden...</p>
+        <p>
+          Entstanden ist das Projekt im Rahmen des Moduls "Webtechnologien" an
+          der
+          <a
+            href="https://www.htw-berlin.de/"
+            class="underline"
+            >HTW Berlin</a
+          >. Wir sind so zufrieden mit unserem Ergebnis das wir es live stellen
+          wollten.
+        </p>
+      </section>
+      <section>
+        <h3
+          class="mb-2 mt-4 inline-block rounded-md bg-accent px-2 text-l text-white"
+        >
+          Wer?
+        </h3>
+        <p>
+          <NuxtLink
+            to="mailto:wohnungsmarkt@lukasfrey.com"
+            class="underline"
+          >
+            <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
+            Lukas Frey</NuxtLink
+          >
+          &
+          <NuxtLink
+            to="mailto:malie.bertram@student.htw-berlin.de"
+            class="underline"
+          >
+            <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
+            Malie Bertram</NuxtLink
+          >
+        </p>
+      </section>
+    </div>
   </div>
 </template>
 <style scoped>
@@ -83,13 +153,16 @@ const origin = useRequestURL().origin;
   .layout {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto auto auto auto auto auto;
     column-gap: 1.25rem;
     grid-auto-flow: row;
     grid-template-areas:
       "eyecatcher eyecatcher map_preview"
       "eyecatcher eyecatcher decoration"
       "apartmentlist apartmentlist apartmentlist"
-      "mailing_list mailing_list mailing_list";
+      ". . ."
+      ". . ."
+      "about about about";
   }
 }
 @media screen and (min-width: 1024px) {
@@ -101,10 +174,11 @@ const origin = useRequestURL().origin;
     grid-template-areas:
       "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
       "eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher eyecatcher apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
-      "decoration decoration decoration decoration map_preview map_preview apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
-      "decoration decoration decoration decoration map_preview map_preview apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
-      "decoration decoration decoration decoration . . . . . . . ."
-      "decoration decoration decoration decoration mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list mailing_list";
+      "map_preview map_preview map_preview map_preview map_preview map_preview apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
+      "map_preview map_preview map_preview map_preview map_preview map_preview apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist apartmentlist"
+      ". . . . . . . . . . . ."
+      "about about about about about about about about decoration decoration decoration decoration"
+      "about about about about about about about about decoration decoration decoration decoration";
   }
 }
 
@@ -126,5 +200,9 @@ const origin = useRequestURL().origin;
 
 .mailing_list {
   grid-area: mailing_list;
+}
+
+.about {
+  grid-area: about;
 }
 </style>
