@@ -18,6 +18,7 @@ import { omit } from "~/utils/typeHelper";
 import { berlinDistricts, districtIdSchema } from "~/data/districts";
 import { type Tags, tagsSchema } from "~/data/tags";
 import { flatFilterUrlSchema } from "~/composables/useUrlState";
+import { hashString } from "~/server/util";
 
 const countsAsNewTime = 60 * 60 * 12;
 export const countsAsNewFilter = sql<
@@ -238,4 +239,16 @@ export const flatRouter = router({
         data: Object.values(data),
       };
     }),
+  getMapPreviewHash: publicProcedure.query(async () => {
+    const flatIds = (
+      await db
+        .select({
+          id: flat.id,
+        })
+        .from(flat)
+        .where(isNull(flat.deleted))
+    ).map((x) => x.id);
+
+    return await hashString(flatIds.join(""));
+  }),
 });
