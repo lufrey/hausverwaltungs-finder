@@ -17,11 +17,16 @@ const origin = useRequestURL().origin;
       >
         Berlins Wohnungs&shy;markt auf einen&nbsp;Blick
       </h1>
-      <img
-        src="../assets/questionmark.svg"
-        alt=""
-        class="eyecatcher__explanation absolute right-3 top-3"
-      />
+      <NuxtLink
+        to="#about"
+        title='Gehe zu "Über dieses Projekt"'
+      >
+        <img
+          src="../assets/questionmark.svg"
+          alt=""
+          class="eyecatcher__explanation absolute right-3 top-3"
+        />
+      </NuxtLink>
     </div>
     <div
       class="apartmentlist relative flex flex-col gap-4 rounded-3xl border border-black bg-background p-5 pb-16"
@@ -80,7 +85,10 @@ const origin = useRequestURL().origin;
         ]"
       />
     </div>
-    <div class="about rounded-3xl border border-black p-5">
+    <div
+      id="about"
+      class="about rounded-3xl border border-black p-5"
+    >
       <h2
         class="inline-block rounded-md bg-primary px-2 py-1 text-xl font-semibold leading-10 text-white"
       >

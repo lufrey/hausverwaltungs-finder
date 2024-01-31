@@ -58,6 +58,7 @@ const handleLinkClick = (e: PointerEvent) => {
   <nav class="flex h-12 items-center gap-4 md:justify-between">
     <NuxtLink
       to="/"
+      title="Startseite"
       class="logo text-xl font-medium tracking-tighter text-main md:flex-1"
     >
       ApartiFind
