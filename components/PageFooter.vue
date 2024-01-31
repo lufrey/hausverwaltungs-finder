@@ -16,6 +16,10 @@ const sections = [
         url: "/map",
       },
       {
+        title: "Über dieses Projekt",
+        url: "/about",
+      },
+      {
         title: "Datenschutz",
         url: "/privacy",
       },

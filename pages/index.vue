@@ -18,7 +18,7 @@ const origin = useRequestURL().origin;
         Berlins Wohnungs&shy;markt auf einen&nbsp;Blick
       </h1>
       <NuxtLink
-        to="#about"
+        to="#section_about"
         title='Gehe zu "Über dieses Projekt"'
       >
         <img
@@ -86,7 +86,7 @@ const origin = useRequestURL().origin;
       />
     </div>
     <div
-      id="about"
+      id="section_about"
       class="about rounded-3xl border border-black p-5"
     >
       <h2
