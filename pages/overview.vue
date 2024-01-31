@@ -74,7 +74,7 @@ const countText = computed(() => {
           <th
             v-for="[headerKey, header] in Object.entries(tableHeaders)"
             :key="headerKey"
-            class="w-max text-nowrap px-2 py-4 font-medium last:rounded-r-xl"
+            class="w-max text-nowrap px-2 py-4 font-medium last:w-16 last:rounded-r-xl"
             :class="header.class"
           >
             <button

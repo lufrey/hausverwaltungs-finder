@@ -119,7 +119,7 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
         :zip-code="address.postalCode"
       />
     </td>
-    <td class="pr-4 align-top">
+    <td class="pr-4 text-right align-top">
       <ApartmentFavoriteButton :id="id" />
     </td>
   </tr>
