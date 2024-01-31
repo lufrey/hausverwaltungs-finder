@@ -101,7 +101,7 @@ const sections = [
       <span
         class="my-4 ml-auto block w-full bg-background pt-[1px] lg:w-3/4"
       ></span>
-      <div class="">{{ new Date().getFullYear() }} © ApartiFind</div>
+      <div class="">{{ new Date().getFullYear() }} © WohnungsMarktBerlin</div>
     </div>
   </footer>
 </template>

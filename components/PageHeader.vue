@@ -55,13 +55,19 @@ const handleLinkClick = (e: PointerEvent) => {
 </script>
 
 <template>
-  <nav class="flex h-12 items-center gap-4 md:justify-between">
+  <nav class="flex min-h-12 items-center gap-4 md:justify-between">
     <NuxtLink
       to="/"
       title="Startseite"
-      class="logo text-xl font-medium tracking-tighter text-main md:flex-1"
+      class="logo text-[24px] font-medium text-main md:flex-1"
     >
-      ApartiFind
+      <span
+        class="-mb-6 inline-flex max-w-40 flex-wrap leading-none tracking-tighter xs:flex-nowrap md:flex-col lg:flex-row"
+      >
+        <span class="text-accent">Wohnungs</span>
+        <span class="text-primary">Markt</span>
+        <span class="">Berlin</span>
+      </span>
     </NuxtLink>
     <h2
       class="tagline hidden whitespace-nowrap text-center text-l font-light opacity-50 md:block md:flex-1"

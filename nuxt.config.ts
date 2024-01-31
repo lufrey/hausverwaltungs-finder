@@ -5,7 +5,7 @@ import { env } from "./env";
 export const deploymentUrl =
   process.env.NODE_ENV === "development"
     ? "http://localhost:3000"
-    : "https://apartifind.lksfr.de";
+    : "https://wohnungsmarktberlin.de";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({

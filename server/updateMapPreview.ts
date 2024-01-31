@@ -38,7 +38,7 @@ export async function updateMapPreview() {
     .map((f) => `${f.address.latitude},${f.address.longitude}`)
     .join("|");
 
-  const markerFileUrl = `${config.public.deploymentUrl !== "http://localhost:3000" ? config.public.deploymentUrl : "https://apartifind.lksfr.de"}/marker.png?v=1.0`;
+  const markerFileUrl = `${config.public.deploymentUrl !== "http://localhost:3000" ? config.public.deploymentUrl : "https://wohnungsmarktberlin.de"}/marker.png?v=1.0`;
 
   url.searchParams.set("markers", `icon:${markerFileUrl}|${markers}`);
   // load image and save it to disk
