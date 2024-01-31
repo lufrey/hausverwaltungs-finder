@@ -9,7 +9,6 @@ const icon = ref<null | Element>(null);
 watch(isFavorite, (newValue) => {
   const playerInstance = (icon.value as any)?.playerInstance;
   if (!playerInstance) return;
-  playerInstance.state = "morph-heart";
   playerInstance.direction = newValue ? 1 : -1;
   playerInstance.play();
 });
@@ -20,7 +19,6 @@ onMounted(async () => {
     icon.value.addEventListener("ready", () => {
       const playerInstance = (icon.value as any)?.playerInstance;
       if (playerInstance && isFavorite.value) {
-        playerInstance.state = "morph-heart";
         playerInstance.goToLastFrame();
       }
     });
@@ -47,7 +45,7 @@ onMounted(async () => {
           ref="icon"
           src="/icons/heart.json"
           state="morph-heart"
-          class="current-color md:hover:animate-zoombounce -m-1"
+          class="current-color -m-1 md:hover:animate-zoombounce"
           style="width: 28px; height: 28px"
         />
       </span>
