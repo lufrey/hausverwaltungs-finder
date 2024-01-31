@@ -52,7 +52,9 @@ export const getApartmentTags = async (
     ).map((res) => res.tag.id);
   }
 
-  const possibleTags = Object.keys(tags).join(", ");
+  const possibleTags = Object.keys(tags)
+    .filter((tag) => tag !== "new")
+    .join(", ");
 
   const run = await openai.beta.threads.createAndRun({
     assistant_id: "asst_1A41Kwq2ETuoNNRD0ZrkBoNM",
@@ -113,7 +115,7 @@ export const getApartmentTags = async (
           );
         });
 
-        const validTags = Object.keys(tags);
+        const validTags = Object.keys(tags).filter((tag) => tag !== "new");
         const validatedTags: string[] = [];
 
         for (const tag of tagsArray) {

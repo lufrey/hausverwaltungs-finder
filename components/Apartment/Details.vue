@@ -82,7 +82,7 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
         </div>
       </div>
     </td>
-    <td class="text-left align-top">
+    <td class="align-top">
       <span v-html="formatPrice(shownPrice)"></span>
       <span
         v-if="$props.warmRentPrice"
@@ -94,12 +94,12 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
       {{ roomCount ?? "-" }}
     </td>
     <td
-      class="text-left align-top"
+      class="align-top"
       v-html="formatArea(usableArea)"
     ></td>
     <td
       v-if="shownPrice"
-      class="text-left align-top"
+      class="align-top"
     >
       {{
         usableArea
@@ -113,7 +113,7 @@ const shownPrice = computed(() => props.coldRentPrice ?? props.warmRentPrice);
     >
       -
     </td>
-    <td class="text-left align-top">
+    <td class="align-top">
       <ApartmentDistrict
         class="underline hover:no-underline"
         :zip-code="address.postalCode"

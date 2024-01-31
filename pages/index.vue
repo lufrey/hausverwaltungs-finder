@@ -1,10 +1,12 @@
 <script setup lang="ts">
 const { $client } = useNuxtApp();
-const propertyManagementsWithFlats = await $client.flat.getFeatured.query({
-  limit: 10,
-});
+const [propertyManagementsWithFlats, mapPreviewHash] = await Promise.all([
+  $client.flat.getFeatured.query({
+    limit: 10,
+  }),
+  $client.flat.getMapPreviewHash.query(),
+]);
 
-const mapPreviewHash = await $client.flat.getMapPreviewHash.query();
 const flats = propertyManagementsWithFlats;
 const origin = useRequestURL().origin;
 </script>
@@ -50,7 +52,9 @@ const origin = useRequestURL().origin;
         Alle Wohnungen ansehen
         <img
           src="/arrow_right.svg"
-          alt=""
+          width="32"
+          height="23"
+          aria-hidden="true"
           class="ml-4 inline"
         />
       </FatButton>

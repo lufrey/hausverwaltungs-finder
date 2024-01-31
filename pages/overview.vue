@@ -3,7 +3,7 @@ useHead({
   title: "Alle Wohnungen",
 });
 const { $client } = useNuxtApp();
-const { urlState } = useFlatFilterUrlState();
+const { urlState, updateQueryState } = useFlatFilterUrlState();
 const { registerLoadingRef, unregisterLoadingRef } =
   useCustomLoadingIndicator();
 
@@ -24,31 +24,29 @@ watch(flats, () => {
 onUnmounted(() => unregisterLoadingRef(flatsQuery.status));
 
 const tableHeaders = {
-  coldRentPrice: {
+  price: {
     title: "Preis (K)",
-    sortable: true,
   },
   roomCount: {
     title: "Zimmer",
-    sortable: true,
   },
   usableArea: {
     title: "Fläche",
-    sortable: true,
   },
   coldRentPricePerSquareMeter: {
     title: "€/m²",
-    sortable: true,
   },
   district: {
     title: "Bezirk",
-    sortable: false,
+    class: "w-[20%]",
   },
   favorite: {
     title: "",
-    sortable: false,
   },
-};
+} as Record<string, { title: string; class?: string }>;
+
+const sortOptions = flatFilterUrlSchema.shape.orderBy.unwrap().unwrap()
+  .element.options;
 
 const countText = computed(() => {
   const total = flatsQuery.data?.value?.totalElementsCount ?? 0;
@@ -65,24 +63,61 @@ const countText = computed(() => {
 <template>
   <div>
     <Filters />
-    <table class="hidden w-full border-separate border-spacing-y-4 lg:table">
+    <table
+      class="hidden w-full table-fixed border-separate border-spacing-y-4 text-center lg:table"
+    >
       <thead class="bg-background">
         <tr class="">
-          <th class="rounded-l-xl p-4 text-left font-medium">
+          <th class="w-[30%] rounded-l-xl p-4 text-left font-medium">
             {{ countText }}
           </th>
           <th
             v-for="[headerKey, header] in Object.entries(tableHeaders)"
             :key="headerKey"
-            class="w-max text-nowrap py-4 text-left font-medium last:rounded-r-xl"
+            class="w-max text-nowrap px-2 py-4 font-medium last:rounded-r-xl"
+            :class="header.class"
           >
-            <div
-              v-if="header.sortable"
-              class="flex gap-2"
+            <button
+              v-if="sortOptions.includes(headerKey)"
+              class="group m-auto flex items-center gap-2"
+              @click="
+                (e) => {
+                  updateQueryState({
+                    orderBy: [headerKey as (typeof sortOptions)[number]],
+                    order:
+                      urlState.orderBy?.[0] === headerKey &&
+                      urlState.order?.[0] === 'asc'
+                        ? ['desc']
+                        : ['asc'],
+                  });
+                }
+              "
+              @mouseenter="
+                (e) => {
+                  // @ts-ignore
+                  const icon = e.target?.querySelector('lord-icon');
+                  if (icon.playerInstance) {
+                    !icon.playerInstance.isPlaying &&
+                      icon.playerInstance.playFromBeginning();
+                  }
+                }
+              "
             >
               {{ header.title }}
-              <img src="/sort_direction.svg" />
-            </div>
+              <lord-icon
+                src="/icons/arrow.json"
+                state="hover-ternd-flat-3"
+                class="-mx-2 -rotate-90 transition-all duration-500"
+                :class="{
+                  'opacity-0': urlState.orderBy?.[0] !== headerKey,
+                  'group-hover:opacity-50': urlState.orderBy?.[0] !== headerKey,
+                  '-scale-x-100':
+                    urlState.orderBy?.[0] === headerKey &&
+                    urlState.order?.[0] === 'desc',
+                }"
+                style="width: 20px; height: 20px"
+              />
+            </button>
             <div v-else>
               {{ header.title }}
             </div>

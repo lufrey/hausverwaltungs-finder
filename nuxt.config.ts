@@ -16,6 +16,7 @@ export default defineNuxtConfig({
       script: [
         {
           src: "/lordicon_lib.js",
+          defer: true,
         },
       ],
     },
