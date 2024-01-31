@@ -15,8 +15,6 @@ export const env = createEnv({
     BROWSERLESS_URL: z.string().min(1).optional(),
     BROWSERLESS_TOKEN: z.string().min(1).optional(),
     LOCAL_SQLITE_PATH: z.string().min(1).optional(),
-    TURSO_URL: z.string().url().optional(),
-    TURSO_TOKEN: z.string().min(1).optional(),
     CRON_TOKEN: z.string().min(1).optional(),
     OPENAI_API_KEY: z.string().min(1),
     AUTH_USER: z.string().min(1).optional().default("admin"),

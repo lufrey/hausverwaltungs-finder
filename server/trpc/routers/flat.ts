@@ -9,6 +9,8 @@ import {
   lte,
   count,
   or,
+  asc,
+  desc,
 } from "drizzle-orm";
 import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
@@ -18,6 +20,7 @@ import { omit } from "~/utils/typeHelper";
 import { berlinDistricts, districtIdSchema } from "~/data/districts";
 import { type Tags, tagsSchema } from "~/data/tags";
 import { flatFilterUrlSchema } from "~/composables/useUrlState";
+import { hashString } from "~/server/util";
 
 const countsAsNewTime = 60 * 60 * 12;
 export const countsAsNewFilter = sql<
@@ -60,6 +63,7 @@ export const flatRouter = router({
         await db.query.flat.findMany({
           ...queryOptions,
           limit: input.limit,
+          orderBy: [desc(flat.firstSeen)],
         })
       ).map((flat) => {
         const tags = flat.flatToTag.map((flatToTag) => flatToTag.tagId);
@@ -173,6 +177,19 @@ export const flatRouter = router({
           .where(isNull(flat.deleted))
       )[0].count;
 
+      const orderByInput = [];
+      if (!input.orderBy?.[0]) {
+        orderByInput.push(desc(flat.firstSeen));
+      } else {
+        const orderFunc = input.order?.[0] === "asc" ? asc : desc;
+        if (input.orderBy?.[0] === "price") {
+          orderByInput.push(orderFunc(flat.warmRentPrice));
+          orderByInput.push(orderFunc(flat.coldRentPrice));
+        } else {
+          orderByInput.push(orderFunc(flat[input.orderBy?.[0]]));
+        }
+      }
+
       // get the flatIds of all flats that fulfill the filters
       const flatIdsQuery = db
         .select({
@@ -185,6 +202,7 @@ export const flatRouter = router({
         .innerJoin(address, eq(flat.addressId, address.id))
         .groupBy(flat.id)
         .where(and(...filters))
+        .orderBy(...orderByInput)
         .limit(input.pageSize)
         .offset((input.page - 1) * input.pageSize);
 
@@ -204,7 +222,6 @@ export const flatRouter = router({
       const data = (await query).reduce(
         (acc, dataPoint) => {
           const flat = omit(dataPoint.flat, ["deleted", "image"]);
-
           // create the flat object for the first time
           if (!acc[dataPoint.flat.id]) {
             acc[dataPoint.flat.id] = {
@@ -238,4 +255,16 @@ export const flatRouter = router({
         data: Object.values(data),
       };
     }),
+  getMapPreviewHash: publicProcedure.query(async () => {
+    const flatIds = (
+      await db
+        .select({
+          id: flat.id,
+        })
+        .from(flat)
+        .where(isNull(flat.deleted))
+    ).map((x) => x.id);
+
+    return await hashString(flatIds.join(""));
+  }),
 });

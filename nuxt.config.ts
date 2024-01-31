@@ -16,6 +16,7 @@ export default defineNuxtConfig({
       script: [
         {
           src: "/lordicon_lib.js",
+          defer: true,
         },
       ],
     },
@@ -97,7 +98,12 @@ export default defineNuxtConfig({
       "wohnungsmarktberlin.de",
     ],
     ipx: {
-      maxAge: 60 * 60 * 24 * 30,
+      http: {
+        maxAge: 60 * 60 * 24 * 30,
+      },
+      fs: {
+        maxAge: 60 * 60 * 24 * 7,
+      },
     },
   },
   css: ["~/assets/global.css"],

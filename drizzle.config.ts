@@ -1,15 +1,13 @@
 import type { Config } from "drizzle-kit";
 import { env } from "./env";
 
-const { TURSO_URL, TURSO_TOKEN } = env;
-const isLocal = !TURSO_URL || !TURSO_TOKEN;
-
 export default {
   schema: "./db/schema.ts",
   out: "./drizzle",
-  driver: isLocal ? "better-sqlite" : "libsql",
+  driver: "libsql",
   dbCredentials: {
-    url: isLocal ? "./db/sqlite.db" : TURSO_URL,
-    authToken: TURSO_TOKEN,
+    url: env.LOCAL_SQLITE_PATH
+      ? `file://${env.LOCAL_SQLITE_PATH}`
+      : "file:db/sqlite.db",
   },
 } satisfies Config;

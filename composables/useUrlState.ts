@@ -85,6 +85,14 @@ export const flatFilterUrlSchema = z
     roomsMax: z.array(z.coerce.number()).optional().nullable(),
     areaMin: z.array(z.coerce.number()).optional().nullable(),
     areaMax: z.array(z.coerce.number()).optional().nullable(),
+    orderBy: z
+      .array(z.enum(["price", "usableArea", "roomCount"]))
+      .optional()
+      .nullable(),
+    order: z
+      .array(z.enum(["asc", "desc"]))
+      .optional()
+      .nullable(),
   })
   .merge(paginationSchema);
 
