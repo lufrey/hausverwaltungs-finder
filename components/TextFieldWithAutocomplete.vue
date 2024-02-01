@@ -1,39 +1,41 @@
 <template>
-  <div>
+  <div class="w-full">
     <div
-      class="relative mb-2 flex flex-row flex-wrap gap-1 rounded-md bg-white p-1"
+      class="relative my-2 w-full rounded-md bg-white p-1 shadow-[inset_0_1px_4px_rgba(0,0,0,0.4)]"
     >
-      <div
-        v-for="(itemId, index) in modelValue"
-        :key="index"
-        class="flex h-5 w-max cursor-pointer flex-row items-center justify-end rounded-[0.2rem] bg-gray-300 px-2 py-3 text-s"
-        @click="removeItem(index)"
-      >
-        <span class="whitespace-nowrap">{{
-          suggestions.find((item) => item.id == itemId)!.title
-        }}</span>
-        <img
-          src="/cancel_remove.svg"
-          alt="entfernen"
-          class="ml-1 w-4"
+      <div class="flex w-full gap-1 overflow-x-auto">
+        <input
+          v-model="inputValue"
+          type="text"
+          class="mt-0 h-full w-32 grow rounded-md px-1 outline-none"
+          placeholder="hinzufügen..."
+          @input="handleInput"
+          @keydown.down="highlightNext"
+          @keydown.up="highlightPrev"
+          @keydown.enter.prevent="selectHighlighted"
+          @focus="handleFocus"
+          @blur="handleBlur"
         />
+        <div
+          v-for="(itemId, index) in modelValue"
+          :key="index"
+          title="Tag entfernen"
+          class="flex h-5 w-full min-w-fit max-w-fit cursor-pointer flex-row items-center justify-end rounded-[0.2rem] bg-gray-300 px-2 py-3 text-s"
+          @click="removeItem(index)"
+        >
+          <span class="whitespace-nowrap">{{
+            suggestions.find((item) => item.id == itemId)!.title
+          }}</span>
+          <img
+            src="/cancel_remove.svg"
+            alt="entfernen"
+            class="ml-1 w-4"
+          />
+        </div>
       </div>
-      <input
-        id="districts"
-        v-model="inputValue"
-        type="text"
-        class="mt-0 h-full min-w-max grow rounded-md px-1 outline-none"
-        placeholder="hinzufügen..."
-        @input="handleInput"
-        @keydown.down="highlightNext"
-        @keydown.up="highlightPrev"
-        @keydown.enter.prevent="selectHighlighted"
-        @focus="handleFocus"
-        @blur="handleBlur"
-      />
       <div
         v-if="showSuggestions"
-        class="absolute left-0 top-full z-10 mt-1 max-h-60 w-full overflow-scroll rounded-md bg-white drop-shadow-md"
+        class="absolute left-0 top-full z-10 mt-1 max-h-60 w-full overflow-x-hidden overflow-y-scroll rounded-md bg-white drop-shadow-md"
       >
         <div
           v-for="(suggestion, index) in filteredSuggestions"
