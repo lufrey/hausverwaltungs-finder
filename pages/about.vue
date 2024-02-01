@@ -31,6 +31,7 @@ const { activeFlatCount, allFlatsCount } = stats || initialStats;
         target="_blank"
         class="cursor-help"
       >
+        <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
         scrapen</NuxtLink
       >
       die Webseiten der Berliner Wohnungsverwaltungen und speichern die
@@ -48,7 +49,14 @@ const { activeFlatCount, allFlatsCount } = stats || initialStats;
             v-for="propertyManagement in propertyManagements.data.value"
             :key="propertyManagement.slug"
           >
-            {{ propertyManagement.name }}
+            <NuxtLink
+              v-if="propertyManagement.website"
+              :to="propertyManagement.website"
+              target="_blank"
+            >
+              {{ propertyManagement.name }}
+            </NuxtLink>
+            <span v-else>{{ propertyManagement.name }}</span>
           </li>
         </ul>
       </div>
@@ -67,10 +75,10 @@ const { activeFlatCount, allFlatsCount } = stats || initialStats;
         </table>
       </div>
 
-      <div class="flex-1 rounded-md border border-dashed border-black p-4">
+      <!-- <div class="flex-1 rounded-md border border-dashed border-black p-4">
         <h3 class="pb-2 text-m font-semibold">User</h3>
         <p>105 Besuche seit Livegang</p>
-      </div>
+      </div> -->
     </div>
 
     <p></p>

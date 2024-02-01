@@ -12,6 +12,7 @@ import { getApartmentTags } from "~/server/aiTagRetriever";
 export const gewobag: PropertyManagement = {
   slug: "gewobag",
   name: "Gewobag",
+  website: "https://www.gewobag.de/",
   getFlats: async (browser: Browser) => {
     const url =
       "https://www.gewobag.de/fuer-mieter-und-mietinteressenten/mietangebote/?bezirke_all=1&objekttyp%5B%5D=wohnung&gesamtmiete_von=&gesamtmiete_bis=&gesamtflaeche_von=&gesamtflaeche_bis=&zimmer_von=&zimmer_bis=&sort-by=recent";

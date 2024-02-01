@@ -39,13 +39,3 @@ export const propertyManagementList = [
   deutschewohnen,
   berlinovo,
 ] satisfies Readonly<PropertyManagement[]>;
-
-export const propertyManagementMap = Object.fromEntries(
-  propertyManagementList.map((pm) => [
-    pm.slug,
-    {
-      name: pm.name,
-      website: pm.website,
-    },
-  ]),
-) as Record<string, PropertyManagement>;

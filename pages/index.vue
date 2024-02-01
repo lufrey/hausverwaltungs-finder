@@ -107,8 +107,17 @@ const origin = useRequestURL().origin;
         </h3>
 
         <p>
-          Wir scrapen die Webseiten der Berliner Wohnungsverwaltungen und
-          stellen die Wohnungen für alle zugänglich bereit.
+          Wir
+          <NuxtLink
+            to="https://de.wikipedia.org/wiki/Screen_Scraping"
+            target="_blank"
+            class="cursor-help underline"
+          >
+            <!--  eslint-disable-next-line vue/multiline-html-element-content-newline -->
+            scrapen</NuxtLink
+          >
+          die Webseiten verschiedener Berliner Wohnungsverwaltungen und stellen
+          die Wohnungen für alle zugänglich bereit.
         </p>
       </section>
       <section>
@@ -118,15 +127,14 @@ const origin = useRequestURL().origin;
           Warum?
         </h3>
         <p>Versuch mal in Berlin eine bezahlbare Wohnung zu finden...</p>
+
         <p>
-          Entstanden ist das Projekt im Rahmen des Moduls "Webtechnologien" an
-          der
-          <a
-            href="https://www.htw-berlin.de/"
-            class="underline"
-            >HTW Berlin</a
-          >. Wir sind so zufrieden mit unserem Ergebnis das wir es live stellen
-          wollten.
+          Es gibt nur wenige und die sind häufig auf den Websites der einzelnen
+          Hausverwaltungen versteckt.
+        </p>
+        <p>
+          Um nicht jede Website einzeln durchsuchen zu müssen, haben wir hier
+          alle zusammengetragen :)
         </p>
       </section>
       <section>
@@ -151,6 +159,16 @@ const origin = useRequestURL().origin;
             <!-- eslint-disable-next-line vue/multiline-html-element-content-newline -->
             Malie Bertram</NuxtLink
           >
+        </p>
+        <p>
+          Entstanden ist das Projekt im Rahmen des Moduls "Webtechnologien" an
+          der
+          <a
+            href="https://www.htw-berlin.de/"
+            class="underline"
+            >HTW Berlin</a
+          >. Wir sind so zufrieden mit unserem Ergebnis das wir es live stellen
+          wollten.
         </p>
       </section>
     </div>
