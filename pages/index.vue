@@ -70,7 +70,7 @@ const origin = useRequestURL().origin;
       title="Zur Karte"
     >
       <NuxtImg
-        :src="`${origin}/map-preview.png?v=${mapPreviewHash}`"
+        :src="`${origin}/api/image/map-preview?v=${mapPreviewHash}`"
         alt="Vorschau der Karte"
         class="h-full w-full object-cover"
         width="512"
