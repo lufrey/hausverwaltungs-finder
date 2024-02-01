@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { tags } from "~/data/tags";
+import { berlinDistricts } from "~/data/districts";
 const { updateQueryState, urlState } = useFlatFilterUrlState();
 const modalOpen = ref(false);
 
@@ -13,6 +15,11 @@ const modalPreferences = reactive({
   "priceMin" | "priceMax" | "roomsMin" | "roomsMax" | "areaMin" | "areaMax",
   number | null
 >);
+
+const activeTags = reactive({} as Record<keyof typeof tags, string | null>);
+const activeDistricts = reactive(
+  {} as Record<keyof typeof berlinDistricts, string | null>,
+);
 
 interface Metadata {
   [key: string]: {
@@ -35,6 +42,14 @@ watch(urlState, () => {
 const syncStateWithUrl = () => {
   for (const key of typedObjectKeys(modalPreferences)) {
     modalPreferences[key] = urlState.value[key]?.[0] ?? null;
+  }
+  for (const key of typedObjectKeys(tags)) {
+    activeTags[key] = urlState.value.tags?.includes(key) ? tags[key] : null;
+  }
+  for (const key of typedObjectKeys(berlinDistricts)) {
+    activeDistricts[key] = urlState.value.districts?.includes(key)
+      ? berlinDistricts[key].name
+      : null;
   }
 };
 
@@ -84,13 +99,27 @@ const uiFilters = computed(() => {
     }
   }
 
+  for (const [key, value] of Object.entries(activeTags)) {
+    if (value) {
+      filters.push({ filter: value, id: key });
+    }
+  }
+
+  for (const [key, value] of Object.entries(activeDistricts)) {
+    if (value) {
+      filters.push({ filter: value, id: key });
+    }
+  }
+
   return filters;
 });
 
 const applyFilters = () => {
   modalOpen.value = false;
 
-  const query: Record<string, number | number[] | null | string> = {};
+  const query: Record<string, number | number[] | string[] | null | string> =
+    {};
+
   for (const [key, value] of Object.entries(modalPreferences)) {
     if (typeof value === "number" && filterMetadata[key]) {
       query[key] = Math.min(
@@ -100,8 +129,28 @@ const applyFilters = () => {
     }
     query[key] = value ? [value] : null;
   }
+
+  for (const [key, value] of Object.entries(activeTags)) {
+    query[key] = value ? [value] : null;
+  }
+
+  for (const [key, value] of Object.entries(activeDistricts)) {
+    query[key] = value ? [value] : null;
+  }
+
   updateQueryState(query);
 };
+
+const tagsSuggestions = Object.entries(tags).map(([id, title]) => ({
+  id,
+  title,
+}));
+const districtSuggestions = Object.entries(berlinDistricts).map(
+  ([id, { name }]) => ({
+    id,
+    title: name,
+  }),
+);
 </script>
 
 <template>
@@ -115,11 +164,11 @@ const applyFilters = () => {
     <Modal
       :open="modalOpen"
       :on-close="() => (modalOpen = false)"
-      class="absolute top-12 z-20 flex flex-col gap-4 rounded-xl border border-black bg-white p-4 shadow-xl"
+      class="absolute top-12 z-20 flex w-96 flex-col gap-4 rounded-xl border border-black bg-white p-4 shadow-xl"
     >
       <div>
         <strong>Preis (€)</strong>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center justify-between gap-2">
           <input
             v-model="modalPreferences.priceMin"
             type="number"
@@ -141,7 +190,7 @@ const applyFilters = () => {
       </div>
       <div>
         <strong>Zimmer</strong>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center justify-between gap-2">
           <input
             v-model="modalPreferences.roomsMin"
             type="number"
@@ -163,7 +212,7 @@ const applyFilters = () => {
       </div>
       <div>
         <strong>Fläche (m²)</strong>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center justify-between gap-2">
           <input
             v-model="modalPreferences.areaMin"
             type="number"
@@ -180,6 +229,24 @@ const applyFilters = () => {
             :placeholder="'max. ' + filterMetadata.area.max.toLocaleString()"
             :min="filterMetadata.area.min"
             :max="filterMetadata.area.max"
+          />
+        </div>
+      </div>
+      <div>
+        <strong>Bezirk</strong>
+        <div class="flex items-center gap-2">
+          <TextFieldWithAutocomplete
+            v-model="activeDistricts"
+            :suggestions="districtSuggestions"
+          />
+        </div>
+      </div>
+      <div>
+        <strong>Tags</strong>
+        <div class="flex items-center gap-2">
+          <TextFieldWithAutocomplete
+            v-model="activeTags"
+            :suggestions="tagsSuggestions"
           />
         </div>
       </div>
