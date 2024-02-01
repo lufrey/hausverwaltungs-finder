@@ -13,7 +13,7 @@ export const tags = {
   stellplatz: "Stellplatz",
   erstbezug: "Erstbezug",
   dachgeschoss: "Dachgeschoss",
-  familie: "Für Familie",
+  familie: "Familie",
 };
 
 // this is necessary for the type to be inferred correctly
