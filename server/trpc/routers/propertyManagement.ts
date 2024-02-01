@@ -86,6 +86,8 @@ export const propertyManagementRouter = router({
           .filter((tag) => !!tags[tag])
           .map((tag) => ({ id: tag, name: tags[tag] }));
 
+        debugger;
+
         tagsToInsert.length &&
           (await db
             .insert(tag)
@@ -117,14 +119,18 @@ export const propertyManagementRouter = router({
             flats.map(async (f) => {
               let image: Buffer | null = null;
               if (f.imageUrl) {
-                const imageBuffer = await (
-                  await fetch(f.imageUrl)
-                ).arrayBuffer();
-                image = await sharp(imageBuffer)
-                  .resize(200, 200, {
-                    fit: "cover",
-                  })
-                  .toBuffer();
+                try {
+                  const imageBuffer = await (
+                    await fetch(f.imageUrl)
+                  ).arrayBuffer();
+                  image = await sharp(imageBuffer)
+                    .resize(200, 200, {
+                      fit: "cover",
+                    })
+                    .toBuffer();
+                } catch (e) {
+                  console.error(e);
+                }
               }
 
               return {

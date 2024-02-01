@@ -61,62 +61,42 @@ export const deutschewohnen: PropertyManagement = {
       body: JSON.stringify(postBody),
     }).then((r) => r.json());
 
-    try {
-      const parsedRes = z.array(z.any()).parse(res);
-      const listings = parsedRes
-        .map((listing) => {
-          const result = listingSchema.safeParse(listing);
-          if (result.success) {
-            return result.data;
-          }
-          return false;
-        })
-        .filter(Boolean);
-      if (parsedRes.length !== listings.length) {
-        console.log(
-          `parsed ${listings.length} of ${parsedRes.length} listings`,
+    if (!Array.isArray(res)) return [];
+    const listings = res
+      .map((listing) => {
+        const result = listingSchema.safeParse(listing);
+        return result.success && result.data;
+      })
+      .filter(Boolean);
+
+    return await Promise.all(
+      listings.map(async (listing) => {
+        const id = await hashString(listing.id);
+        const cleanedAddress = await getAddress(
+          id,
+          `${listing.address.street} ${listing.address.houseNumber}, ${listing.address.zip} ${listing.address.city}`,
         );
-      }
+        if (!cleanedAddress) return false;
 
-      return await Promise.all(
-        listings.map(async (listing) => {
-          const id = await hashString(listing.id);
-          const cleanedAddress = await getAddress(
-            id,
-            `${listing.address.street} ${listing.address.houseNumber}, ${listing.address.zip} ${listing.address.city}`,
-          );
-          if (cleanedAddress === null) {
-            return false;
-          }
+        const tags = await getApartmentTags(id, listing.title);
 
-          const tags = await getApartmentTags(id, listing.title);
-
-          console.log("Tags für Wohnung: ", ...tags);
-
-          const returnFlat = {
-            address: cleanedAddress,
-            title: listing.title,
-            id,
-            roomCount: listing.rooms,
-            coldRentPrice: listing.price,
-            warmRentPrice: null,
-            usableArea: listing.area,
-            tags,
-            url: `https://www.deutsche-wohnen.com/expose/object/${listing.id}`,
-            imageUrl: listing.images[0]?.filePath
-              ? `https://immo-api.deutsche-wohnen.com${listing.images[0]?.filePath}`
-              : null,
-          } satisfies Flat;
-          const result = flatSchema.safeParse(returnFlat);
-          if (result.success) {
-            return result.data;
-          }
-          return false;
-        }),
-      );
-    } catch (e) {
-      console.log("error parsing json", e);
-      return [];
-    }
+        const returnFlat = {
+          address: cleanedAddress,
+          title: listing.title,
+          id,
+          roomCount: listing.rooms,
+          coldRentPrice: listing.price,
+          warmRentPrice: null,
+          usableArea: listing.area,
+          tags,
+          url: `https://www.deutsche-wohnen.com/expose/object/${listing.id}`,
+          imageUrl: listing.images[0]?.filePath
+            ? `https://immo-api.deutsche-wohnen.com${listing.images[0]?.filePath}`
+            : null,
+        } satisfies Flat;
+        const result = flatSchema.safeParse(returnFlat);
+        return result.success && result.data;
+      }),
+    );
   },
 };

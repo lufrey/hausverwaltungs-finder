@@ -6,6 +6,7 @@ import { stadtundland } from "./propertyManagements/stadtundland";
 import { gewobag } from "./propertyManagements/gewobag";
 import { deutschewohnen } from "./propertyManagements/deutschewohnen";
 import { berlinovo } from "./propertyManagements/berlinovo";
+import { allod } from "./propertyManagements/allod";
 
 export const flatSchema = z.object({
   id: z.string(),
@@ -38,4 +39,5 @@ export const propertyManagementList = [
   gewobag,
   deutschewohnen,
   berlinovo,
+  allod,
 ] satisfies Readonly<PropertyManagement[]>;

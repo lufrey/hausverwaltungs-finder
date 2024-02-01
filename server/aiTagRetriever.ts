@@ -37,7 +37,7 @@ const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
 export const getApartmentTags = async (
   flatId: string,
   apartmentTitle: string,
-): Promise<Tags> => {
+) => {
   const existingFlat = await db.query.flat.findFirst({
     where: eq(flat.id, flatId),
   });
@@ -61,7 +61,7 @@ export const getApartmentTags = async (
     thread: {
       messages: [{ role: "user", content: apartmentTitle }],
     },
-    instructions: `Du bist Mitarbeiter eines Wohnungsportals. Deine Aufgabe: Dir werden Wohnungstitel gezeigt, du musst passende Tags aus einer vordefinierten Liste raussuchen, nach denen die Wohnung kategorisiert wird. Bediene dich NUR an den erlaubten Tags!  Ordne nur Tags zu wenn es aus dem Titel direkt hervorgeht!
+    instructions: `Du bist Mitarbeiter eines Wohnungsportals. Deine Aufgabe: Dir werden Wohnungstitel gezeigt, du musst passende Tags aus einer vordefinierten Liste raussuchen, nach denen die Wohnung kategorisiert wird. Bediene dich NUR an den erlaubten Tags! Ordne nur Tags zu wenn es aus dem Titel direkt hervorgeht, erfinde nichts neues dazu!
 
     Beispiel:
     User: Wohnberechtigungsschein mit besonderen Wohnbedarf erforderlich!
@@ -77,10 +77,8 @@ export const getApartmentTags = async (
     Ausgabe: keine
     
     Gebe die Tags, getrennt mit einem Komma aus.
-    ${possibleTags}`,
+    Das hier sind die möglichen Tags, VERWENDE NUR DIESE: ${possibleTags}`,
   });
-
-  // console.log("ok so far");
 
   // By default, a Run goes into the queued state. You can periodically retrieve the Run to check on its status to see if it has moved to completed.
   return new Promise<Tags>((resolve) => {
@@ -89,7 +87,7 @@ export const getApartmentTags = async (
         run.thread_id,
         run.id,
       );
-      // console.log(fetchedRun.status);
+      console.log(fetchedRun.status);
       if (fetchedRun.status === "completed") {
         // console.log(fetchedRun);
         clearInterval(intervalId);
@@ -140,6 +138,6 @@ export const getApartmentTags = async (
 
         resolve(parsedTags);
       }
-    }, 200);
+    }, 400);
   });
 };
