@@ -13,6 +13,7 @@ import { getApartmentTags } from "~/server/aiTagRetriever";
 export const stadtundland: PropertyManagement = {
   slug: "stadtundland",
   name: "Stadt und Land",
+  website: "https://www.stadtundland.de/",
   getFlats: async (browser: Browser) => {
     const url = "https://www.stadtundland.de/immobiliensuche.php";
     const page = await browser.newPage();

@@ -37,6 +37,7 @@ const listingSchema = z.object({
 export const deutschewohnen: PropertyManagement = {
   slug: "deutschewohnen",
   name: "Deutsche Wohnen SE",
+  website: "https://www.deutsche-wohnen.com/",
   getFlats: async () => {
     const url = "https://immo-api.deutsche-wohnen.com/estate/findByFilter";
 

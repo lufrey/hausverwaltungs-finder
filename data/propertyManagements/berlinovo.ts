@@ -12,7 +12,7 @@ import { getApartmentTags } from "~/server/aiTagRetriever";
 export const berlinovo: PropertyManagement = {
   slug: "berlinovo",
   name: "berlinovo",
-
+  website: "https://www.berlinovo.de/",
   getFlats: async (browser: Browser) => {
     const url =
       "https://www.berlinovo.de/de/wohnungen/suche?w%5B0%5D=wohungen_region%3A6";

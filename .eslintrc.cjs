@@ -49,6 +49,7 @@ module.exports = {
     "vue/no-multiple-template-root": "off",
     curly: "off",
     "import/named": "off",
+    // "vue/multiline-html-element-content-newline": "off",
     // "@typescript-eslint/no-misused-promises": [
     //   2,
     //   {
