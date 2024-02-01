@@ -2,10 +2,7 @@ import { resolve } from "node:path";
 import { defineNuxtConfig } from "nuxt/config";
 
 import { env } from "./env";
-export const deploymentUrl =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:3000"
-    : "https://wohnungsmarktberlin.de";
+export const deploymentUrl = env.DEPLOYMENT_URL;
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -19,6 +16,18 @@ export default defineNuxtConfig({
           defer: true,
         },
       ],
+      meta: [
+        {
+          name: "robots",
+          content:
+            deploymentUrl === "https://wohnungsmarktberlin.de"
+              ? "index, follow"
+              : "noindex, nofollow",
+        },
+      ],
+      htmlAttrs: {
+        lang: "de",
+      },
     },
   },
   devtools: {
@@ -92,11 +101,7 @@ export default defineNuxtConfig({
   image: {
     // this default is not really used, because it only works with NuxtPicture
     format: ["avif", "webp", "jpg"],
-    domains: [
-      "localhost:3000",
-      "apartifind.lksfr.de",
-      "wohnungsmarktberlin.de",
-    ],
+    domains: [deploymentUrl],
     ipx: {
       http: {
         maxAge: 60 * 60 * 24 * 30,

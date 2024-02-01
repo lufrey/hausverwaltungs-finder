@@ -71,10 +71,10 @@ const sections = [
     >
       <div class="grid w-full gap-6 md:grid-cols-3 lg:grid-cols-4">
         <div class="relative hidden lg:block">
-          <NuxtImg
+          <LazyNuxtImg
             src="/3d-rendering-abstract-building.png"
-            alt="Krasse Graphik"
-            class="md:absolute md:-bottom-[100px] lg:h-72"
+            alt="Verspielte Illustration eines Wohnhauses"
+            class="md:absolute md:-bottom-[100px] lg:h-80"
             format="avif,webp"
           />
         </div>

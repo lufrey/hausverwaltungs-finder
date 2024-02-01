@@ -51,15 +51,7 @@ useHead({
       property: "twitter:card",
       content: "summary_large_image",
     },
-    {
-      hid: "lang",
-      property: "lang",
-      content: "de",
-    },
   ],
-  htmlAttrs: {
-    lang: "de",
-  },
   bodyAttrs: {
     class: "antialiased min-h-dvh h-1",
   },
