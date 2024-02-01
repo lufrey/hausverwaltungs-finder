@@ -64,7 +64,18 @@ export const propertyManagementRouter = router({
           propertyManagements.map(async ({ getFlats, slug }) => {
             let data = null;
             try {
-              data = await getFlats(browser);
+              // get number of existing (non deleted) flats
+              const existingFlatCount = await db
+                .select()
+                .from(flat)
+                .where(
+                  and(
+                    isNull(flat.deleted),
+                    eq(flat.propertyManagementId, slug),
+                  ),
+                )
+                .execute();
+              data = await getFlats(browser, existingFlatCount.length + 15);
             } catch (e) {
               console.error(e);
               return false;
