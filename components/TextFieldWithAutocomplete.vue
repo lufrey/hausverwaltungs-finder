@@ -17,13 +17,15 @@
           @blur="handleBlur"
         />
         <div
-          v-for="(value, key) in nonNullModelValue"
+          v-for="key in props.modelValue"
           :key="key"
           title="Tag entfernen"
-          class="flex h-5 w-full min-w-fit max-w-fit cursor-pointer flex-row items-center justify-end rounded-[0.2rem] bg-gray-300 px-2 py-3 text-s"
-          @click="removeItem(key.toString())"
+          class="bubble flex h-5 w-full min-w-fit max-w-fit cursor-pointer flex-row items-center justify-end rounded-[0.2rem] bg-gray-300 px-2 py-3 text-s"
+          @click="removeItem(key)"
         >
-          <span class="whitespace-nowrap">{{ value }}</span>
+          <span class="whitespace-nowrap">{{
+            props.suggestions.find((item) => item.id === key)?.title
+          }}</span>
           <img
             src="/cancel_remove.svg"
             alt="entfernen"
@@ -54,14 +56,8 @@ type Suggestion = { id: string; title: string };
 
 const props = defineProps<{
   suggestions: Suggestion[];
-  modelValue: Record<string, string | null>;
+  modelValue: string[];
 }>();
-
-const nonNullModelValue = computed(() =>
-  Object.fromEntries(
-    Object.entries(props.modelValue).filter(([, value]) => value !== null),
-  ),
-);
 
 const $emit = defineEmits(["update:modelValue"]);
 
@@ -84,8 +80,10 @@ const handleBlur = () => {
 };
 
 const filteredSuggestions = computed(() => {
-  return props.suggestions.filter((suggestion: Suggestion) =>
-    suggestion.title.toLowerCase().includes(inputValue.value.toLowerCase()),
+  return props.suggestions.filter(
+    (suggestion: Suggestion) =>
+      suggestion.title.toLowerCase().includes(inputValue.value.toLowerCase()) &&
+      !props.modelValue.includes(suggestion.id),
   );
 });
 
@@ -114,21 +112,16 @@ const selectHighlighted = () => {
 };
 
 const selectSuggestion = (id: Suggestion["id"]) => {
-  const selectedSuggestion = props.suggestions.find(
-    (suggestion) => suggestion.id === id,
-  );
-  if (selectedSuggestion) {
-    $emit("update:modelValue", {
-      ...props.modelValue,
-      [id]: selectedSuggestion.title,
-    });
-    inputValue.value = "";
-    highlightedIndex.value = -1;
-  }
+  $emit("update:modelValue", [...new Set([...props.modelValue, id])]);
+
+  inputValue.value = "";
+  highlightedIndex.value = -1;
 };
 
 const removeItem = (id: string) => {
-  const { [id]: removed, ...rest } = props.modelValue;
-  $emit("update:modelValue", rest);
+  console.log("removing", props.modelValue, id);
+  $emit("update:modelValue", [
+    ...props.modelValue.filter((value) => value !== id),
+  ]);
 };
 </script>

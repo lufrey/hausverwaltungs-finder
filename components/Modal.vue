@@ -8,7 +8,8 @@ const handleClickOutside = (event: MouseEvent) => {
   if (
     modalElement.value &&
     event.target instanceof Element &&
-    !modalElement?.value.contains(event.target)
+    !modalElement?.value.contains(event.target) &&
+    !event.target.closest(".bubble")
   ) {
     props.onClose();
   }

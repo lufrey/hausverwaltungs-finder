@@ -11,15 +11,13 @@ const modalPreferences = reactive({
   roomsMax: null,
   areaMin: null,
   areaMax: null,
+  tags: [] as string[],
+  districts: [] as string[],
 } as Record<
   "priceMin" | "priceMax" | "roomsMin" | "roomsMax" | "areaMin" | "areaMax",
   number | null
->);
-
-const activeTags = reactive({} as Record<keyof typeof tags, string | null>);
-const activeDistricts = reactive(
-  {} as Record<keyof typeof berlinDistricts, string | null>,
-);
+> &
+  Record<"tags" | "districts", string[]>);
 
 interface Metadata {
   [key: string]: {
@@ -41,15 +39,9 @@ watch(urlState, () => {
 
 const syncStateWithUrl = () => {
   for (const key of typedObjectKeys(modalPreferences)) {
-    modalPreferences[key] = urlState.value[key]?.[0] ?? null;
-  }
-  for (const key of typedObjectKeys(tags)) {
-    activeTags[key] = urlState.value.tags?.includes(key) ? tags[key] : null;
-  }
-  for (const key of typedObjectKeys(berlinDistricts)) {
-    activeDistricts[key] = urlState.value.districts?.includes(key)
-      ? berlinDistricts[key].name
-      : null;
+    if (key === "tags" || key === "districts")
+      modalPreferences[key] = urlState.value[key] ?? [];
+    else modalPreferences[key] = urlState.value[key]?.[0] ?? null;
   }
 };
 
@@ -89,6 +81,24 @@ const uiFilters = computed(() => {
   const filters: any[] = [];
 
   for (const [key, value] of Object.entries(modalPreferences)) {
+    if (key === "tags") {
+      for (const tag of value) {
+        filters.push({ filter: tag, id: key, title: tags[tag] });
+      }
+      continue;
+    }
+
+    if (key === "districts") {
+      for (const district of value) {
+        filters.push({
+          filter: district,
+          id: key,
+          title: berlinDistricts[district].name,
+        });
+      }
+      continue;
+    }
+
     if (value) {
       const filter = createFilter(
         value,
@@ -96,18 +106,6 @@ const uiFilters = computed(() => {
         getLimitByKeyName(key),
       );
       filters.push({ filter, id: key });
-    }
-  }
-
-  for (const [key, value] of Object.entries(activeTags)) {
-    if (value) {
-      filters.push({ filter: value, id: key });
-    }
-  }
-
-  for (const [key, value] of Object.entries(activeDistricts)) {
-    if (value) {
-      filters.push({ filter: value, id: key });
     }
   }
 
@@ -121,21 +119,19 @@ const applyFilters = () => {
     {};
 
   for (const [key, value] of Object.entries(modalPreferences)) {
+    if (Array.isArray(value)) {
+      query[key] = value.length ? value : null;
+      continue;
+    }
+
     if (typeof value === "number" && filterMetadata[key]) {
       query[key] = Math.min(
         Math.max(value, filterMetadata[key].min),
         filterMetadata[key].max,
       );
     }
-    query[key] = value ? [value] : null;
-  }
 
-  for (const [key, value] of Object.entries(activeTags)) {
-    query[key] = value ? [value] : null;
-  }
-
-  for (const [key, value] of Object.entries(activeDistricts)) {
-    query[key] = value ? [value] : null;
+    query[key] = value ? [value].flat() : null;
   }
 
   updateQueryState(query);
@@ -236,7 +232,7 @@ const districtSuggestions = Object.entries(berlinDistricts).map(
         <strong>Bezirk</strong>
         <div class="flex items-center gap-2">
           <TextFieldWithAutocomplete
-            v-model="activeDistricts"
+            v-model="modalPreferences.districts"
             :suggestions="districtSuggestions"
           />
         </div>
@@ -245,7 +241,7 @@ const districtSuggestions = Object.entries(berlinDistricts).map(
         <strong>Tags</strong>
         <div class="flex items-center gap-2">
           <TextFieldWithAutocomplete
-            v-model="activeTags"
+            v-model="modalPreferences.tags"
             :suggestions="tagsSuggestions"
           />
         </div>
@@ -261,12 +257,24 @@ const districtSuggestions = Object.entries(berlinDistricts).map(
       <div
         v-for="filterObj in uiFilters"
         :key="filterObj.filter"
-        class="text-nowrap rounded-full border-accent bg-secondary px-4 py-2"
+        class="flex items-center gap-2 text-nowrap rounded-full border-accent bg-secondary px-4 py-2"
       >
-        {{ filterObj.filter }}
+        {{ filterObj.title ?? filterObj.filter }}
         <span
-          class="ml-2 cursor-pointer text-accent"
-          @click="updateQueryState({ [filterObj.id]: undefined })"
+          class="cursor-pointer text-accent"
+          @click="
+            () => {
+              if (urlState[filterObj.id].length > 1) {
+                updateQueryState({
+                  [filterObj.id]: urlState[filterObj.id].filter(
+                    (item) => item !== filterObj.filter,
+                  ),
+                });
+                return;
+              }
+              updateQueryState({ [filterObj.id]: undefined });
+            }
+          "
           >x</span
         >
       </div>
