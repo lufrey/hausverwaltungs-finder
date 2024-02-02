@@ -27,6 +27,13 @@ interface Metadata {
   };
 }
 
+const activePrefsCount = computed(() => {
+  return Object.keys(urlState.value).filter(
+    (key) =>
+      modalPreferences[key as keyof typeof modalPreferences] !== undefined,
+  ).length;
+});
+
 const filterMetadata: Metadata = {
   price: { min: 100, max: 10000, unit: "€" },
   rooms: { min: 1, max: 10, unit: "Zimmer" },
@@ -253,7 +260,10 @@ const districtSuggestions = Object.entries(berlinDistricts).map(
         Anwenden
       </button>
     </Modal>
-    <div class="scrollbar-hide flex gap-2 overflow-y-scroll whitespace-nowrap">
+    <div
+      v-if="activePrefsCount"
+      class="scrollbar-hide flex gap-2 overflow-y-scroll whitespace-nowrap"
+    >
       <div
         v-for="filterObj in uiFilters"
         :key="filterObj.filter"
