@@ -1,19 +1,26 @@
 import { promises as fs, constants } from "fs";
+import { simpleImageCache } from "~/server/image-cache";
 import {
   mapPreviewImagePath,
   updateMapPreview,
 } from "~/server/updateMapPreview";
 
-let cachedContent: null | Buffer = null;
+// make sure the map preview image exists
+// this will probably make the devserver fail, just start it again
+try {
+  await fs.access(mapPreviewImagePath, constants.F_OK);
+} catch (error) {
+  updateMapPreview();
+}
+const cache = simpleImageCache(() => fs.readFile(mapPreviewImagePath));
 
-export default defineEventHandler(async () => {
-  if (cachedContent) return cachedContent;
+export default defineEventHandler(async (e) => {
+  const query = getQuery(e);
 
-  try {
-    await fs.access(mapPreviewImagePath, constants.F_OK);
-  } catch (error) {
-    await updateMapPreview();
-  }
-  cachedContent = await fs.readFile(mapPreviewImagePath);
-  return cachedContent;
+  const { format, content } = await cache(query);
+  setResponseHeaders(e, {
+    "Cache-Control": "public, max-age=14400, s-maxage=14400",
+    "Content-Type": `image/${format}`,
+  });
+  return content;
 });

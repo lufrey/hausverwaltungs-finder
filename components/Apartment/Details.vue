@@ -45,12 +45,12 @@ const shownPrice = computed(() => props.warmRentPrice ?? props.coldRentPrice);
           :to="url"
           target="_blank"
         >
-          <NuxtImg
+          <CustomImageLoader
             :src="img"
             :alt="`Vorschaubild ${title}`"
             class="h-16 w-16 rounded-lg"
-            width="64"
-            height="64"
+            :width="64"
+            :height="64"
             format="avif,webp"
           />
         </NuxtLink>
@@ -135,10 +135,12 @@ const shownPrice = computed(() => props.warmRentPrice ?? props.coldRentPrice);
         target="_blank"
         class="shrink-0"
       >
-        <NuxtImg
+        <CustomImageLoader
           :src="img"
           :alt="`Vorschaubild ${title}`"
           class="h-16 w-16 rounded-lg"
+          :width="64"
+          :height="64"
           format="avif,webp"
         />
       </NuxtLink>

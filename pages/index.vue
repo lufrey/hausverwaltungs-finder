@@ -69,12 +69,13 @@ const origin = useRequestURL().origin;
       class="map_preview relative mt-8 aspect-square overflow-hidden rounded-3xl border border-black md:mt-0"
       title="Zur Karte"
     >
-      <NuxtImg
-        :src="`${origin}/api/image/map-preview?v=${mapPreviewHash}`"
+      <CustomImageLoader
+        :src="`${origin}/api/image/map-preview`"
         alt="Vorschau der Karte"
         class="h-full w-full object-cover"
-        width="512"
-        height="512"
+        :v="mapPreviewHash"
+        :width="512"
+        :height="512"
         format="avif,webp"
       />
       <IconZoomIn class="absolute right-4 top-4" />

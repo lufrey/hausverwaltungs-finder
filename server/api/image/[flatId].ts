@@ -1,4 +1,7 @@
 import { db } from "~/db/db";
+import { simpleImageCache } from "~/server/image-cache";
+
+const imagesCache = new Map<string, ReturnType<typeof simpleImageCache>>();
 
 export default defineEventHandler(async (e) => {
   const flatId = getRouterParam(e, "flatId");
@@ -6,17 +9,33 @@ export default defineEventHandler(async (e) => {
   if (!flatId) {
     return null;
   }
-  try {
-    const x = await db.query.flat.findFirst({
-      where: (f, { eq }) => eq(f.id, flatId),
-      columns: { image: true, id: true },
-    });
-    e.headers.set("Cache-Control", "public, max-age=86400");
-    // apply headers
-    e.respondWith(new Response(x?.image, { status: 200, headers: e.headers }));
-  } catch (err) {
-    console.error(err);
+
+  // check if imagesCache has the flatId
+  if (!imagesCache.has(flatId)) {
+    imagesCache.set(
+      flatId,
+      simpleImageCache(() => {
+        return db.query.flat
+          .findFirst({
+            where: (f, { eq }) => eq(f.id, flatId),
+            columns: { image: true },
+          })
+          .then((res) => res!.image!);
+      }, 2),
+    );
   }
 
-  return null;
+  const cache = imagesCache.get(flatId)!;
+  const query = getQuery(e);
+  const { format, content } = await cache({
+    w: 64,
+    h: 64,
+    ...query,
+  });
+  setResponseHeaders(e, {
+    "Cache-Control": "public, max-age=31536000, immutable",
+    "Content-Type": `image/${format}`,
+  });
+
+  return content;
 });
