@@ -170,24 +170,26 @@ const sortOrders = computed(() => {
       <h2 class="mb-4 text-xl">
         {{ countText }}
       </h2>
-      <ApartmentDetails
-        v-for="flat in flats?.data"
-        :id="flat.id"
-        :key="flat.id"
-        :room-count="flat.roomCount"
-        :title="flat.title"
-        :address="flat.address!"
-        :cold-rent-price="flat.coldRentPrice"
-        :warm-rent-price="flat.warmRentPrice"
-        :tags="flat.tags"
-        :favorite="false"
-        :usable-area="flat.usableArea"
-        :image-src="flat.hasImage ? `/api/image/${flat.id}` : null"
-        :url="flat.url"
-        :first-seen="new Date(flat.firstSeen)"
-      />
+      <div class="flex flex-wrap gap-4">
+        <ApartmentDetails
+          v-for="flat in flats?.data"
+          :id="flat.id"
+          :key="flat.id"
+          :room-count="flat.roomCount"
+          :title="flat.title"
+          :address="flat.address!"
+          :cold-rent-price="flat.coldRentPrice"
+          :warm-rent-price="flat.warmRentPrice"
+          :tags="flat.tags"
+          :favorite="false"
+          :usable-area="flat.usableArea"
+          :image-src="flat.hasImage ? `/api/image/${flat.id}` : null"
+          :url="flat.url"
+          :first-seen="new Date(flat.firstSeen)"
+        />
+      </div>
     </div>
-    <div class="w-full rounded-xl bg-background p-4">
+    <div class="mt-8 w-full rounded-xl bg-background p-4">
       <Pagination
         :total-elements-count="flats?.totalElementsCount ?? 0"
         :filtered-elements-count="flats?.filteredElementsCount ?? 0"

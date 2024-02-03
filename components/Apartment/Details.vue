@@ -123,44 +123,59 @@ const shownPrice = computed(() => props.warmRentPrice ?? props.coldRentPrice);
       <ApartmentFavoriteButton :id="id" />
     </td>
   </tr>
-  <!-- TODO: More info on mobile -->
+
+  <!---------- MOBILE ------------>
   <div
     v-else
-    class="items-top mb-4 flex items-center gap-x-4"
+    class="items-top flex min-w-80 flex-1 flex-col gap-y-4 rounded-md bg-slate-200 p-3"
   >
-    <div class="aspect-square h-full shrink-0">
+    <div class="flex gap-x-4">
       <NuxtLink
         :to="url"
         target="_blank"
+        class="shrink-0"
       >
         <NuxtImg
           :src="img"
           :alt="`Vorschaubild ${title}`"
           class="h-16 w-16 rounded-lg"
-          width="64"
-          height="64"
           format="avif,webp"
         />
       </NuxtLink>
-    </div>
-    <div class="flex flex-col gap-1 overflow-hidden">
-      <NuxtLink
-        :to="url"
-        target="_blank"
-      >
-        <h3
-          class="overflow-hidden text-ellipsis whitespace-nowrap text-l leading-5"
+      <div class="flex flex-col justify-between">
+        <NuxtLink
+          :to="url"
+          target="_blank"
         >
-          {{ title }}
-        </h3>
-      </NuxtLink>
-      <h4 class="max-w-40 overflow-hidden text-ellipsis text-s font-light">
-        {{ address.street }} {{ address.streetNumber }} -
-        <ApartmentDistrict
-          class="hover:underline"
-          :zip-code="address.postalCode"
-        />
-      </h4>
+          <h3 class="line-clamp-2 text-ellipsis text-m leading-5">
+            {{ title }}
+          </h3>
+        </NuxtLink>
+        <h4 class="line-clamp-1 text-ellipsis text-s font-light">
+          {{ address.street }} {{ address.streetNumber }} -
+          <ApartmentDistrict
+            class="hover:underline"
+            :zip-code="address.postalCode"
+          />
+        </h4>
+      </div>
+    </div>
+    <div
+      class="flex justify-between border-y border-y-black border-opacity-30 py-4 text-m font-light"
+    >
+      <span v-html="formatPrice(shownPrice)"></span>
+      <span class="opacity-40">|</span>
+      <span v-if="roomCount && roomCount > 1">{{ roomCount }} Zimmer</span>
+      <span
+        v-if="roomCount && roomCount > 1"
+        class="opacity-40"
+        >|</span
+      >
+      <span v-html="formatArea(usableArea)"></span>
+      <span class="opacity-40">|</span>
+      <ApartmentFavoriteButton :id="id" />
+    </div>
+    <div class="flex justify-between overflow-hidden">
       <div class="tags-container flex flex-row gap-x-1">
         <ApartmentTag
           v-for="tag in tags"
@@ -170,17 +185,13 @@ const shownPrice = computed(() => props.warmRentPrice ?? props.coldRentPrice);
         >
         </ApartmentTag>
       </div>
-    </div>
-    <div class="flex shrink-0 flex-grow flex-col items-end gap-1">
-      <span
-        class="price block text-l font-light leading-5"
-        v-html="formatPrice(shownPrice)"
-      ></span>
-      <span
-        class="block text-s font-light"
-        v-html="formatArea(usableArea)"
-      ></span>
-      <ApartmentFavoriteButton :id="id" />
+      <NuxtLink
+        :to="url"
+        target="_blank"
+        class="text-s underline"
+      >
+        Zur Wohnung 🡥
+      </NuxtLink>
     </div>
   </div>
 </template>
