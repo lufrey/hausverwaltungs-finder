@@ -31,7 +31,7 @@ const propertyManagementSchema = z.object({
 });
 
 export type PropertyManagement = z.infer<typeof propertyManagementSchema> & {
-  getFlats: (browser: Browser) => Promise<(Flat | false)[]>;
+  getFlats: (browser: Browser, limit?: number) => Promise<(Flat | false)[]>;
 };
 
 export const propertyManagementList = [

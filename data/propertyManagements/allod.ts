@@ -5,7 +5,6 @@ import {
   type PropertyManagement,
 } from "../propertyManagementList";
 import { getAddress } from "../address";
-import type { Tags } from "../tags";
 import { hashString } from "~/server/util";
 import { getApartmentTags } from "~/server/aiTagRetriever";
 
@@ -41,7 +40,7 @@ export const allod: PropertyManagement = {
   slug: "allod",
   name: "Allod Immobilien",
   website: "https://www.allod.de/Immobilien",
-  getFlats: async () => {
+  getFlats: async (_, limit) => {
     await new Promise((resolve) => setTimeout(resolve, 10));
 
     const url = "https://papapi.mediac2.de/api/Publications?portalId=10035";
@@ -57,6 +56,7 @@ export const allod: PropertyManagement = {
     if (!Array.isArray(res)) return [];
 
     const listings = res
+      .slice(0, limit)
       .map((listing) => {
         const parsedListing = listingSchema.safeParse(listing);
         return parsedListing.success && parsedListing.data;
