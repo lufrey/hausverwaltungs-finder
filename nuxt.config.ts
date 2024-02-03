@@ -15,6 +15,11 @@ export default defineNuxtConfig({
           src: "/lordicon_lib.js",
           defer: true,
         },
+        {
+          defer: true,
+          "data-domain": new URL(deploymentUrl).hostname,
+          src: "https://plausible.lukasfrey.com/js/script.js",
+        },
       ],
       meta: [
         {
