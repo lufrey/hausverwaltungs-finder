@@ -35,7 +35,7 @@ const updatePagination = (page: number, pageSize: number, replace = true) => {
   );
 };
 
-if (props.currentPage > maxPage.value) {
+if (props.currentPage > maxPage.value && maxPage.value > 0) {
   updatePagination(maxPage.value, props.pageSize);
 }
 
