@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
 import { and, isNotNull, isNull } from "drizzle-orm";
+import { mapPreviewCache } from "./api/image/map-preview";
+import { createCaller } from "./trpc/routers";
 import { db } from "~/db/db";
 import { flat } from "~/db/schema";
 import { env } from "~/env";
@@ -48,5 +50,14 @@ export async function updateMapPreview() {
   const image = Buffer.from(buffer);
 
   fs.writeFileSync(mapPreviewImagePath, image);
+
+  const caller = createCaller({
+    user: "admin",
+  });
+
+  const previewHash = await caller.flat.getMapPreviewHash();
+  mapPreviewCache({ v: previewHash, w: 512, h: 512 });
+  mapPreviewCache({ v: previewHash, w: 1024, h: 1024 });
+
   return true;
 }

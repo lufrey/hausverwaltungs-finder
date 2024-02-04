@@ -12,12 +12,14 @@ try {
 } catch (error) {
   updateMapPreview();
 }
-const cache = simpleImageCache(() => fs.readFile(mapPreviewImagePath));
+export const mapPreviewCache = simpleImageCache(() =>
+  fs.readFile(mapPreviewImagePath),
+);
 
 export default defineEventHandler(async (e) => {
   const query = getQuery(e);
 
-  const { format, content } = await cache(query);
+  const { format, content } = await mapPreviewCache(query);
   setResponseHeaders(e, {
     "Cache-Control": "public, max-age=14400, s-maxage=14400",
     "Content-Type": `image/${format}`,
