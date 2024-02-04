@@ -79,7 +79,14 @@ export default defineNuxtConfig({
     ],
     "@nuxt/image",
     "@hebilicious/authjs-nuxt",
+    "@nuxtjs/sitemap",
   ],
+  site: {
+    url: deploymentUrl,
+  },
+  sitemap: {
+    exclude: ["/admin/**"],
+  },
   authJs: {
     guestRedirectTo: "/api/auth/signin",
     authenticatedRedirectTo: "/admin/dashboard",
