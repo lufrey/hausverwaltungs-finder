@@ -187,13 +187,12 @@ const shownPrice = computed(() => props.warmRentPrice ?? props.coldRentPrice);
         >
         </ApartmentTag>
       </div>
-      <NuxtLink
+      <StyledNuxtLink
         :to="url"
-        target="_blank"
-        class="text-s underline"
+        class="text-s"
       >
-        Zur Wohnung 🡥
-      </NuxtLink>
+        Zur Wohnung
+      </StyledNuxtLink>
     </div>
   </div>
 </template>

@@ -22,18 +22,20 @@ const consent = useConsent();
     </p>
     <p>
       Unsere Webseite wird auf Servern von
-      <a
-        href="https://docs.hetzner.com/de/general/general-terms-and-conditions/data-privacy-faq/"
+      <StyledNuxtLink
+        to="https://docs.hetzner.com/de/general/general-terms-and-conditions/data-privacy-faq/"
         target="_blank"
-        >Hetzner Cloud</a
       >
+        Hetzner Cloud
+      </StyledNuxtLink>
       gehostet, die sich innerhalb der Europäischen Union befinden. Zudem nutzen
       wir
-      <a
-        href="https://www.cloudflare.com/de-de/privacypolicy/"
+      <StyledNuxtLink
+        to="https://www.cloudflare.com/de-de/privacypolicy/"
         target="_blank"
-        >Cloudflare</a
       >
+        Cloudflare
+      </StyledNuxtLink>
       als DNS-Dienst und Content Delivery Network (CDN). Obwohl durch diese
       Services keine personenbezogenen Daten unserer Webseitenbesucher direkt
       durch uns erhoben werden, können diese Dienste typische Informationen wie
@@ -47,11 +49,9 @@ const consent = useConsent();
       einer ansprechenden Darstellung unserer Online-Angebote und an leicht
       auffindbaren Orten der von uns auf der Webseite angegebenen Adressen. Dies
       stellt ein berechtigtes Interesse im Sinne von
-      <a
-        href="https://dsgvo-gesetz.de/art-6-dsgvo/"
-        target="_blank"
-        >Art.6 Abs.1 lit. f DSGVO</a
-      >
+      <StyledNuxtLink to="https://dsgvo-gesetz.de/art-6-dsgvo/">
+        Art.6 Abs.1 lit. f DSGVO
+      </StyledNuxtLink>
       dar. Die Nutzung von Google Maps erfolgt erst nach ausdrücklicher
       Einwilligung durch den Nutzer.
     </p>
@@ -94,13 +94,6 @@ const consent = useConsent();
 </template>
 
 <style scoped>
-a {
-  cursor: pointer;
-  text-decoration: underline;
-}
-a[target="_blank"]:after {
-  content: " 🡥";
-}
 p {
   margin-bottom: 1rem;
   margin-top: 0.5rem;

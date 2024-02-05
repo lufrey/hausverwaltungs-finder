@@ -49,13 +49,13 @@ const { activeFlatCount, allFlatsCount } = stats || initialStats;
             v-for="propertyManagement in propertyManagements.data.value"
             :key="propertyManagement.slug"
           >
-            <NuxtLink
+            <StyledNuxtLink
               v-if="propertyManagement.website"
               :to="propertyManagement.website"
               target="_blank"
             >
               {{ propertyManagement.name }}
-            </NuxtLink>
+            </StyledNuxtLink>
             <span v-else>{{ propertyManagement.name }}</span>
           </li>
         </ul>
@@ -107,9 +107,9 @@ const { activeFlatCount, allFlatsCount } = stats || initialStats;
 </template>
 
 <style scoped>
-a {
+/* a {
   text-decoration: underline;
-}
+} */
 p {
   margin-bottom: 1rem;
   margin-top: 0.5rem;
