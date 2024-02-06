@@ -27,8 +27,8 @@ const img = getFlatImageUrl({
 </script>
 
 <template>
-  <div class="flex gap-2">
-    <div class="aspect-square h-full shrink-0">
+  <div class="flex gap-3">
+    <div class="h-full shrink-0">
       <NuxtLink
         :to="url"
         target="_blank"
