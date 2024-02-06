@@ -45,7 +45,7 @@ const tableHeaders = computed(
         class: "w-[30%] rounded-l-xl px-4 text-left",
       },
       price: {
-        title: "Preis (K)",
+        title: "Preis (kalt)",
       },
       roomCount: {
         title: "Zimmer",

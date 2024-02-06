@@ -168,8 +168,8 @@ const origin = useRequestURL().origin;
             href="https://www.htw-berlin.de/"
             class="underline"
             >HTW Berlin</a
-          >. Wir sind so zufrieden mit unserem Ergebnis das wir es live stellen
-          wollten.
+          >. Wir sind so zufrieden mit unserem Ergebnis, dass wir es live
+          stellen wollten.
         </p>
       </section>
     </div>
