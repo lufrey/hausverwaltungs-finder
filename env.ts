@@ -16,7 +16,7 @@ export const env = createEnv({
     BROWSERLESS_TOKEN: z.string().min(1).optional(),
     LOCAL_SQLITE_PATH: z.string().min(1).optional(),
     CRON_TOKEN: z.string().min(1).optional(),
-    OPENAI_API_KEY: z.string().min(1),
+    OPENAI_API_KEY: z.string().min(1).optional(),
     AUTH_USER: z.string().min(1).optional().default("admin"),
     AUTH_PASSWORD: z.string().min(1).optional().default("admin"),
     NUXT_NEXTAUTH_SECRET: z.string().min(1).optional().default("secret"),

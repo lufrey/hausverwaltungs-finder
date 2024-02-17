@@ -21,3 +21,30 @@ const [firstKey, ...restOfKeys] = typedObjectKeys(tags);
 
 export const tagsSchema = z.array(z.enum([firstKey, ...restOfKeys]));
 export type Tags = z.infer<typeof tagsSchema>;
+
+export const titleToTagsMap = {
+  altbau: ["altbau"],
+  neubau: ["neubau"],
+  wbs: ["wbs"],
+  wohnberechtigungsschein: ["wbs"],
+  garage: ["garage"],
+  stellplatz: ["stellplatz"],
+  parkplatz: ["parkplatz"],
+  erstbezug: ["erstbezug"],
+  dachgeschoss: ["dachgeschoss"],
+  familie: ["familie"],
+} as const;
+
+export const tagKeys = typedObjectKeys(tags);
+export const getApartmentTagsLocally = (
+  title: string,
+  customTagsMap?: Record<string, Tags>,
+): Tags => {
+  const titleToTagsKeys = typedObjectKeys(customTagsMap ?? titleToTagsMap);
+  return titleToTagsKeys.reduce((acc, key) => {
+    if (title.toLowerCase().includes(key)) {
+      acc.push(...titleToTagsMap[key]);
+    }
+    return acc;
+  }, [] as Tags);
+};

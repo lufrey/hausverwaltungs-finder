@@ -32,12 +32,23 @@ import { flat, flatToTag, tag } from "~/db/schema";
  * API auf Rate Limit und andere Fehler prüfen
  */
 
-const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
+const openaiApiKey = env.OPENAI_API_KEY;
 
-export const getApartmentTags = async (
+let openai: OpenAI | undefined;
+if (openaiApiKey) {
+  openai = new OpenAI({ apiKey: openaiApiKey });
+} else {
+  console.error("OpenAI API key is not provided in the env file.");
+}
+
+export const getApartmentTagsViaAI = async (
   flatId: string,
   apartmentTitle: string,
 ) => {
+  if (openai === undefined) {
+    console.error("OpenAI API key is not provided in the env file.");
+    return [];
+  }
   const existingFlat = await db.query.flat.findFirst({
     where: eq(flat.id, flatId),
   });
@@ -83,6 +94,10 @@ export const getApartmentTags = async (
   // By default, a Run goes into the queued state. You can periodically retrieve the Run to check on its status to see if it has moved to completed.
   return new Promise<Tags>((resolve) => {
     const intervalId = setInterval(async () => {
+      if (openai === undefined) {
+        console.error("OpenAI API key is not provided in the env file.");
+        return [];
+      }
       const fetchedRun = await openai.beta.threads.runs.retrieve(
         run.thread_id,
         run.id,

@@ -5,10 +5,12 @@ import {
   type PropertyManagement,
 } from "../propertyManagementList";
 import { getAddress } from "../address";
+import { getApartmentTagsLocally } from "../tags";
 import { parseUncleanFloat, parseUncleanInt } from "~/utils/util";
 import { hashString } from "~/server/util";
 import { typedObjectKeys } from "~/utils/typeHelper";
-import { getApartmentTags } from "~/server/aiTagRetriever";
+import { getApartmentTagsViaAI } from "~/server/aiTagRetriever";
+import { env } from "~/env";
 
 export const stadtundland: PropertyManagement = {
   slug: "stadtundland",
@@ -107,7 +109,9 @@ export const stadtundland: PropertyManagement = {
             coldRentPrice,
             warmRentPrice: parseUncleanInt(mappedTableData.warmRentPrice),
             usableArea: parseUncleanFloat(mappedTableData.usableArea),
-            tags: await getApartmentTags(id, title),
+            tags: env.OPENAI_API_KEY
+              ? await getApartmentTagsViaAI(id, title)
+              : getApartmentTagsLocally(title),
             url: idSource,
             imageUrl,
           } satisfies Flat;

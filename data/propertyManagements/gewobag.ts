@@ -5,9 +5,11 @@ import {
   type PropertyManagement,
 } from "../propertyManagementList";
 import { getAddress } from "../address";
+import { getApartmentTagsLocally } from "../tags";
 import { parseUncleanFloat, parseUncleanInt } from "~/utils/util";
 import { hashString } from "~/server/util";
-import { getApartmentTags } from "~/server/aiTagRetriever";
+import { getApartmentTagsViaAI } from "~/server/aiTagRetriever";
+import { env } from "~/env";
 
 export const gewobag: PropertyManagement = {
   slug: "gewobag",
@@ -92,7 +94,9 @@ export const gewobag: PropertyManagement = {
             coldRentPrice: null, // nicht auf der Übersichtsseite verfügbar. wenn dann jede angebotsseite aufrufen...
             warmRentPrice: parseUncleanInt(warmRentPrice),
             usableArea: parseUncleanFloat(usableArea),
-            tags: await getApartmentTags(id, title),
+            tags: env.OPENAI_API_KEY
+              ? await getApartmentTagsViaAI(id, title)
+              : getApartmentTagsLocally(title),
             url: idSource,
             imageUrl,
           } satisfies Flat;

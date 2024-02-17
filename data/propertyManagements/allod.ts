@@ -5,8 +5,10 @@ import {
   type PropertyManagement,
 } from "../propertyManagementList";
 import { getAddress } from "../address";
+import { getApartmentTagsLocally } from "../tags";
 import { hashString } from "~/server/util";
-import { getApartmentTags } from "~/server/aiTagRetriever";
+import { getApartmentTagsViaAI } from "~/server/aiTagRetriever";
+import { env } from "~/env";
 
 const listingSchema = z.object({
   RealEstateId: z.number(),
@@ -73,7 +75,10 @@ export const allod: PropertyManagement = {
             `${listing.Street} ${listing.HouseNumber}, ${listing.PostalCode} ${listing.City}`,
           );
           if (!cleanedAddress) return false;
-          const tags = await getApartmentTags(id, listing.Title);
+          const tags = env.OPENAI_API_KEY
+            ? await getApartmentTagsViaAI(id, listing.Title)
+            : getApartmentTagsLocally(listing.Title);
+
           const returnFlat = {
             id,
             address: cleanedAddress,

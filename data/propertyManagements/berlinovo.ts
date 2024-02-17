@@ -5,9 +5,11 @@ import {
   type PropertyManagement,
 } from "../propertyManagementList";
 import { getAddress } from "../address";
+import { getApartmentTagsLocally } from "../tags";
 import { parseUncleanFloat, parseUncleanInt } from "~/utils/util";
 import { hashString } from "~/server/util";
-import { getApartmentTags } from "~/server/aiTagRetriever";
+import { getApartmentTagsViaAI } from "~/server/aiTagRetriever";
+import { env } from "~/env";
 
 export const berlinovo: PropertyManagement = {
   slug: "berlinovo",
@@ -67,7 +69,9 @@ export const berlinovo: PropertyManagement = {
             return false;
           }
 
-          const tags = await getApartmentTags(id, title);
+          const tags = env.OPENAI_API_KEY
+            ? await getApartmentTagsViaAI(id, title)
+            : getApartmentTagsLocally(title);
 
           const returnFlat = {
             address: addressPretty,
