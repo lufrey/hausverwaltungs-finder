@@ -63,7 +63,7 @@ export const berlinovo: PropertyManagement = {
             return false;
           }
           const id = await hashString(idSource);
-          const addressPretty = await getAddress(idSource, addressRaw);
+          const addressPretty = await getAddress(id, addressRaw);
 
           if (!addressPretty || !warmRentPrice || !title) {
             return false;
