@@ -20,11 +20,17 @@ export default defineNuxtConfig({
           "data-domain": new URL(deploymentUrl).hostname,
           src: "https://plausible.lukasfrey.com/js/script.js",
         },
+        // {
+        //   async: true,
+        //   defer: true,
+        //   "data-domain": "wohnungsmarktberlin.de",
+        //   src: "/speedinsite.js",
+        // },
         {
           async: true,
           defer: true,
           "data-domain": "wohnungsmarktberlin.de",
-          src: "/speedinsite.js",
+          src: "https://speedin.site/static/js/collect.js",
         },
       ],
       meta: [
