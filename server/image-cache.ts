@@ -15,19 +15,41 @@ export type CacheContent = {
   avif: Buffer;
 };
 
-export const simpleImageCache = (
-  bufferGetter: () => Promise<Buffer>,
-  maxCachedSizes = 4,
-) => {
-  const cache: {
+const caches = new Map<
+  string,
+  {
     version: string;
     sizes: Record<`${number}x${number}`, CacheContent>;
     content: CacheContent | null;
-  } = {
-    version: "0",
-    sizes: {},
-    content: null,
-  };
+    lastUsed: number;
+  }
+>();
+
+const cleanupInterval = 1000 * 60 * 60 * 24;
+export function cleanUpCaches() {
+  const now = Date.now();
+  caches.forEach((cache, id) => {
+    if (now - cache.lastUsed > cleanupInterval) {
+      caches.delete(id);
+    }
+  });
+}
+
+export function simpleImageCache(
+  id: string,
+  bufferGetter: () => Promise<Buffer>,
+  maxCachedSizes = 4,
+) {
+  if (!caches.has(id)) {
+    caches.set(id, {
+      version: "0",
+      sizes: {},
+      content: null,
+      lastUsed: Date.now(),
+    });
+  }
+
+  const cache = caches.get(id)!;
 
   return async (query: QueryObject) => {
     const parsedSize = sizeSchema.safeParse(query);
@@ -76,9 +98,11 @@ export const simpleImageCache = (
       };
     }
 
+    cache.lastUsed = Date.now();
+
     return {
       format,
       content: cache.content,
     };
   };
-};
+}

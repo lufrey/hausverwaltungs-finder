@@ -14,14 +14,18 @@ export default defineEventHandler(async (e) => {
   if (!imagesCache.has(flatId)) {
     imagesCache.set(
       flatId,
-      simpleImageCache(() => {
-        return db.query.flat
-          .findFirst({
-            where: (f, { eq }) => eq(f.id, flatId),
-            columns: { image: true },
-          })
-          .then((res) => res!.image!);
-      }, 2),
+      simpleImageCache(
+        `flat-${flatId}`,
+        () => {
+          return db.query.flat
+            .findFirst({
+              where: (f, { eq }) => eq(f.id, flatId),
+              columns: { image: true },
+            })
+            .then((res) => res!.image!);
+        },
+        2,
+      ),
     );
   }
 

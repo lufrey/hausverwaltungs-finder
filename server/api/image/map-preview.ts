@@ -12,7 +12,7 @@ try {
 } catch (error) {
   updateMapPreview();
 }
-export const mapPreviewCache = simpleImageCache(() =>
+export const mapPreviewCache = simpleImageCache("map-preview", () =>
   fs.readFile(mapPreviewImagePath),
 );
 

@@ -1,3 +1,4 @@
+import { cleanUpCaches } from "../image-cache";
 import { createCaller } from "../trpc/routers";
 import { env } from "~/env";
 
@@ -10,5 +11,7 @@ export default defineEventHandler(async (e) => {
   const caller = createCaller({
     user: "admin",
   });
-  return await caller.propertyManagement.update({ return: true });
+  const result = await caller.propertyManagement.update({ return: true });
+  cleanUpCaches();
+  return result;
 });
