@@ -25,12 +25,13 @@ const caches = new Map<
   }
 >();
 
-const cleanupInterval = 1000 * 60 * 60 * 24;
+const olderThan = 1000 * 60 * 60 * 2;
 export function cleanUpCaches() {
   const now = Date.now();
   caches.forEach((cache, id) => {
-    if (now - cache.lastUsed > cleanupInterval) {
+    if (now - cache.lastUsed > olderThan) {
       caches.delete(id);
+      console.log(`Deleted cache for ${id}, last used ${cache.lastUsed}`);
     }
   });
 }
